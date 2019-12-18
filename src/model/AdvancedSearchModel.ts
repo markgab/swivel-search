@@ -109,5 +109,6 @@ export enum ResultItemType {
     OneDrive="OneDrive",
     Folder="Folder",
     OneNote="OneNote",
+    Image="Image",
     Unknown="Unknown"
 }

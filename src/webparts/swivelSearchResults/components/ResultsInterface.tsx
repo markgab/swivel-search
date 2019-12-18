@@ -182,6 +182,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 case type.OneNote:
                     return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={'https://spoprod-a.akamaihd.net/files/fabric/assets/item-types/20/one.svg?refresh1'} alt={item.ResultItemType} title={item.ResultItemType} /></div>
                 case type.Page:
+                    
                 case type.Document:
                 default:
                     return <Icon title={item.ResultItemType} {...getFileTypeIconProps({extension: item.FileType, size: 20})} />;
@@ -297,7 +298,8 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     <div>
                         <iframe
                             className={styles.frmDocumentReader} 
-                            src={this.state.documentReaderUrl} 
+                            src={this.state.documentReaderUrl}
+                            onLoad={this.frame_load}
                             frameBorder={0}></iframe>
                     </div>
                 </Panel>
@@ -389,6 +391,20 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         console.log('click', ev, column);
     }
 
+    protected frame_load = (e: React.SyntheticEvent<HTMLIFrameElement, Event>): void => {
+        let frame: HTMLIFrameElement = e.target as any;
+        let doc: Document = frame.contentDocument;
+
+        if(doc) {
+
+            let s = doc.createElement('style') as HTMLStyleElement;
+            s.innerText = '.OneUp-commandBar { display: none; } .OneUp-content{ top: 0 !important; }';
+            doc.head.appendChild(s);
+            
+        }
+
+    }
+
     protected btnCommandbar_click(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, btn: ICommandBarItemProps): void {
         let action: string = btn.key;
         let selected: IAdvancedSearchResult = this._getSelectionDetails();
@@ -400,7 +416,11 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             case 'view':
                 console.log(action, selected);
                 newState.documentReaderOpen = true;
-                newState.documentReaderUrl = selected.ServerRedirectedEmbedURL;
+                if(selected.ResultItemType === Model.ResultItemType.Image) {
+                    newState.documentReaderUrl = this._buildListPreviewLink(selected);
+                } else {
+                    newState.documentReaderUrl = selected.ServerRedirectedEmbedURL;
+                }
                 break;
             case 'edit':
                 console.log(action, selected);
@@ -441,6 +461,18 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
 
     protected handleFrameEvents(): void {
         //this._dialogHelper.activateCancelButtons();
+    }
+
+    private _buildListPreviewLink(result: IAdvancedSearchResult): string {
+        return `${result.ParentLink}?id=${encodeURIComponent(this._absToRelativeUrl(result.DocumentLink))}&parent=${encodeURIComponent(this._buildListPreviewLinkParentUrl(result))}`;
+    }
+
+    private _buildListPreviewLinkParentUrl(result: IAdvancedSearchResult): string {
+        return this._absToRelativeUrl(result.ParentLink).replace(/(forms)?\/[^\/]+\.aspx?$/i, '');
+    }
+
+    private _absToRelativeUrl(absUrl: string): string {
+        return absUrl.replace(/^http[s]?:\/\/[^\/]+/, '');
     }
 
 
@@ -519,12 +551,13 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     private commandbarButtons(result: IAdvancedSearchResult): ICommandBarItemProps[] {
         let items: ICommandBarItemProps[] = [];
         let type = Model.ResultItemType;
+        let splitItems: Array<IContextualMenuItem> = [];
 
         if(!result) { return items; }
 
         if(result.ResultItemType === type.Page ||
            result.ResultItemType === type.OneDrive) {
-            items.push({
+            splitItems.push({
                 key: 'go',
                 name: 'Go',
                 iconProps: {
@@ -532,41 +565,37 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 },
                 onClick: (e, btn) => this.btnCommandbar_click(e, btn)
             });
-        } else if(result.IsDocument == "true" as any) {
-            let subItems: Array<IContextualMenuItem> = [
-                {
-                    key: 'view',
-                    name: 'View',
-                    iconProps: {
-                        iconName: 'View'
-                    },
-                    onClick: (e, btn) => this.btnCommandbar_click(e, btn)                             
-                }
-            ];
-            if(result.ServerRedirectedURL) {
-                subItems.push({
-                        key: 'edit',
-                        name: 'Edit',
-                        iconProps: {
-                            iconName: 'PageEdit'
-                        },
-                        onClick: (e, btn) => this.btnCommandbar_click(e, btn)
-                    });
-                console.log(subItems);
-            }
-            items.push({
-                key: 'open',
-                name: 'Open',
-                split: true,
+        } else if(result.IsDocument == "true" as any || 
+                  result.ResultItemType === type.Image) {
+                splitItems.push({
+                key: 'view',
+                name: 'View',
                 iconProps: {
-                    iconName: 'OpenFile'
+                    iconName: 'View'
                 },
-                href: 'https://news.google.com',
-                ['data-automation-id']: 'opendocument',
-                subMenuProps:{
-                    items: subItems
-                }
+                onClick: (e, btn) => this.btnCommandbar_click(e, btn)                             
             });
+            if(result.ServerRedirectedURL) {
+                splitItems.push({
+                    key: 'edit',
+                    name: 'Edit',
+                    iconProps: {
+                        iconName: 'PageEdit'
+                    },
+                    onClick: (e, btn) => this.btnCommandbar_click(e, btn)
+                });
+            }
+            if(splitItems.length > 1) {
+                let split = splitItems.shift();
+                split.split = true;
+                split.subMenuProps = {
+                    items: splitItems
+                };
+                items.push(split);
+            } else if(splitItems.length === 1) {
+                items.push(splitItems.pop());
+            }
+
         }
 
         switch (result.ResultItemType) {
@@ -580,7 +609,8 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                         iconName: 'CustomList'
                     },
                     onClick: (e, btn) => this.btnCommandbar_click(e, btn)
-                });
+                }
+            );
         }
 /*         if(result.ListID && result.SPWebUrl && result.ListItemID) {
             items.push({

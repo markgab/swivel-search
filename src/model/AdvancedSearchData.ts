@@ -26,6 +26,7 @@ export interface IAdvancedSearchResult extends SearchResult {
     ContentTypeId: string;
     ListItemID: string;
     ResultItemType: Model.ResultItemType;
+    DocumentLink: string;
 }
 
 export default class AdvancedSearchData {
@@ -73,7 +74,8 @@ export default class AdvancedSearchData {
         "ParentLink",
         "ListID",
         "ContentTypeId",
-        "ListItemID"
+        "ListItemID",
+        "DocumentLink"
     ];
 
     public search(queryText: string): Promise<SearchResults> {
@@ -147,6 +149,8 @@ export default class AdvancedSearchData {
                 return type.OneDrive;
             case this._isListItem(item):
                 return type.ListItem;
+            case this._isImage(item):
+                return type.Image;
             case this._isList(item):
                 return type.List;
             case this._isFolder(item):
@@ -169,7 +173,16 @@ export default class AdvancedSearchData {
     }
 
     private _isDocument(result: IAdvancedSearchResult): boolean {
-        return result.IsDocument == "true" as any || result.FileType === "tif";
+        return result.IsDocument == "true" as any;
+    }
+
+    private _isImage(result: IAdvancedSearchResult): boolean {
+        let imgs: string[] = ['gif','png','jpg','jpeg','tif','tiff','bmp'];     // Recognized image formats
+        return  result.IsDocument == "false" as any &&
+                !!result.FileType &&
+                result.IsContainer == "false" as any &&
+                result.IsListItem == "true" &&
+                imgs.indexOf(result.FileType.toLowerCase()) !== -1;
     }
 
     private _isWeb(result: IAdvancedSearchResult): boolean {
@@ -206,9 +219,9 @@ export default class AdvancedSearchData {
 
     private _isListItem(result: IAdvancedSearchResult): boolean {
         return  result.IsDocument == "false" as any &&
-                result.FileType === null &&
                 result.IsContainer == "false" as any &&
-                result.IsListItem == "true";
+                result.IsListItem == "true" &&
+                result.Filename.toLocaleLowerCase() === 'dispform.aspx';
     }
 
     private _isPage(result: IAdvancedSearchResult): boolean {
