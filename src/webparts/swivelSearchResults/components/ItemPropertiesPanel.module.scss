@@ -1,0 +1,48 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+.ItemPropertiesPanel {
+    display:block;
+
+}
+.panel {
+  display: block;
+
+  :global {
+    .ms-Panel-content {
+      padding: 10px;
+    }
+    
+    .ms-Panel-navigation {
+      background-color: $ms-color-themeDarker;
+      .ms-Button {
+        @include ms-fontColor-white;
+      }
+    }
+  }
+}
+
+.frmViewPanel {
+    width:100%;
+    height:calc(100vh - 50px);
+    //border:1px solid coral;
+}
+
+.frmPropsAnchor {
+  position:relative;
+}
+
+.frmPropsLoading {
+  top:0;
+  right:0;
+  left:0;
+  bottom:0;
+  position: absolute;
+  background-color:#FFF;
+  display:flex;
+  flex-direction: column;
+  justify-content: space-around;
+  z-index: 2000;
+}
+
+.frmPropsLoadingHidden {
+  display: none;
+}

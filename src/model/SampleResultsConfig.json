@@ -1,0 +1,35 @@
+
+{
+    "columns": [
+        {
+            "name": "Title",
+            "fieldName": "Title",
+            "sortable": false
+        },
+        {
+            "name": "Filename",            
+            "fieldName": "Filename",
+            "sortable": true
+        },
+        {
+            "name": "File Extension",
+            "fieldName": "FileExtension",
+            "sortable": true
+        },
+        {
+            "name": "Is Document",
+            "fieldName": "IsDocument",
+            "sortable": false
+        },
+        {
+            "name": "Modified",
+            "fieldName": "LastModifiedTime",
+            "sortable": true
+        },
+        {
+            "name": "NavEnabled",
+            "fieldName": "NavEnabled",
+            "sortable": false
+        }
+    ]
+}

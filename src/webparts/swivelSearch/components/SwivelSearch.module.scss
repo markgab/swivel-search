@@ -1,0 +1,120 @@
+//@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+@mixin noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.swivelSearch {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .searchInterface {
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.18), 0 3px 5px 2px rgba(0,0,0,.15);
+    padding:30px;
+  }
+
+  .buttonRow {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-left:30px;
+    }
+  }
+
+  .pnlAdvanced {
+    overflow: hidden;
+    //max-height: 1000px;
+    transition: max-height 300ms linear;
+    &.pnlAdvancedMinimized {
+      max-height: 0px !important;
+    }
+  }
+
+  .keywordSearch {
+    display: block;
+    :global {
+      .ms-TextField-prefix {
+        padding: 0px;
+
+        .btnKeywordSearch {
+          height: 100%;
+          min-width: 60px;
+        }
+      }
+
+      .ms-TextField-suffix {
+/*         @include noselect();
+        color: rgb(51, 51, 51);
+        font-weight: 600;
+        padding-left: 16px;
+        padding-right: 16px;
+        cursor: pointer; */
+        //border-left: 1px solid rgb(161, 161, 161);
+/*         background-color: rgb(244, 244, 244);
+        &:hover {
+          background-color: rgb(234, 234, 234);
+        }
+        &:active, .toggleOn {
+          background-color: rgb(224, 224, 224);
+        }*/
+        padding: 0px;
+        .btnAdvanced {
+          height: 100%;
+          .ms-Button-label {
+            font-weight: 400;
+          }
+        }
+      }
+    }
+/* 
+    .toggleOn {
+      background-color: rgb(224, 224, 224);
+    } */
+
+  }
+
+  .grid {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    margin-right: -2%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .row {
+ /*    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; */
+  }
+
+  .cell {
+    min-width: 250px;
+    flex-grow: 1;
+    position: relative;
+    margin: 0 0 0 -2%;
+    left: -2%;
+    width: 48%;
+    padding-left: 4%;
+  }
+
+}
+
+.hide {
+  display: none !important;
+}
+
+:global {
+  #workbenchPageContent {
+    max-width: none;
+  }
+}

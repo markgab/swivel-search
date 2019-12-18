@@ -1,0 +1,90 @@
+{
+    "fields": [
+        {
+            "name": "Title",
+            "property": "ows_title",
+            "operator": "like",
+            "type": "String"
+        },
+        {
+            "name": "Department",
+            "property": "ows_department",
+            "operator": "equals",
+            "type": "String",
+            "options": {
+                "choices": [
+                    "IT",
+                    "Hr",
+                    "Marketing",
+                    "Film",
+                    "Operations",
+                    "Food"
+                ]
+            }
+        },
+        {
+            "name": "Created",
+            "property": "ows_created",
+            "operator": "between",
+            "type": "DateTime"
+        },
+        {
+            "name": "IsDocument",
+            "property": "IsDocument",
+            "operator": "equals",
+            "type": "Boolean"
+        },
+        {
+            "name": "NavEnabled",
+            "property": "NavEnabled",
+            "operator": "equals",
+            "type": "Int32",
+            "options": {
+                "choices": [
+                    {
+                        "text": "Yes",
+                        "key": 1
+                    },
+                    {
+                        "text": "No",
+                        "key": 0
+                    }
+                ]
+            }
+        }
+    ],
+    "results": {
+        "properties": [
+            {
+                "property": "Title",
+                "label": "Title",
+                "sortable": false
+            },
+            {
+                "property": "Filename",
+                "label": "Filename",
+                "sortable": true
+            },
+            {
+                "property": "FileExtension",
+                "label": "File Extension",
+                "sortable": true
+            },
+            {
+                "property": "IsDocument",
+                "label": "Is Document",
+                "sortable": false
+            },
+            {
+                "property": "LastModifiedTime",
+                "label": "Modified",
+                "sortable": true
+            },
+            {
+                "property": "NavEnabled",
+                "label": "NavEnabled",
+                "sortable": false
+            }
+        ]
+    }
+}

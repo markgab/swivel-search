@@ -1,0 +1,68 @@
+{
+    "properties": [
+        {
+            "name": "Title",
+            "property": "Title",
+            "operator": "like",
+            "type": "String"
+        },
+        {
+            "name": "File Type",
+            "property": "FileType",
+            "operator": "equals",
+            "type": "String",
+            "options": {
+                "choices": [
+                    "pdf",
+                    "docx"
+                ]
+            }
+        },
+        {
+            "name": "Department",
+            "property": "ows_department",
+            "operator": "equals",
+            "type": "String",
+            "options": {
+                "choices": [
+                    "IT",
+                    "Hr",
+                    "Marketing",
+                    "Film",
+                    "Operations",
+                    "Food"
+                ]
+            }
+        },
+        {
+            "name": "Modified",
+            "property": "LastModifiedTime",
+            "operator": "after",
+            "type": "DateTime"
+        },
+        {
+            "name": "IsDocument",
+            "property": "IsDocument",
+            "operator": "equals",
+            "type": "Boolean"
+        },
+        {
+            "name": "NavEnabled",
+            "property": "NavEnabled",
+            "operator": "equals",
+            "type": "Int32",
+            "options": {
+                "choices": [
+                    {
+                        "text": "Yes",
+                        "key": 1
+                    },
+                    {
+                        "text": "No",
+                        "key": 0
+                    }
+                ]
+            }
+        }
+    ]
+}

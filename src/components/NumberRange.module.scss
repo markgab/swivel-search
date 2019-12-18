@@ -1,0 +1,44 @@
+.numberRange {
+
+    .pickerRow {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .numberOperator {
+        min-width: 110px;
+    }
+
+    .numberEnd {
+        display: block;
+    }
+
+    .numberEndHidden {
+        display: none;
+    }
+
+    :global .ms-TextField {
+        flex-grow: 1;
+        span > div {
+          position: absolute;
+          right:0px;
+          overflow-x: visible;
+          white-space: nowrap;
+        }
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield; /* Firefox */
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0;
+        }
+
+        &:hover,
+        &:focus {
+            -moz-appearance: number-input;
+        } 
+    }
+}

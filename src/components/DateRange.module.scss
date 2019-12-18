@@ -1,0 +1,40 @@
+.dateRange {
+
+    .pickerRow {
+      display:flex;
+      flex-direction: row;
+      position: relative;
+    }
+
+    .dateOperator {
+      min-width: 110px;
+    }
+
+    .dateOperator :global .ms-Dropdown-title {
+      border-right-width: 0px !important;
+    }
+
+    :global .ms-DatePicker {
+      width: 100%;
+
+      :global .ms-Label {
+        visibility: hidden;
+      }
+    }
+
+    .dateEnd :global .ms-TextField-fieldGroup {
+      border-left-width: 0px !important;
+    }
+    
+    .dateEndHidden {
+      display: none;
+    }
+
+    :global .ms-TextField {
+      position: static;
+      span > div {
+        position: absolute;
+        right:0px;
+      }
+    }
+  }
