@@ -21,7 +21,40 @@
     "description": { "default": "swivel-search-results description" },
     "officeFabricIconFontName": "Page",
     "properties": {
-      "description": "swivel-search-results"
+      "rowLimit": 100,
+      "isDebug": false,
+      "columns": [
+        {
+            "uniqueId": "561aad8f-e5ca-4d67-9193-3fd00db01633",
+            "name": "Created By",
+            "fieldName": "Author",
+            "sortable": true,
+            "sortIdx": 1
+        },
+        {
+            "uniqueId": "e01b34c4-d7b5-4fb8-ba81-da58b122bead",
+            "name": "Modified",
+            "fieldName": "LastModifiedTime",
+            "sortable": true,
+            "sortIdx": 2
+        },
+        {
+            "uniqueId": "2e01edce-2aed-47d3-9b0b-7849044b7f59",
+            "name": "File Extension",
+            "fieldName": "FileExtension",
+            "sortable": true,
+            "sortIdx": 3
+        },
+        {
+            "uniqueId": "dce04e8e-c342-4db0-9384-6deb438eaaa0",
+            "name": "Is Document",
+            "fieldName": "IsDocument",
+            "sortable": null
+        }
+      ], 
+      "searchQuery": "",
+      "sortDirection": 1,
+      "sortProperty": "Rank"
     }
   }]
 }

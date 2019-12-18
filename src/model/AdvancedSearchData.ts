@@ -169,7 +169,7 @@ export default class AdvancedSearchData {
     }
 
     private _isDocument(result: IAdvancedSearchResult): boolean {
-        return result.IsDocument == "true" as any;
+        return result.IsDocument == "true" as any || result.FileType === "tif";
     }
 
     private _isWeb(result: IAdvancedSearchResult): boolean {
