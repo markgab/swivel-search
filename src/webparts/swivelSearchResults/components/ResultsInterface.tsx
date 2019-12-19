@@ -19,7 +19,6 @@ import * as Model from '../../../model/AdvancedSearchModel';
 import AdvancedSearchData, {
     IAdvancedSearchResult
 } from '../../../model/AdvancedSearchData';
-//import DebugPanel from './DebugPanel';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { 
     SearchResults, 
@@ -43,7 +42,6 @@ import { IDragDropContext } from 'office-ui-fabric-react/lib/utilities/dragdrop'
 
 export interface IResultsInterfaceProps {
     isDebug: boolean;
-    //config: Model.IResultsConfig;
     columns: Array<Model.IResultProperty>;
     searchQuery: string;
     context: WebPartContext;
@@ -52,15 +50,11 @@ export interface IResultsInterfaceProps {
 }
 
 export interface IResultInterfaceState {
-    //config: Model.IResultsConfig;
     items: ICommandBarItemProps[];
     overflowItems: ICommandBarItemProps[];
     faritems: ICommandBarItemProps[];
     searchQuery: string;
     results: SearchResult[];
-    //currentPage: number;
-    //totalPages: number;
-    //totalResults: number;
     columns: Model.IResultProperty[];
     spWebUrl: string;
     listID: string;
@@ -85,25 +79,19 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         this.searchData.rowLimit = props.rowLimit;
         this.searchData.bench();
         initializeFileTypeIcons();
-        //this._closePanelRedirectUrl = `${this.props.context.pageContext.web.absoluteUrl}/siteassets/advanced-search-webpart-close-panel.aspx`;
         let cols = uniq<Model.IResultProperty>([
-            ...this._defaultColumns, 
-            //...props.config.columns
+            ...this._defaultColumns,
             ...props.columns
         ]);
 
         console.log(cols);
 
-        this.state = { 
-            //config: props.config,
+        this.state = {
             items:[],
             overflowItems:[],
             faritems:[],
             searchQuery: props.searchQuery,
             results: [],
-            //currentPage:0,
-            //totalPages:0,
-            //totalResults:0,
             columns: cols,
             spWebUrl: '',
             listID: '',
@@ -145,7 +133,6 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     private _selection: Selection;
     private _scrollParent: HTMLElement;
     private _isFetchingItems: Boolean = false;
-    //private _closePanelRedirectUrl: string;
     private _defaultColumns: Model.IResultProperty[] = [{
         key: 'FileType',
         name: 'File Type',
@@ -158,8 +145,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         isIconOnly: true,
         fieldName: 'FileType',
         minWidth: 20,
-        maxWidth: 120,
-        //onColumnClick: this._onColumnClick,
+        maxWidth: 20,
         onRender: (item: IAdvancedSearchResult) => {
             let web = this.props.context.pageContext.web.absoluteUrl;
             let type = Model.ResultItemType;
@@ -174,35 +160,16 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 case type.OneDrive:
                     return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={`https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/onedrive_16x1_5.png`} alt="OneDrive" title="OneDrive" /></div>;
                 case type.ListItem:
-                    //return <Icon iconName="CustomList" title="List Item" className={styles.mgCustomIcon} />;
-                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={'https://spoprod-a.akamaihd.net/files/fabric/assets/item-types/20/listitem.svg?refresh1'} alt={item.ResultItemType} title={item.ResultItemType} /></div>
+                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={'https://spoprod-a.akamaihd.net/files/fabric/assets/item-types/20/listitem.svg?refresh1'} alt={item.ResultItemType} title={item.ResultItemType} /></div>;
                 case type.Folder:
-                    //return <Icon iconName="FabricFolder" title="Folder" className={styles.mgCustomIcon} />;
                     return <Icon title={item.ResultItemType} {...getFileTypeIconProps({ type: FileIconType.folder})} />;
                 case type.OneNote:
-                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={'https://spoprod-a.akamaihd.net/files/fabric/assets/item-types/20/one.svg?refresh1'} alt={item.ResultItemType} title={item.ResultItemType} /></div>
+                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={'https://spoprod-a.akamaihd.net/files/fabric/assets/item-types/20/one.svg?refresh1'} alt={item.ResultItemType} title={item.ResultItemType} /></div>;
                 case type.Page:
-                    
                 case type.Document:
                 default:
                     return <Icon title={item.ResultItemType} {...getFileTypeIconProps({extension: item.FileType, size: 20})} />;
             }
-/* 
-            if (this._isListOrLibrary(item)) {
-                if(this._isList(item)) {
-                    return <div className={styles.mgCustomIcon}><img src={`${web}/_layouts/15/images/itgen.png?rev=45`} alt="SharePoint List" title="SharePoint List" /></div>;
-                } else {
-                    return <Icon iconName="DocLibrary" title="Document Library" className={styles.mgCustomIcon} />;
-                }
-            } else if (this._isWeb(item)) {
-                return <div className={styles.mgCustomIcon}><img src={`https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/sharepoint_16x1_5.png`} alt="SharePoint Site" title="SharePoint List or Library" /></div>;
-            } else if (this._isOneDrive(item)) {
-                return <div className={styles.mgCustomIcon}><img src={`https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/onedrive_16x1_5.png`} alt="OneDrive" title="SharePoint List or Library" /></div>;
-            } else if (this._isListItem(item)) {
-                return <Icon iconName="CustomList" title="List Item" className={styles.mgCustomIcon} />;
-            } else {
-                return <Icon {...getFileTypeIconProps({extension: item.FileType, size: 20})} />;             
-            } */
         }
     },
     {
@@ -259,7 +226,6 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     isHeaderVisible={true}
                     selection={this._selection}
                     selectionPreservedOnEmptyClick={true}
-                    //onItemInvoked={this._onItemInvoked}
                     enterModalSelectionOnTouch={true}
                     onRenderMissingItem={this._onRenderMissingItem}
                 />
@@ -271,11 +237,6 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                         </div>
                     </div>
                 </div>
-{/* 
-                <DebugPanel 
-                    searchQuery={this.state.searchQuery} 
-                    isDebug={this.props.isDebug} 
-                /> */}
 
                 <ItemPropertiesPanel
                     PageType={PageTypes.ViewForm}
@@ -338,19 +299,12 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
 
             }
 
-            //console.log('totalrows: ', totalRows);
-            //console.log('rowlimit: ', this.props.rowLimit);
-            //console.log('currpage: ', this.searchData.page);
-            //console.log('totpages: ', totalPages);
             console.log('result count: ', results.length);
 
             return this.setState({
                 ...this.state,
                 searchQuery: props.searchQuery,
                 results: results,
-                //currentPage: currentPage,
-                //totalPages: totalPages,
-                //totalResults: totalRows,
                 showLoading: false,
                 faritems: [this.resultCountLabel(totalRows)],
                 columns: columns
@@ -556,7 +510,12 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         if(!result) { return items; }
 
         if(result.ResultItemType === type.Page ||
-           result.ResultItemType === type.OneDrive) {
+           result.ResultItemType === type.OneDrive || 
+           result.ResultItemType === type.Library ||
+           result.ResultItemType === type.List ||
+           result.ResultItemType === type.Folder ||
+           result.ResultItemType === type.Web || 
+           result.ResultItemType === type.OneNote) {
             splitItems.push({
                 key: 'go',
                 name: 'Go',
@@ -585,22 +544,36 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     onClick: (e, btn) => this.btnCommandbar_click(e, btn)
                 });
             }
-            if(splitItems.length > 1) {
-                let split = splitItems.shift();
-                split.split = true;
-                split.subMenuProps = {
-                    items: splitItems
-                };
-                items.push(split);
-            } else if(splitItems.length === 1) {
-                items.push(splitItems.pop());
+            
+            if(OfficeURIHelper.isOfficeDocument(result.OriginalPath)) {
+                splitItems.push({
+                    key: 'clientopen',
+                    name: 'Open in Desktop Client',
+                    iconProps: {
+                        iconName: 'DocumentReply'
+                    },
+                    onClick: (e, btn) => this.btnCommandbar_click(e, btn)
+                });
             }
 
+        }
+
+        if(splitItems.length > 1) {
+            let split = splitItems.shift();
+            split.split = true;
+            split.subMenuProps = {
+                items: splitItems
+            };
+            items.push(split);
+        } else if(splitItems.length === 1) {
+            items.push(splitItems.pop());
         }
 
         switch (result.ResultItemType) {
             case type.ListItem:
             case type.Document:
+            case type.Image:
+            case type.Page:
             case type.Folder:
                 items.push({
                     key: 'viewproperties',
@@ -612,16 +585,6 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 }
             );
         }
-/*         if(result.ListID && result.SPWebUrl && result.ListItemID) {
-            items.push({
-                key: 'viewproperties',
-                name: 'Properties',
-                iconProps: {
-                    iconName: 'CustomList'
-                },
-                onClick: (e, btn) => this.btnCommandbar_click(e, btn)
-            });
-        } */
 
         if(result.ParentLink) {
             items.push({
@@ -649,21 +612,12 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
 
     private commandbarOverflowButtons(result: IAdvancedSearchResult): ICommandBarItemProps[] {
         let items: ICommandBarItemProps[] = [];
+        let type = Model.ResultItemType;
         
         if(!result) { return items; }
 
-        if(result.IsDocument == "true" as any) {
-            
-            if(OfficeURIHelper.isOfficeDocument(result.OriginalPath)) {
-                items.push({
-                    key: 'clientopen',
-                    name: 'Open in Client',
-                    iconProps: {
-                        iconName: 'DocumentReply'
-                    },
-                    onClick: (e, btn) => this.btnCommandbar_click(e, btn)
-                });
-            }
+        if(result.IsDocument == "true" as any || 
+           result.ResultItemType === type.Image) {
 
             items.push({
                 key: 'download',
@@ -682,7 +636,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 iconName: 'M365InvoicingLogo'
             },
             onClick: (e, btn) => this.btnCommandbar_click(e, btn)
-        })
+        });
 
         return items;
 

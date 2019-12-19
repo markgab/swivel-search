@@ -173,7 +173,9 @@ export default class AdvancedSearchData {
     }
 
     private _isDocument(result: IAdvancedSearchResult): boolean {
-        return result.IsDocument == "true" as any;
+        return result.IsDocument == "true" as any &&
+               result.IsContainer == "false" as any && 
+              (result.FileType || '').toLocaleLowerCase() !== 'aspx';
     }
 
     private _isImage(result: IAdvancedSearchResult): boolean {
@@ -189,15 +191,16 @@ export default class AdvancedSearchData {
         return  result.IsDocument == "false" as any && 
                 result.IsContainer == "true" as any &&
                 result.IsListItem === null &&
-            (
+            ((
                !result.ListID &&
                 result.FileExtension === null
-            ) || 
+            )
+            || 
             (
                 result.ListID &&
                 result.FileExtension == 'aspx' &&
                 result.FileType == 'aspx'
-            );
+            ));
     }
 
     private _isList(result: IAdvancedSearchResult): boolean {
@@ -225,10 +228,10 @@ export default class AdvancedSearchData {
     }
 
     private _isPage(result: IAdvancedSearchResult): boolean {
-        return (result.FileExtension === "aspx" || 
+        return (result.FileType === "aspx" || 
                 result.FileType === "html") &&
                 result.IsContainer == "false" as any &&
-                result.IsDocument == "false" as any;
+                result.IsDocument == "true" as any;
     }
 
     private _isOneDrive(result: IAdvancedSearchResult): boolean {

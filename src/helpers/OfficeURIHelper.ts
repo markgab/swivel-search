@@ -60,7 +60,8 @@ export default class OfficeURIHelper {
      * @param docURL Url to document https://contoso.sharepoint.com/shared/document1.docx
      */
     public static getFileExtensionFromURL(docURL: string): string {
-        let m = docURL.match(/[a-zA-Z0-1]{2,5}$/);
+        let trim = docURL.replace(/\?.*$/, '');
+        let m = trim.match(/[a-zA-Z0-1]{2,5}$/);
 
         if(m.length > 0) {
             return m[0].toLowerCase();
