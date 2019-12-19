@@ -77,7 +77,6 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         
         this.searchData = new AdvancedSearchData(props.context, props.columns);
         this.searchData.rowLimit = props.rowLimit;
-        this.searchData.bench();
         initializeFileTypeIcons();
         let cols = uniq<Model.IResultProperty>([
             ...this._defaultColumns,

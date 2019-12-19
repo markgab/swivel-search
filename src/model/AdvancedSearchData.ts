@@ -1,8 +1,7 @@
 import { 
     sp, 
     SearchResults,
-    SearchResult, 
-    //SearchQueryBuilder,
+    SearchResult,
     SearchQuery 
 } from '@pnp/sp';
 import { uniq } from '@microsoft/sp-lodash-subset';
@@ -243,7 +242,6 @@ export default class AdvancedSearchData {
 
     private _isFolder(result: IAdvancedSearchResult): boolean {
         return  result.IsDocument == "false" as any &&
-                // result.FileType === "html" &&
                 result.IsContainer == "true" as any &&
                 result.IsListItem === null &&
                 result.FileExtension === null &&
@@ -258,29 +256,6 @@ export default class AdvancedSearchData {
                 result.IsListItem === null &&
               !!result.ListID &&
               !!result.ServerRedirectedURL;
-    }
-
-    private _isFolderRx(result:IAdvancedSearchResult): boolean {
-        return !!result.ContentTypeId.match(/^0x0120.*/);
-    }
-
-    public bench(): void {
-        let result: IAdvancedSearchResult = <any> {"Rank":"17.0755615234375","DocId":"17606496955643","Title":"Grand","Filename":"Grand","IsDocument":"false","IsContainer":"true","IsListItem":null,"SPWebUrl":"https://golgamesh.sharepoint.com","FileType":"html","Path":"https://golgamesh.sharepoint.com/Shared Documents/Grand","OriginalPath":"https://golgamesh.sharepoint.com/Shared Documents/Grand","WorkId":"17606496955643","ServerRedirectedURL":null,"ServerRedirectedPreviewURL":null,"ServerRedirectedEmbedURL":null,"SiteName":"https://golgamesh.sharepoint.com","ParentLink":"https://golgamesh.sharepoint.com/Shared Documents/Forms/AllItems.aspx","ListID":"33c8470b-9b8e-4034-9570-2d0ac4b5dd44","ContentTypeId":"0x012000A2A7B9CAB913734984E6846874904802","ListItemID":"5","Author":"Golgamesh","LastModifiedTime":"2019-10-06T03:11:53.0000000Z","FileExtension":null,"owsID":null,"_ranking_features_":null,"PartitionId":"0f64d5d4-5d2e-4474-8dd4-5ce9858dccc5","UrlZone":"0","Culture":"en-US","ResultTypeId":"0","RenderTemplateId":"~sitecollection/_catalogs/masterpage/Display Templates/Search/Item_Default.js"};
-        console.time('matrix');
-        let iterations = 100;
-        for(let i = 0; i < iterations; i ++) {
-            this._isFolder(result);
-        }
-        console.timeEnd('matrix');
-
-        console.time('regex');
-        for(let i = 0; i < iterations; i ++) {
-            this._isFolderRx(result);
-        }
-        console.timeEnd('regex');
-
-        
-
     }
 
 }
