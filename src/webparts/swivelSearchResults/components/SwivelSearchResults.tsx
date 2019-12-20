@@ -58,19 +58,16 @@ export default class SwivelSearchResults extends React.Component<ISwivelSearchRe
     let { needsConfiguration, onConfigure } = this.props;
     let Placeholder = this.placeholder;
 
-    if(needsConfiguration && !Placeholder) {
-      return(<div></div>);
-    }
-
     return (
       <div className={styles.swivelSearchResults}>
-        { needsConfiguration && 
+        { needsConfiguration && Placeholder && 
           <Placeholder
             iconName='Edit'
             iconText='Configure your web part'
             description='Please configure the web part.'
             buttonLabel='Configure'
-            onConfigure={onConfigure} />
+            onConfigure={onConfigure} 
+          />
         }
         { !needsConfiguration && 
           <ResultsInterface 

@@ -186,7 +186,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
           groups: [
             {
               primaryGroup: {
-                groupName: 'fsdajk',
+                groupName: 'Data Conneciton',
                 groupFields: [
                   PropertyPaneTextField('searchQuery', {
                     label: strings.SearchQueryFieldLabel
