@@ -75,7 +75,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
         rowLimit: this.properties.rowLimit,
         columns: this.properties.columns,
         searchQuery: searchQuery,
-        context: this.context
+        context: this.context,
       }
     );
 

@@ -6,13 +6,11 @@ import {
     Selection,
     SelectionMode,
     IColumn,
-    IObjectWithKey,
     IDetailsRowProps,
     ISelectionOptions
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { 
-    CommandBar, 
-    ICommandBarProps,
+    CommandBar,
     ICommandBarItemProps 
 } from 'office-ui-fabric-react/lib/CommandBar';
 import * as Model from '../../../model/AdvancedSearchModel';

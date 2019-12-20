@@ -1,10 +1,8 @@
 import * as React from 'react';
 import styles from './SwivelSearchResults.module.scss';
-import { escape } from '@microsoft/sp-lodash-subset';
 import ResultsInterface, { IResultsInterfaceProps } from './ResultsInterface';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as Model from '../../../model/AdvancedSearchModel';
-import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
 
 export interface ISwivelSearchResultsProps {
   onConfigure: () => void;
@@ -31,6 +29,7 @@ export default class SwivelSearchResults extends React.Component<ISwivelSearchRe
   }
   
   public state: IAdvancedSearchResultsState;
+  protected placeholder;
 
   public componentWillReceiveProps(nextProps: ISwivelSearchResultsProps): void {
     this.setState({
@@ -39,8 +38,30 @@ export default class SwivelSearchResults extends React.Component<ISwivelSearchRe
     });
   }
 
+  public async componentDidMount(): Promise<any> {
+    if(!this.props.needsConfiguration) {
+      return;
+    }
+
+    let { Placeholder } = await import (
+      /* webpackChunkName: 'pnp-spfx-controls-react-placeholder' */
+      '@pnp/spfx-controls-react/lib/Placeholder'
+    );
+
+    this.placeholder = Placeholder;
+
+    this.forceUpdate();
+
+  }
+
   public render(): React.ReactElement<ISwivelSearchResultsProps> {
     let { needsConfiguration, onConfigure } = this.props;
+    let Placeholder = this.placeholder;
+
+    if(needsConfiguration && !Placeholder) {
+      return(<div></div>);
+    }
+
     return (
       <div className={styles.swivelSearchResults}>
         { needsConfiguration && 
