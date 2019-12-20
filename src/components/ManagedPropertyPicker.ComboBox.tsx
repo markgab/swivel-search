@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ComboBox, Fabric, IComboBoxProps, IComboBoxOption, mergeStyles, SelectableOptionMenuItemType, Toggle, IComboBox, KeyCodes } from 'office-ui-fabric-react/lib/index';
+import { ComboBox, IComboBoxProps, IComboBoxOption, IComboBox } from 'office-ui-fabric-react/lib/ComboBox';
 import SearchSchemaHelper from '../helpers/SearchSchemaHelper';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 
@@ -63,16 +63,16 @@ export default class ManagedPropertyPicker extends React.Component<IManagedPrope
 
     protected combobox_keyup = (e: React.KeyboardEvent<IComboBox>): void => {
 
-        let key: KeyCodes = e.keyCode;
+        let key: number = e.keyCode;
 
         switch(key) {
-            case KeyCodes.enter:
-            case KeyCodes.tab:
-            case KeyCodes.down:
-            case KeyCodes.up:
-            case KeyCodes.left:
-            case KeyCodes.right:
-            case KeyCodes.escape:
+            case 13:    // KeyCodes.enter:
+            case 9:     // KeyCodes.tab:
+            case 40:    // KeyCodes.down:
+            case 38:    // KeyCodes.up:
+            case 37:    // KeyCodes.left:
+            case 39:    // KeyCodes.right:
+            case 27:    // KeyCodes.escape:
                 //console.log('Leaving with: ', key);
                 return;
             default: 

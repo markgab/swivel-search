@@ -38,7 +38,6 @@ import { Label } from 'office-ui-fabric-react/lib/Label';
 import OfficeURIHelper from '../../../helpers/OfficeURIHelper';
 import { IContextualMenuItem } from 'office-ui-fabric-react/lib/ContextualMenu';
 import stickybits from 'stickybits';
-import { IDragDropContext } from 'office-ui-fabric-react/lib/utilities/dragdrop';
 
 export interface IResultsInterfaceProps {
     isDebug: boolean;

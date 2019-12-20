@@ -15,11 +15,6 @@ import {
   IDropdownOption, 
   IDropdownProps
 } from 'office-ui-fabric-react/lib/Dropdown';
-import {
-  PropertyFieldCollectionData,
-  CustomCollectionFieldType,
-  IPropertyFieldCollectionDataProps
-} from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import * as Model from '../../model/AdvancedSearchModel';
 import * as strings from 'SwivelSearchWebPartStrings';
 import SwivelSearch from './components/SwivelSearch';
@@ -59,6 +54,8 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
    * Currently submitted search query
    */
   private _searchQuery: string;
+  private _propertyFieldCollectionData;
+  private _customCollectionFieldType;
 
   /**
    * Return list of dynamic data properties that this dynamic data source
@@ -108,6 +105,19 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
 
     ReactDom.render(element, this.domElement);
 
+  }
+
+  //executes only before property pane is loaded.
+  protected async loadPropertyPaneResources(): Promise<void> {
+    // import additional controls/components
+
+    const { PropertyFieldCollectionData, CustomCollectionFieldType } = await import (
+      /* webpackChunkName: 'pnp-propcontrols-colldata' */
+      '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData'
+    );
+
+    this._propertyFieldCollectionData = PropertyFieldCollectionData;
+    this._customCollectionFieldType = CustomCollectionFieldType;
   }
 
   protected search(searchQuery:string): void {
@@ -180,7 +190,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                   label: strings.StartMinimizedLabel,
                   disabled: !this.properties.includeKeywordSearch
                 }),
-                PropertyFieldCollectionData('searchConfig', <IPropertyFieldCollectionDataProps>{
+                this._propertyFieldCollectionData('searchConfig', {
                     key: 'searchConfig',
                     enableSorting: true,
                     label: 'Choose Result Columns',
@@ -191,12 +201,12 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                       id: 'name',
                       title: 'Column Display Name',
                       required: true,
-                      type: CustomCollectionFieldType.string,
+                      type: this._customCollectionFieldType.string,
                     }, 
                     {
                       id: 'property',
                       title: 'Managed Property',
-                      type: CustomCollectionFieldType.custom,
+                      type: this._customCollectionFieldType.custom,
                       onCustomRender: (field, value, onUpdate, item, rowUniqueId) => {
                         return(
                           React.createElement(ManagedPropertyPicker, {
@@ -216,7 +226,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                     {
                       id: 'type',
                       title: 'Data Type',
-                      type: CustomCollectionFieldType.dropdown,
+                      type: this._customCollectionFieldType.dropdown,
                       options: [
                         {
                           key: Model.PropertyValueType.Boolean,
@@ -249,7 +259,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                       id: 'operator',
                       title: 'Operator',
                       required: true,
-                      type: CustomCollectionFieldType.custom,
+                      type: this._customCollectionFieldType.custom,
                       onCustomRender: (field, value: Model.SearchOperator, onUpdate, item: Model.ISearchProperty, itemId) => {
                         let options: Array<IDropdownOption>;
                         switch(item.type) {
@@ -315,7 +325,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                     {
                       id: 'choices',
                       title: 'Choices',
-                      type: CustomCollectionFieldType.custom,
+                      type: this._customCollectionFieldType.custom,
                       onCustomRender: (field, val: string, onUpdate, item: Model.ISearchProperty, itemId) => {
                         let disabled: boolean = false;
                         let { type, operator } = item; 

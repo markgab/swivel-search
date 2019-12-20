@@ -19,7 +19,9 @@
       ]
     }
   },
-  "externals": {},
+  "externals": {
+    "@pnp/sp": "https://publiccdn.sharepointonline.com/regal.sharepoint.com/sites/cdn/public/Libraries/pnp-sp/1.3.5/sp.es5.umd.bundle.min.js"
+  },
   "localizedResources": {
     "SwivelSearchWebPartStrings": "lib/webparts/swivelSearch/loc/{locale}.js",
     "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js",

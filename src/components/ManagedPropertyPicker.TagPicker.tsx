@@ -2,8 +2,6 @@ import * as React from 'react';
 import SearchSchemaHelper from '../helpers/SearchSchemaHelper';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { TagPicker, IBasePicker, ITag } from 'office-ui-fabric-react/lib/Pickers';
-import { values } from '@uifabric/utilities/lib';
-import wait, { WaitPromise } from '../helpers/Wait';
 
 export interface IManagedPropertyPickerProps {
     context: WebPartContext;

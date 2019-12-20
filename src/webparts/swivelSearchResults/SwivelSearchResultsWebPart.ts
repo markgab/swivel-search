@@ -14,10 +14,6 @@ import {
   PropertyPaneDropdown,
   IPropertyPaneDropdownOption
 } from '@microsoft/sp-webpart-base';
-import {
-  PropertyFieldCollectionData,
-  CustomCollectionFieldType
-} from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import * as Model from '../../model/AdvancedSearchModel';
 import * as strings from 'SwivelSearchResultsWebPartStrings';
 import SwivelSearchResults, { ISwivelSearchResultsProps } from './components/SwivelSearchResults';
@@ -48,6 +44,8 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
 
   public resultsConfig: Model.IResultsConfig;
   public searchSchemaHelper: SearchSchemaHelper;
+  private _propertyFieldCollectionData;
+  private _customCollectionFieldType;
 
   public onInit(): Promise<void> {
     return super.onInit().then(_ => {
@@ -82,6 +80,19 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
     );
 
     ReactDom.render(element, this.domElement);
+  }
+
+  //executes only before property pane is loaded.
+  protected async loadPropertyPaneResources(): Promise<void> {
+    // import additional controls/components
+
+    const { PropertyFieldCollectionData, CustomCollectionFieldType } = await import (
+      /* webpackChunkName: 'pnp-propcontrols-colldata' */
+      '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData'
+    );
+
+    this._propertyFieldCollectionData = PropertyFieldCollectionData;
+    this._customCollectionFieldType = CustomCollectionFieldType;
   }
 
   /**
@@ -224,7 +235,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                   }],
                   label: 'Sort Direction'
                 }),
-                PropertyFieldCollectionData('columns', {
+                this._propertyFieldCollectionData('columns', {
                     key: 'resultsConfig',
                     enableSorting: true,
                     label: 'Choose Result Columns',
@@ -235,12 +246,12 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                         id: 'name',
                         title: 'Column Display Name',
                         required: true,
-                        type: CustomCollectionFieldType.string,
+                        type: this._customCollectionFieldType.string,
                       },
                       {
                         id: 'fieldName',
                         title: 'Managed Property',
-                        type: CustomCollectionFieldType.custom,
+                        type: this._customCollectionFieldType.custom,
                         onCustomRender: (field, value, onUpdate, item, rowUniqueId) => {
                           return(
                             React.createElement(ManagedPropertyPicker, {
@@ -261,7 +272,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                         id: 'sortable',
                         title: 'sortable',
                         required: false,
-                        type: CustomCollectionFieldType.boolean
+                        type: this._customCollectionFieldType.boolean
                       }
                     ]
                   }
