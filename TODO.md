@@ -2,7 +2,7 @@
 
 
 ## Search
-* Searching with a select box is produces a query such that property: "[Object object]"
+* ~~Searching with a select box is produces a query such that property: "[Object object]"~~
 * Pressing Enter Key after typing should initiate a search
 
 ## Results
