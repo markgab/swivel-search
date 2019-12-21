@@ -3,6 +3,7 @@ import styles from './SwivelSearchResults.module.scss';
 import ResultsInterface, { IResultsInterfaceProps } from './ResultsInterface';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as Model from '../../../model/AdvancedSearchModel';
+import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 
 export interface ISwivelSearchResultsProps {
   onConfigure: () => void;
@@ -68,6 +69,11 @@ export default class SwivelSearchResults extends React.Component<ISwivelSearchRe
             buttonLabel='Configure'
             onConfigure={onConfigure} 
           />
+        }
+        { needsConfiguration && !Placeholder &&
+          <div className={styles.loading}>
+            <Spinner size={SpinnerSize.large} />
+          </div>
         }
         { !needsConfiguration && 
           <ResultsInterface 

@@ -71,4 +71,13 @@
       display: inline-block;
     }
   }
+
+  .loading {
+    min-height: 305px;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+  }
 }

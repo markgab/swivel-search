@@ -1,30 +1,14 @@
 import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { TextField, ITextFieldProps, ITextField } from 'office-ui-fabric-react/lib/TextField';
-import { 
-    Dropdown,
-    IDropdown,
-    DropdownMenuItemType, 
-    IDropdownOption,
-    IDropdownProps
-} from 'office-ui-fabric-react/lib/Dropdown';
-import { ISelectableDroppableTextProps } from 'office-ui-fabric-react/lib/SelectableOption';
+import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import * as React from 'react';
-import { ISwivelSearchWebPartProps } from '../SwivelSearchWebPart';
-import DateRange, { 
-    IDateRangeProps, 
-    IDateRangeValue, 
-    DateRangeOperator 
-} from '../../../components/DateRange';
-import NumberRange, {
-    INumberRangeProps, INumberRangeValue
-} from '../../../components/NumberRange';
+import DateRange from '../../../components/DateRange';
+import NumberRange from '../../../components/NumberRange';
 import PeoplePicker from '../../../components/PeoplePicker';
 import * as Model from '../../../model/AdvancedSearchModel';
 import styles from './SwivelSearch.module.scss';
 import DropdownResettable, { IDropdownResettableOption } from '../../../components/DropdownResettable';
-import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
-import { FieldTypes } from '@pnp/sp';
-import { IBasePicker } from 'office-ui-fabric-react/lib/Pickers';
+import { on } from '../../../helpers/events';
 
 const AdvancedMinimized: string = `${styles.pnlAdvanced} ${styles.pnlAdvancedMinimized}`;
 const AdvancedExpanded: string = styles.pnlAdvanced;
@@ -68,10 +52,6 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     private readonly buttonRowHeight: number = 62;
     private fieldRefs: any = {};
 
-    public componentWillMount(): void {
-
-    }
-
     public componentWillReceiveProps(nextProps: ISearchInterfaceProps): void {
         const config =  [ ...nextProps.config ];
 
@@ -104,18 +84,21 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                 case Model.PropertyValueType.String:
                     if(field.operator === Model.SearchOperator.NumberRange) {
 
-                        controls.push(<NumberRange 
-                            label={field.name}
-                            onChanged={e => this.ctrl_changed(e, field)}
-                            data-index={i}
-                            key={key++}
-                        />);
+                        controls.push(
+                            <NumberRange 
+                                label={field.name}
+                                onChanged={e => this.ctrl_changed(e, field)}
+                                data-index={i}
+                                key={key++}
+                            />
+                        );
 
                     } else {
                         
                         if(this._hasChoices(field)) {
                             
-                            controls.push(<DropdownResettable
+                            controls.push(
+                                <DropdownResettable
                                     placeHolder={field.operator}
                                     label={field.name}
                                     options={field.propertyChoices as IDropdownResettableOption[]}
@@ -123,31 +106,35 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                                     onChanged={e => this.ctrl_changed(e, field)}
                                     data-index={i}
                                     key={key++} 
-                                />);
+                                />
+                            );
 
                         }
                         else {
 
-                            controls.push(<TextField
-                                spellCheck={false}
-                                placeholder={field.operator}
-                                label={field.name} 
-                                onChanged={(e) => this.ctrl_changed(e, field)}
-                                data-index={i}
-                                type={field.type === Model.PropertyValueType.Numeric ? "numeric" : ""}
-                                componentRef={(component: ITextField): void => {
-                                    this.fieldRefs[field.property] = component;
-                                }}
-                                autoComplete={"off"}
-                                //value={field.value ? field.value.toString() : ''}
-                                key={key++} 
-                            />);
+                            controls.push(
+                                <TextField
+                                    spellCheck={false}
+                                    placeholder={field.operator}
+                                    label={field.name} 
+                                    onChanged={(e) => this.ctrl_changed(e, field)}
+                                    data-index={i}
+                                    type={field.type === Model.PropertyValueType.Numeric ? "numeric" : ""}
+                                    componentRef={(component: ITextField): void => {
+                                        this.fieldRefs[field.property] = component;
+                                    }}
+                                    autoComplete={"off"}
+                                    //value={field.value ? field.value.toString() : ''}
+                                    key={key++} 
+                                />
+                            );
 
                         }
                     }
                     break;
                 case Model.PropertyValueType.Person:
-                    controls.push(<PeoplePicker
+                    controls.push(
+                        <PeoplePicker
                             onChanged={e => this.ctrl_changed(e, field)}
                             label={field.name}
                             componentRef={(component: PeoplePicker): void => {
@@ -157,11 +144,13 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                             data-index={i}
                             key={key++}
                             //selectedItems={field.value as Array<IPersonaProps>}
-                        />);
+                        />
+                    );
                     break;
                 case Model.PropertyValueType.Boolean:
 
-                    controls.push(<DropdownResettable 
+                    controls.push(
+                        <DropdownResettable 
                             placeHolder={field.operator}
                             label={field.name} 
                             //onChange={e => this.ctrl_change(e, field)}
@@ -170,22 +159,24 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                             selectedKey={field.choicesSelectedKey as any}
                             data-index={i} 
                             key={key++} 
-                        />);
-                        
+                        />
+                    );    
                     break;
                 case Model.PropertyValueType.DateTime:
                     //field.options = field.options || {} as Model.ISearchPropertyOptions;
                     field.data = field.data || {} as any;
                     field.data.value = field.data.value || DateRange.emptyValue; 
 
-                    controls.push(<DateRange
+                    controls.push(
+                        <DateRange
                             placeHolder={field.name} 
                             label={field.name}
                             onChanged={e => this.ctrl_changed(e, field)}
                             //value={field.data.value as any}
                             data-index={i}
                             key={key++}
-                        />);
+                        />
+                    );
 
                     break;
                 default:
@@ -242,6 +233,25 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                 </div>
             </div>
         );
+
+    }
+
+    public componentDidMount(): void {
+        console.log('componenetDidMount');
+        let si = this.props.parentElement.querySelector('.' + styles.searchInterface) as HTMLElement;
+
+        on(si, 'keypress', 'input[type="text"],input[type]', this.onInput_keypress);
+
+    }
+
+    protected onInput_keypress = (e: KeyboardEvent) => {
+        let key = e.keyCode;
+
+        switch(key) {
+            case 13:    // Enter
+                this.btnSearch_click();
+                break;
+        }
 
     }
 
@@ -323,7 +333,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
     }
 
-    protected btnSearch_click = (e: React.MouseEvent<any>): void => {
+    protected btnSearch_click = (e?: React.MouseEvent<any>): void => {
         this.props.searchHandler(this.state.keywordSearch, this.state.config, this.props.additionalCriteria);
     }
 
