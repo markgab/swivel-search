@@ -2,6 +2,7 @@ import * as Model from '../model/AdvancedSearchModel';
 import { IDateRangeValue, DateRangeOperator } from '../components/DateRange';
 import { INumberRangeValue, NumberRangeOperator } from '../components/NumberRange';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
+import { IDropdownResettableOption } from '../components/DropdownResettable';
 
 export default class SearchQueryBuilder {
     constructor () {
@@ -107,7 +108,7 @@ export default class SearchQueryBuilder {
         for (var i = 0; i < properties.length; i++) {
             var field: Model.ISearchProperty = properties[i];
             var prop: string = field.property;
-            var value: string | number | IDateRangeValue | INumberRangeValue | Array<IPersonaProps> = field.value;
+            var value: string | number | IDateRangeValue | INumberRangeValue | Array<IPersonaProps> | IDropdownResettableOption = field.value;
 
             if(!value) {
                 continue;
@@ -117,6 +118,7 @@ export default class SearchQueryBuilder {
             var dateVal: IDateRangeValue = <IDateRangeValue> field.value;
             var numbVal: INumberRangeValue = <any> field.value;
             var perVal: Array<IPersonaProps> = <any> field.value;
+            var choiceVal: IDropdownResettableOption = <any> field.value;
 
             if(perVal.length === 0) {
                 continue;
@@ -142,12 +144,18 @@ export default class SearchQueryBuilder {
                         let name = perVal[0].text;
                         criteria.push(prop + ':"*' + name + '*"');
                     } else {
+                        if(typeof value !== 'string') {
+                            value = choiceVal.value || choiceVal.text;
+                        }
                         criteria.push(prop + ':"' + value + '"');
                     }
                     //searchString += prop + ':"' + value + '"';
                     //author: "John Smith"
                     break;
                 case Model.SearchOperator.Contains:
+                    if(typeof value !== 'string') {
+                        value = choiceVal.value || choiceVal.text;
+                    }
                     criteria.push(prop + ':"*' + value + '*"');
                     //searchString += prop + ':"*' + value + '*"';
                     //author: "*Smith*"
