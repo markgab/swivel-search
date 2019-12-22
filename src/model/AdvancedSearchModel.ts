@@ -83,6 +83,7 @@ export enum ResultPropertyValueType {
     Int32 = "Edm.Int32",
     Int64 = "Edm.Int64",
     String = "Edm.String",
+    Number = "Edm.Number",
     Null = "Null"
 }
 

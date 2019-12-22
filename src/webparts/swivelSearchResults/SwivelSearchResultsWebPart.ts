@@ -269,6 +269,30 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                         }
                       },
                       {
+                        id: 'type',
+                        title: 'Data Type',
+                        required: true,
+                        type: this._customCollectionFieldType.dropdown,
+                        options: [
+                          {
+                            key: "Edm.String",
+                            text: "String"
+                          },
+                          {
+                            key: "Edm.DateTime",
+                            text: "DateTime"
+                          },
+                          {
+                            key: "Edm.Number",
+                            text: "Number"
+                          },
+                          {
+                            key: "Edm.Boolean",
+                            text: "Boolean"
+                          }
+                        ],
+                      },
+                      {
                         id: 'sortable',
                         title: 'sortable',
                         required: false,

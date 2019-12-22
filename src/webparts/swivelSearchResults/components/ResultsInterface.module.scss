@@ -3,39 +3,36 @@
 .results {
   box-shadow: 0 3px 5px 0 rgba(0,0,0,.18), 0 3px 5px 2px rgba(0,0,0,.15);
   padding:30px;
+  position: relative;
 
-  .anchor {
-    position: relative;
+  .pnlLoading {
+    $duration: 150ms;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    background-color: rgba(255,255,255,0.5);
+    transition-property: opacity, z-index;
+    transition-duration: $duration, 0ms;
+    transition-delay: 0ms, $duration;
+    transition-timing-function: linear;
+    z-index: -1;
 
-    .pnlLoading {
-      $duration: 150ms;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      opacity: 0;
-      background-color: rgba(255,255,255,0.8);
-      transition-property: opacity, z-index;
-      transition-duration: $duration, 0ms;
-      transition-delay: 0ms, $duration;
-      transition-timing-function: linear;
-      z-index: -1;
+    &.fadein {
+      opacity: 1;
+      z-index: 1000;
+      transition-delay: 0ms, 0ms;
+    }
 
-      &.fadein {
-        opacity: 1;
-        z-index: 2;
-        transition-delay: 0ms, 0ms;
-      }
-
-      .loading {
-        margin-left: auto;
-        margin-right: auto;
-        display:inline-block;
-      }
+    .loading {
+      margin-left: auto;
+      margin-right: auto;
+      display:inline-block;
     }
   }
 

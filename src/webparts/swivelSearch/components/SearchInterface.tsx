@@ -237,7 +237,6 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     }
 
     public componentDidMount(): void {
-        console.log('componenetDidMount');
         let si = this.props.parentElement.querySelector('.' + styles.searchInterface) as HTMLElement;
 
         on(si, 'keypress', 'input[type="text"],input[type]', this.onInput_keypress);

@@ -80,6 +80,8 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             ...props.columns
         ]);
 
+        this._applyCustomColumnRendering(cols);
+
         console.log(cols);
 
         this.state = {
@@ -96,7 +98,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             itemPropPanelOpen: false,
             documentReaderOpen: false,
             documentReaderUrl: '',
-            showLoading: !props.searchQuery,
+            showLoading: false,
             sort: props.sort
         };
 
@@ -225,14 +227,14 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     enterModalSelectionOnTouch={true}
                     onRenderMissingItem={this._onRenderMissingItem}
                 />
-                <div className={ this.state.results.length ? styles.anchor : `${styles.anchor} ${styles.hidden}` }>
+                {/* <div className={ this.state.results.length ? styles.anchor : `${styles.anchor} ${styles.hidden}` }> */}
                     <div className={this.state.showLoading ? `${styles.pnlLoading} ${styles.fadein}` : styles.pnlLoading } style={{ display: this.state.showLoading ? 'flex' : 'none' }} > {/* */}
                         <div className={styles.loading}>
                             <Label>Loading ...</Label>
                             <Spinner size={SpinnerSize.large} />
                         </div>
                     </div>
-                </div>
+                {/* </div> */}
 
                 <ItemPropertiesPanel
                     PageType={PageTypes.ViewForm}
@@ -266,13 +268,18 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
 
     protected search(props: IResultsInterfaceProps): Promise<any> {
 
+        this.setState({
+            ...this.state,
+            showLoading: true
+        });
+
         return this.searchData.search(props.searchQuery).then((res: SearchResults) => {
 
             let totalPages = 0;
             let currentPage = 0;
             let totalRows = 0;
             let results: IAdvancedSearchResult[] = [];
-            let columns: Array<Model.IResultProperty>;
+            // let columns: Array<Model.IResultProperty>;
             
             if( res && 
                 res.RawSearchResults && 
@@ -287,9 +294,9 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     });
                     results.push(null);
 
-                    let colTypes: Model.IResultPropertyDef[] = res.RawSearchResults.PrimaryQueryResult.RelevantResults.Table.Rows[0].Cells as any;
+                    // let colTypes: Model.IResultPropertyDef[] = res.RawSearchResults.PrimaryQueryResult.RelevantResults.Table.Rows[0].Cells as any;
 
-                    columns = this._buildColumnConfig(colTypes);
+                    // columns = this._buildColumnConfig(colTypes);
 
                     currentPage = 1;
 
@@ -302,10 +309,15 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 searchQuery: props.searchQuery,
                 results: results,
                 showLoading: false,
-                faritems: [this.resultCountLabel(totalRows)],
-                columns: columns
+                faritems: [this.resultCountLabel(totalRows)]
+                // columns: results.length ? columns : [ ...this.state.columns ]
             } as IResultInterfaceState);
 
+        }).catch((err) => {
+            this.setState({
+                ...this.state,
+                showLoading: false
+            });
         });
 
     }
@@ -426,54 +438,34 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     }
 
 
-    private _buildColumnConfig(colTypes: Model.IResultPropertyDef[]): Array<Model.IResultProperty> {
-        var columns = [
-            ...this.state.columns
-        ];
+    private _applyCustomColumnRendering(columns: Array<Model.IResultProperty>): void {
 
-        columns.forEach((col, idx, cols) => {
-            if(!col.type) {
-                let colType = colTypes.filter((type) => {    
-                    return type.Key === col.fieldName; 
-                });
-                if(colType.length === 0) { return; }
-                col.type = colType[0].ValueType;
-                cols[idx] = this._applyResultPropertyDefaults(col);
-            }
+        columns.forEach((col) => {
+            this._applyResultPropertyDefaults(col);
         });
-
-        return columns;
 
     }
 
-    private _applyResultPropertyDefaults(colConfig: Model.IResultProperty): Model.IResultProperty {
-        let typeDefaults: any = {};
+    private _applyResultPropertyDefaults(colConfig: Model.IResultProperty): void {
 
         switch(colConfig.type) {
             case Model.ResultPropertyValueType.DateTime:
-                typeDefaults = {
-                    onRender: (item: IAdvancedSearchResult) => {
-                      return this._formatDate(item[colConfig.fieldName] as string);
-                    }
+                colConfig.onRender = (item: IAdvancedSearchResult) => {
+                    return this._formatDate(item[colConfig.fieldName] as string);
                 };
                 break;
             case Model.ResultPropertyValueType.Boolean:
-                typeDefaults = {
-                    onRender: (item: IAdvancedSearchResult) => {
-                        return this._formatBool(item[colConfig.fieldName] as string);
-                    }
+                colConfig.onRender = (item: IAdvancedSearchResult) => {
+                    return this._formatBool(item[colConfig.fieldName] as string);
                 };
                 break;
         }
-
-        return {
-            ...ColumnDefaults,
-            ...typeDefaults,
-            ...colConfig
-        } as Model.IResultProperty;
     }
 
     private _formatDate (isoDate: string): string {
+        if(!isoDate) {
+            return '';
+        }
         return (new Date(isoDate)).toLocaleDateString();
     }
 
