@@ -200,7 +200,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
           cBar['sticky'] = true;
           stickybits(cBar, { 
               scrollEl: this._scrollParent,
-              stickyBitStickyOffset: -10
+              stickyBitStickyOffset: 0
           }
         );
       }
@@ -229,6 +229,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     isHeaderVisible={true}
                     selection={this._selection}
                     selectionPreservedOnEmptyClick={true}
+                    onItemInvoked={this.row_dbclick}
                     enterModalSelectionOnTouch={true}
                     onRenderMissingItem={this._onRenderMissingItem}
                 />
@@ -352,6 +353,33 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         };
 
         this.setState(newState);
+    }
+
+    protected row_dbclick = (item?: any, index?: number, ev?: Event): void => {
+
+        let type = Model.ResultItemType;
+        let key: string = "";
+        let btn: any = { key };
+
+        if(item.ResultItemType === type.Page ||
+           item.ResultItemType === type.OneDrive || 
+           item.ResultItemType === type.Library ||
+           item.ResultItemType === type.List ||
+           item.ResultItemType === type.Folder ||
+           item.ResultItemType === type.Web || 
+           item.ResultItemType === type.OneNote) {
+               key = 'go';
+        } else if(item.IsDocument == "true" as any || 
+                  item.ResultItemType === type.Image) {
+                key = 'view';
+        } else if(item.ResultItemType === type.ListItem) {
+            key = 'viewproperties';
+        }
+
+        if(key) {
+            btn.key = key;
+            this.btnCommandbar_click(null, btn);
+        }
     }
 
     protected column_click(ev: React.MouseEvent<HTMLElement>, column: IColumn): void {
