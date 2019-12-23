@@ -56,6 +56,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
   private _searchQuery: string;
   private _propertyFieldCollectionData;
   private _customCollectionFieldType;
+  private _propertyPanePropertyEditor;
 
   /**
    * Return list of dynamic data properties that this dynamic data source
@@ -115,9 +116,16 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
       /* webpackChunkName: 'pnp-propcontrols-colldata' */
       '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData'
     );
+    
+    const { PropertyPanePropertyEditor } = await import (
+      /* webpackChunkName: 'pnp-propcontrols-propeditor' */
+      '@pnp/spfx-property-controls/lib/PropertyPanePropertyEditor'
+    );
 
     this._propertyFieldCollectionData = PropertyFieldCollectionData;
     this._customCollectionFieldType = CustomCollectionFieldType;
+    this._propertyPanePropertyEditor = PropertyPanePropertyEditor;
+
   }
 
   protected search(searchQuery:string): void {
@@ -354,8 +362,9 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                   description: strings.AddCriteriaFieldDesc,
                   multiline: true
                 }),
-                PropertyPaneToggle('isDebug', {
-                  label: strings.IsDebugFieldLabel
+                this._propertyPanePropertyEditor({
+                  webpart: this,
+                  key: 'propertyEditor'
                 })
               ]
             }

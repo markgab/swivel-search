@@ -45,6 +45,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
   public searchSchemaHelper: SearchSchemaHelper;
   private _propertyFieldCollectionData;
   private _customCollectionFieldType;
+  private _propertyPanePropertyEditor;
 
   public onInit(): Promise<void> {
     return super.onInit().then(_ => {
@@ -91,9 +92,15 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
       /* webpackChunkName: 'pnp-propcontrols-colldata' */
       '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData'
     );
+    
+    const { PropertyPanePropertyEditor } = await import (
+      /* webpackChunkName: 'pnp-propcontrols-propeditor' */
+      '@pnp/spfx-property-controls/lib/PropertyPanePropertyEditor'
+    );
 
     this._propertyFieldCollectionData = PropertyFieldCollectionData;
     this._customCollectionFieldType = CustomCollectionFieldType;
+    this._propertyPanePropertyEditor = PropertyPanePropertyEditor;
   }
 
   /**
@@ -292,6 +299,10 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                     key: SortDirection.Descending
                   }],
                   label: 'Sort Direction'
+                }),
+                this._propertyPanePropertyEditor({
+                  webpart: this,
+                  key: 'propertyEditor'
                 })
               ]
             }
