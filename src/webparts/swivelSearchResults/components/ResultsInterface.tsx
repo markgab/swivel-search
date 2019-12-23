@@ -215,10 +215,6 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     farItems={this.state.faritems}
                     className={styles.commandBar}
                 />
-
-                <div className={ this.state.results.length ? styles.hidden : '' }>
-                    Your search returned zero matches.
-                </div>
                 <DetailsList
                     items={this.state.results}
                     compact={true}
@@ -233,14 +229,17 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     enterModalSelectionOnTouch={true}
                     onRenderMissingItem={this._onRenderMissingItem}
                 />
-                {/* <div className={ this.state.results.length ? styles.anchor : `${styles.anchor} ${styles.hidden}` }> */}
-                    <div className={this.state.showLoading ? `${styles.pnlLoading} ${styles.fadein}` : styles.pnlLoading } style={{ display: this.state.showLoading ? 'flex' : 'none' }} > {/* */}
-                        <div className={styles.loading}>
-                            <Label>Loading ...</Label>
-                            <Spinner size={SpinnerSize.large} />
-                        </div>
+
+                <div className={ this.state.results.length ? styles.hidden : '' }>
+                    Your search returned zero matches.
+                </div>
+
+                <div className={this.state.showLoading ? `${styles.pnlLoading} ${styles.fadein}` : styles.pnlLoading } style={{ display: this.state.showLoading ? 'flex' : 'none' }}>
+                    <div className={styles.loading}>
+                        <Label>Loading ...</Label>
+                        <Spinner size={SpinnerSize.large} />
                     </div>
-                {/* </div> */}
+                </div>
 
                 <ItemPropertiesPanel
                     PageType={PageTypes.ViewForm}
@@ -278,6 +277,8 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             ...this.state,
             showLoading: true
         });
+
+        this._selection.setItems([], true);
 
         return this.searchData.search(props.searchQuery).then((res: SearchResults) => {
 

@@ -161,12 +161,12 @@ export default class AdvancedSearchData {
             case this._isOneNote(item):
                 return type.OneNote;
             default:
-                console.log(`Unknown Type: ${item.FileExtension}`);
+/*                 console.log(`Unknown Type: ${item.FileExtension}`);
                 console.log(`IsDocument: ${item.IsDocument}`);
                 console.log(`FileType: ${item.FileType}`);
                 console.log(`IsContainer: ${item.IsContainer}`);
                 console.log(`IsListItem: ${item.IsListItem}`);
-                console.log(``);
+                console.log(``); */
                 return type.Unknown;
         }
     }
