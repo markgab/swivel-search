@@ -40,6 +40,7 @@ import stickybits from 'stickybits';
 export interface IResultsInterfaceProps {
     isDebug: boolean;
     columns: Array<Model.IResultProperty>;
+    includeIdentityColumn: boolean;
     searchQuery: string;
     context: WebPartContext;
     rowLimit: number;
@@ -75,6 +76,60 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         this.searchData = new AdvancedSearchData(props.context, props.columns);
         this.searchData.rowLimit = props.rowLimit;
         initializeFileTypeIcons();
+
+        this._defaultColumns = [{
+            key: 'FileType',
+            name: 'File Type',
+            sortable: false,
+            type: Model.ResultPropertyValueType.String,
+            headerClassName: 'DetailsListExample-header--FileIcon',
+            className: 'DetailsListExample-cell--FileIcon',
+            iconClassName: 'DetailsListExample-Header-FileTypeIcon',
+            iconName: 'Page',
+            isIconOnly: true,
+            fieldName: 'FileType',
+            minWidth: 20,
+            maxWidth: 20,
+            onRender: (item: IAdvancedSearchResult) => {
+                let web = this.props.context.pageContext.web.absoluteUrl;
+                let type = Model.ResultItemType;
+    
+                switch(item.ResultItemType) {
+                    case type.List:
+                        return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={`${web}/_layouts/15/images/itgen.png?rev=45`} alt="SharePoint List" title="SharePoint List" /></div>;
+                    case type.Library:
+                        return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={`${web}/_layouts/15/images/itdl.png?rev=47`} alt="SharePoint Library" title="SharePoint Library" /></div>;
+                    case type.Web:
+                        return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={`https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/sharepoint_16x1_5.png`} alt="SharePoint Site" title="SharePoint Site or Web" /></div>;
+                    case type.OneDrive:
+                        return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={`https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/onedrive_16x1_5.png`} alt="OneDrive" title="OneDrive" /></div>;
+                    case type.ListItem:
+                        return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={'https://spoprod-a.akamaihd.net/files/fabric/assets/item-types/20/listitem.svg?refresh1'} alt={item.ResultItemType} title={item.ResultItemType} /></div>;
+                    case type.Folder:
+                        return <Icon title={item.ResultItemType} {...getFileTypeIconProps({ type: FileIconType.folder})} />;
+                    case type.OneNote:
+                        return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={'https://spoprod-a.akamaihd.net/files/fabric/assets/item-types/20/one.svg?refresh1'} alt={item.ResultItemType} title={item.ResultItemType} /></div>;
+                    case type.Page:
+                    case type.Document:
+                    default:
+                        return <Icon title={item.ResultItemType} {...getFileTypeIconProps({extension: item.FileType, size: 20})} />;
+                }
+            }
+        }];
+
+        this.props.includeIdentityColumn && this._defaultColumns.push({
+            key: 'TitleOrFilename',
+            name: 'Name',
+            sortable: true,
+            type: Model.ResultPropertyValueType.String,
+            fieldName: 'TitleOrFilename',
+            minWidth: 100,
+            onColumnClick: (e, column) => this.column_click(e, column),
+            onRender: (item: IAdvancedSearchResult) => {
+                return <div title={item.Title}>{item.TitleOrFilename}</div>;
+            }
+        });
+
         let cols = uniq<Model.IResultProperty>([
             ...this._defaultColumns,
             ...props.columns
@@ -131,57 +186,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     private _selection: Selection;
     private _scrollParent: HTMLElement;
     private _isFetchingItems: Boolean = false;
-    private _defaultColumns: Model.IResultProperty[] = [{
-        key: 'FileType',
-        name: 'File Type',
-        sortable: false,
-        type: Model.ResultPropertyValueType.String,
-        headerClassName: 'DetailsListExample-header--FileIcon',
-        className: 'DetailsListExample-cell--FileIcon',
-        iconClassName: 'DetailsListExample-Header-FileTypeIcon',
-        iconName: 'Page',
-        isIconOnly: true,
-        fieldName: 'FileType',
-        minWidth: 20,
-        maxWidth: 20,
-        onRender: (item: IAdvancedSearchResult) => {
-            let web = this.props.context.pageContext.web.absoluteUrl;
-            let type = Model.ResultItemType;
-
-            switch(item.ResultItemType) {
-                case type.List:
-                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={`${web}/_layouts/15/images/itgen.png?rev=45`} alt="SharePoint List" title="SharePoint List" /></div>;
-                case type.Library:
-                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={`${web}/_layouts/15/images/itdl.png?rev=47`} alt="SharePoint Library" title="SharePoint Library" /></div>;
-                case type.Web:
-                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={`https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/sharepoint_16x1_5.png`} alt="SharePoint Site" title="SharePoint Site or Web" /></div>;
-                case type.OneDrive:
-                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={`https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/onedrive_16x1_5.png`} alt="OneDrive" title="OneDrive" /></div>;
-                case type.ListItem:
-                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={'https://spoprod-a.akamaihd.net/files/fabric/assets/item-types/20/listitem.svg?refresh1'} alt={item.ResultItemType} title={item.ResultItemType} /></div>;
-                case type.Folder:
-                    return <Icon title={item.ResultItemType} {...getFileTypeIconProps({ type: FileIconType.folder})} />;
-                case type.OneNote:
-                    return <div title={item.ResultItemType} className={styles.mgCustomIcon}><img src={'https://spoprod-a.akamaihd.net/files/fabric/assets/item-types/20/one.svg?refresh1'} alt={item.ResultItemType} title={item.ResultItemType} /></div>;
-                case type.Page:
-                case type.Document:
-                default:
-                    return <Icon title={item.ResultItemType} {...getFileTypeIconProps({extension: item.FileType, size: 20})} />;
-            }
-        }
-    },
-    {
-        key: 'TitleOrFilename',
-        name: 'Name',
-        sortable: true,
-        type: Model.ResultPropertyValueType.String,
-        fieldName: 'TitleOrFilename',
-        minWidth: 100,
-        onColumnClick: (e, column) => this.column_click(e, column),
-        onRender: (item: IAdvancedSearchResult) => {
-            return <div title={item.Title}>{item.TitleOrFilename}</div>;
-        }
-    }];
+    private _defaultColumns: Model.IResultProperty[];
 
     public componentWillReceiveProps(nextProps: IResultsInterfaceProps): void {
         this.search(nextProps);

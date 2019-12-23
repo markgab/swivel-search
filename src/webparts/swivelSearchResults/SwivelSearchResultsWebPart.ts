@@ -19,7 +19,6 @@ import * as strings from 'SwivelSearchResultsWebPartStrings';
 import SwivelSearchResults, { ISwivelSearchResultsProps } from './components/SwivelSearchResults';
 import { DynamicProperty } from '@microsoft/sp-component-base';
 import { IDynamicDataSource } from '@microsoft/sp-dynamic-data';
-import WebPartPropertiesHelper from '../../helpers/WebPartPropertiesHelper';
 import SearchSchemaHelper from '../../helpers/SearchSchemaHelper';
 import ManagedPropertyPicker from '../../components/ManagedPropertyPicker';
 import { SortDirection } from '@pnp/sp';
@@ -30,7 +29,7 @@ const defaultSortProperties: Array<string> = [
 ];
 
 export interface ISwivelSearchResultsWebPartProps {
-  description: string;
+  includeIdentityColumn: boolean;
   isDebug: boolean;
   rowLimit: number;
   resultsConfig: string;
@@ -53,7 +52,8 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
       this.searchSchemaHelper = new SearchSchemaHelper(
         document.location.origin,
         this.context.pageContext.web.serverRelativeUrl, 
-        this.context.spHttpClient);
+        this.context.spHttpClient
+      );
 
     });
   }
@@ -65,7 +65,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
     const searchQuerySource: IDynamicDataSource | undefined = this.properties.searchQuery.tryGetSource();
     const searchQuery: string | undefined = this.properties.searchQuery.tryGetValue();
     const needsConfiguration: boolean = (!searchQuerySource && !searchQuery) || !this.properties.columns;
-    
+
     const element: React.ReactElement<ISwivelSearchResultsProps > = React.createElement(
       SwivelSearchResults,
       {
@@ -73,6 +73,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
         onConfigure: () => this._onConfigure(),
         isDebug: this.properties.isDebug,
         rowLimit: this.properties.rowLimit,
+        includeIdentityColumn: this.properties.includeIdentityColumn,
         columns: this.properties.columns,
         searchQuery: searchQuery,
         context: this.context,
@@ -104,11 +105,6 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
 
   protected onDispose(): void {
     ReactDom.unmountComponentAtNode(this.domElement);
-  }
-
-  protected onPropertiesExport_click(): void {
-    let p = new WebPartPropertiesHelper();
-    p.export(this.properties, 'hello');
   }
 
   protected updateSortableProperties(): void {
@@ -186,7 +182,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
           groups: [
             {
               primaryGroup: {
-                groupName: 'Data Conneciton',
+                groupName: 'Search Query Source',
                 groupFields: [
                   PropertyPaneTextField('searchQuery', {
                     label: strings.SearchQueryFieldLabel
@@ -194,7 +190,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                 ]
               },
               secondaryGroup: {
-                groupName: 'fsdajk',
+                groupName: 'Search Query Source',
                 groupFields: [
                   PropertyPaneDynamicField('searchQuery', {
                     label: strings.SearchQueryFieldLabel
@@ -211,29 +207,8 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneButton('export', {
-                  text: 'Export Configuration',
-                  onClick: () => this.onPropertiesExport_click()
-                }),
-                PropertyPaneTextField('rowLimit', {
-                  label: strings.RowLimitFieldLabel
-                }),
-                PropertyPaneToggle('isDebug', {
-                  label: strings.IsDebugFieldLabel
-                }),
-                PropertyPaneDropdown('sortProperty', {
-                  options: this._sortableProperties,
-                  label: 'Sort Property',
-                }),
-                PropertyPaneDropdown('sortDirection', {
-                  options: [{
-                    text: 'Ascending',
-                    key: SortDirection.Ascending
-                  },{
-                    text: 'Descending',
-                    key: SortDirection.Descending
-                  }],
-                  label: 'Sort Direction'
+                PropertyPaneToggle('includeIdentityColumn', {
+                  label: 'First Column is Filename or Title'
                 }),
                 this._propertyFieldCollectionData('columns', {
                     key: 'resultsConfig',
@@ -300,7 +275,24 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                       }
                     ]
                   }
-                )
+                ),
+                PropertyPaneTextField('rowLimit', {
+                  label: strings.RowLimitFieldLabel
+                }),
+                PropertyPaneDropdown('sortProperty', {
+                  options: this._sortableProperties,
+                  label: 'Sort Property',
+                }),
+                PropertyPaneDropdown('sortDirection', {
+                  options: [{
+                    text: 'Ascending',
+                    key: SortDirection.Ascending
+                  },{
+                    text: 'Descending',
+                    key: SortDirection.Descending
+                  }],
+                  label: 'Sort Direction'
+                })
               ]
             }
           ]

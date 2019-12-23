@@ -9,6 +9,7 @@ export interface ISwivelSearchResultsProps {
   onConfigure: () => void;
   needsConfiguration: boolean;
   isDebug: boolean;
+  includeIdentityColumn: boolean;
   columns: Array<Model.IResultProperty>;
   searchQuery: string;
   context: WebPartContext;
@@ -77,6 +78,7 @@ export default class SwivelSearchResults extends React.Component<ISwivelSearchRe
         }
         { !needsConfiguration && 
           <ResultsInterface 
+            includeIdentityColumn={ this.props.includeIdentityColumn }
             columns={ this.props.columns }
             searchQuery={this.state.searchQuery} 
             context={this.props.context}

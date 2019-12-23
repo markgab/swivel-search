@@ -6,12 +6,12 @@
 * ~~Pressing Enter Key after typing should initiate a search~~
 
 ## Results
-* Loading Indicator
-* Title or Filename - Remove or make column option
-* Date Fields default to date only, no time
+* ~~Loading Indicator~~
+* ~~Title or Filename - Remove or make column option~~
+* ~~Date Fields default to date only, no time~~
 * Second Scrollbar appear on properties panel
 * Sticky command bar appears to disappear behiden page commandbar, needs to stand off a bit
-* Column Types of Date cannot be detected by lookinat at the ValueType attribute on the first row, may need to select type manually :(
+* ~~Column Types of Date cannot be detected by lookinat at the ValueType attribute on the first row, may need to select type manually :(~~
 
 ## Both
 
