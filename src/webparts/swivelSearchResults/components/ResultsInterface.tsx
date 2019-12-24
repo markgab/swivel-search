@@ -137,8 +137,6 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
 
         this._applyCustomColumnRendering(cols);
 
-        console.log(cols);
-
         this.state = {
             items:[],
             overflowItems:[],
@@ -230,7 +228,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     onRenderMissingItem={this._onRenderMissingItem}
                 />
 
-                <div className={ this.state.results.length ? styles.hidden : '' }>
+                <div className={ this.state.results.length || !this.state.searchQuery ? styles.hidden : '' }>
                     Your search returned zero matches.
                 </div>
 

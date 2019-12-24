@@ -32,7 +32,7 @@ export interface ISwivelSearchResultsWebPartProps {
   includeIdentityColumn: boolean;
   isDebug: boolean;
   rowLimit: number;
-  resultsConfig: string;
+  //resultsConfig: string;
   columns: Array<Model.IResultProperty>;
   searchQuery: DynamicProperty<string>;
   sortProperty: string;
@@ -62,7 +62,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
   private _sortableProperties: Array<IPropertyPaneDropdownOption> = [];
 
   public render(): void {
-    this.resultsConfig = this._parseConfig(this.properties.resultsConfig);
+    //this.resultsConfig = this._parseConfig(this.properties.resultsConfig);
     const searchQuerySource: IDynamicDataSource | undefined = this.properties.searchQuery.tryGetSource();
     const searchQuery: string | undefined = this.properties.searchQuery.tryGetValue();
     const needsConfiguration: boolean = (!searchQuerySource && !searchQuery) || !this.properties.columns;
@@ -134,14 +134,14 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
       };
     });
   }
-
+/* 
   private _parseConfig(json: string): Model.IResultsConfig {
     try {
       return JSON.parse(json);
     } catch(ex) {
       return null;
     }
-  }
+  } */
 
   protected get propertiesMetadata(): IWebPartPropertiesMetadata {
     return {
