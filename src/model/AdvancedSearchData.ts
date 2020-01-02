@@ -79,6 +79,10 @@ export default class AdvancedSearchData {
 
     public search(queryText: string): Promise<SearchResults> {
 
+        if(!queryText) {
+            return Promise.resolve(null);
+        }
+
         const props = uniq<string>([ 
             ...this.internalSelectProperties, 
             ...this.customSelectProperties 

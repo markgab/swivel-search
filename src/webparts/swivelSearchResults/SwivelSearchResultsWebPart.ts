@@ -258,7 +258,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                         options: [
                           {
                             key: "Edm.String",
-                            text: "String"
+                            text: "Text"
                           },
                           {
                             key: "Edm.DateTime",

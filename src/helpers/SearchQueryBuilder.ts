@@ -1,5 +1,5 @@
 import * as Model from '../model/AdvancedSearchModel';
-import { IDateRangeValue, DateRangeOperator } from '../components/DateRange';
+import DateRange, { IDateRangeValue, DateRangeOperator } from '../components/DateRange';
 import { INumberRangeValue, NumberRangeOperator } from '../components/NumberRange';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
 import { IDropdownResettableOption } from '../components/DropdownResettable';
@@ -101,25 +101,25 @@ export default class SearchQueryBuilder {
             criteria.push(keywordSearch);
         }
 
-        if(additionalCriteria) {
-            criteria.push(additionalCriteria);
-        }
-
         for (var i = 0; i < properties.length; i++) {
             var field: Model.ISearchProperty = properties[i];
             var prop: string = field.property;
             var value: string | number | IDateRangeValue | INumberRangeValue | Array<IPersonaProps> | IDropdownResettableOption = field.value;
 
-            if(!value) {
-                continue;
-            }
-
-            var oper: Model.SearchOperator = field.value['operator'] || field.operator;
+            var oper: Model.SearchOperator; // = field.value['operator'] || field.operator;
             var dateVal: IDateRangeValue = <IDateRangeValue> field.value;
             var numbVal: INumberRangeValue = <any> field.value;
             var perVal: Array<IPersonaProps> = <any> field.value;
             var choiceVal: IDropdownResettableOption = <any> field.value;
+/*             
 
+            if(!value || 
+              (typeof value === 'object' && 
+              (!value['value'] || 
+               dateVal === DateRange.emptyValue))) {
+                continue;
+            } */
+/* 
             if(perVal.length === 0) {
                 continue;
             }
@@ -134,6 +134,34 @@ export default class SearchQueryBuilder {
                     // skip if range value is invalid
                     continue;
                 }
+            } */
+
+            switch(field.type) {
+                case Model.PropertyValueType.Person:
+                    if(!perVal || perVal.length === 0) {
+                        continue;
+                    }
+                    oper = field.operator;
+                    break;
+                case Model.PropertyValueType.DateTime:
+                    if(!dateVal || !dateVal.date || (dateVal.operator === DateRangeOperator.Between && !dateVal.dateEnd)){
+                        // skip if range value is invalid
+                        continue;
+                    }
+                    oper = dateVal.operator as any;
+                    break;
+                case Model.PropertyValueType.Numeric:
+                    if(!numbVal || !numbVal.number || (numbVal.operator === NumberRangeOperator.Between && !numbVal.numberEnd)) {
+                        // skip if range value is invalid
+                        continue;
+                    }
+                    oper = numbVal.operator as any;
+                    break;
+                default:
+                    if(!value || (typeof value === 'object') && !value['value']) {
+                        continue;
+                    }
+                    oper = field.operator;
             }
             
             switch (oper) {
@@ -201,6 +229,10 @@ export default class SearchQueryBuilder {
 
             }
 
+        }
+
+        if(additionalCriteria && criteria.length) {
+            criteria.unshift(additionalCriteria);
         }
         
         searchString = criteria.join(strAndOperator);
