@@ -1,6 +1,13 @@
-## swivel-search
+# Swivel Search
 
-This is where you include your WebPart documentation.
+Swivel Search provides customizable web parts for performing metadata property searches against lists and document libraries in Office 365 SharePoint Online.
+
+## Search Web Part
+
+
+
+##  Search Resuls Web Part
+
 
 ### Building the code
 

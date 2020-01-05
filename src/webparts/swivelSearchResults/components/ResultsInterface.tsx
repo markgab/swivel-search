@@ -117,18 +117,20 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             }
         }];
 
-        this.props.includeIdentityColumn && this._defaultColumns.push({
-            key: 'TitleOrFilename',
-            name: 'Name',
-            sortable: true,
-            type: Model.ResultPropertyValueType.String,
-            fieldName: 'TitleOrFilename',
-            minWidth: 100,
-            onColumnClick: (e, column) => this.column_click(e, column),
-            onRender: (item: IAdvancedSearchResult) => {
-                return <div title={item.Title}>{item.TitleOrFilename}</div>;
-            }
-        });
+        if(this.props.includeIdentityColumn) {
+            this._defaultColumns.push({
+                key: 'TitleOrFilename',
+                name: 'Name',
+                sortable: true,
+                type: Model.ResultPropertyValueType.String,
+                fieldName: 'TitleOrFilename',
+                minWidth: 100,
+                onColumnClick: (e, column) => this.column_click(e, column),
+                onRender: (item: IAdvancedSearchResult) => {
+                    return <div title={item.Title}>{item.TitleOrFilename}</div>;
+                }
+            });
+        }
 
         let cols = uniq<Model.IResultProperty>([
             ...this._defaultColumns,
@@ -557,7 +559,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             if(result.ServerRedirectedURL) {
                 splitItems.push({
                     key: 'edit',
-                    name: 'Edit',
+                    name: 'Open in browser',
                     iconProps: {
                         iconName: 'PageEdit'
                     },
@@ -568,9 +570,9 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             if(OfficeURIHelper.isOfficeDocument(result.OriginalPath)) {
                 splitItems.push({
                     key: 'clientopen',
-                    name: 'Open in Desktop Client',
+                    name: 'Open in app',
                     iconProps: {
-                        iconName: 'DocumentReply'
+                        iconName: 'PageEdit'
                     },
                     onClick: (e, btn) => this.btnCommandbar_click(e, btn)
                 });
@@ -649,14 +651,17 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             });
         }
 
-        items.push({
-            key: 'log',
-            name: 'Log',
-            iconProps: {
-                iconName: 'M365InvoicingLogo'
-            },
-            onClick: (e, btn) => this.btnCommandbar_click(e, btn)
-        });
+        if(this.props.isDebug) {
+
+            items.push({
+                key: 'log',
+                name: 'Log',
+                iconProps: {
+                    iconName: 'M365InvoicingLogo'
+                },
+                onClick: (e, btn) => this.btnCommandbar_click(e, btn)
+            });
+        }
 
         return items;
 

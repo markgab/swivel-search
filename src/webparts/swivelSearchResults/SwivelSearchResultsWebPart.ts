@@ -283,9 +283,9 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                     ]
                   }
                 ),
-                PropertyPaneTextField('rowLimit', {
+                /* PropertyPaneTextField('rowLimit', {
                   label: strings.RowLimitFieldLabel
-                }),
+                }), */
                 PropertyPaneDropdown('sortProperty', {
                   options: this._sortableProperties,
                   label: 'Sort Property',
@@ -299,11 +299,11 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                     key: SortDirection.Descending
                   }],
                   label: 'Sort Direction'
-                }),
-                this._propertyPanePropertyEditor({
+                })
+                /* this._propertyPanePropertyEditor({
                   webpart: this,
                   key: 'propertyEditor'
-                })
+                }) */
               ]
             }
           ]
