@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as AutoComplete from 'React-AutoComplete';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import SearchSchemaHelper from '../helpers/SearchSchemaHelper';
+import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
+import styles from './ManagedPropertyPicker.module.scss';
 
 export interface IManagedPropertyPickerProps extends AutoComplete.Props {
     context: WebPartContext;
@@ -11,6 +13,7 @@ export interface IManagedPropertyPickerProps extends AutoComplete.Props {
 
 export interface IManagedPropertyPickerState {
     items: Array<string>;
+    spinnerVisible: boolean;
 }
 
 export default class ManagedPropertyPicker extends React.Component<IManagedPropertyPickerProps, IManagedPropertyPickerState> {
@@ -23,7 +26,8 @@ export default class ManagedPropertyPicker extends React.Component<IManagedPrope
             this.props.context.spHttpClient);
 
         this.state = {
-            items: []
+            items: [],
+            spinnerVisible: false
         };
 
     }
@@ -39,34 +43,45 @@ export default class ManagedPropertyPicker extends React.Component<IManagedPrope
      */
     public render(): React.ReactElement<IManagedPropertyPickerProps> {
         return(
-            <AutoComplete 
-                { ...this.props }
-                getItemValue={(item) => item}
-                items={this.state.items}
-                onChange={this.onChange}
-                selectOnBlur={true}
-                renderItem={(item, isHighlighted) =>
-                    <div style={{ background: isHighlighted ? 'lightgray' : 'white' }}>
-                      {item}
-                    </div>
-                }
-                wrapperStyle={{
-                    //position: 'relative'
-                }}
-                menuStyle ={{
-                    borderRadius: '3px',
-                    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-                    background: 'rgba(255, 255, 255, 0.9)',
-                    padding: '2px 0',
-                    fontSize: '90%',
-                    position: 'fixed',
-                    //marginLeft: '-50px',
-                    overflow: 'auto',
-                    maxHeight: '50%',
-                    top: '18',
-                    left: '0px !important'
-                }}
-            />
+            <div className={styles.ManagedPropertyPicker}>
+                <AutoComplete
+                    { ...this.props }
+                    inputProps={{ 
+                        className: styles.autocomplete,
+                        spellcheck: 'false'
+                    }}
+                    getItemValue={(item) => item}
+                    items={this.state.items}
+                    onChange={this.onChange}
+                    selectOnBlur={false}
+                    renderItem={(item, isHighlighted) =>
+                        <div style={{ background: isHighlighted ? 'lightgray' : 'white' }}>
+                        {item}
+                        </div>
+                    }
+                    wrapperStyle={{
+                        position: 'relative'
+                    }}
+                    menuStyle={{
+                        position: 'absolute',
+                        top: '32px',
+                        left: '0',
+                        zIndex: 4,
+                        boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        overflow: 'auto',
+                        maxHeight: '85px',
+                        padding: '2px 12px',
+                    }}
+                />
+                <Spinner 
+                    className={styles.spinner}
+                    style={{
+                        display: this.state.spinnerVisible ? 'block' : 'none'
+                    }} 
+                    size={SpinnerSize.xSmall} 
+                />
+            </div>
         );
     }
 
@@ -76,6 +91,11 @@ export default class ManagedPropertyPicker extends React.Component<IManagedPrope
             this.props.onChanged.call(null, val);
         }
 
+    }
+
+    protected onKeypress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+        console.log('stop prop');
+        e.stopPropagation();
     }
 
     protected onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -100,10 +120,12 @@ export default class ManagedPropertyPicker extends React.Component<IManagedPrope
 
         this._timeoutId = setTimeout(
             () => { 
+                this._showLoading(true);
                 this.fetchMatchingManagedProperties(key).then(items => {
                     this.setState({
                         ...this.state,
-                        items: items
+                        items: items,
+                        spinnerVisible: false
                     });
                 });
             }, 
@@ -118,6 +140,13 @@ export default class ManagedPropertyPicker extends React.Component<IManagedPrope
                 return mp.RefinementName;
             });
             return options;
+        });
+    }
+
+    private _showLoading(val: boolean): void {
+        this.setState({
+            ...this.state,
+            spinnerVisible: val
         });
     }
 }

@@ -134,14 +134,6 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
       };
     });
   }
-/* 
-  private _parseConfig(json: string): Model.IResultsConfig {
-    try {
-      return JSON.parse(json);
-    } catch(ex) {
-      return null;
-    }
-  } */
 
   protected get propertiesMetadata(): IWebPartPropertiesMetadata {
     return {
@@ -233,6 +225,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                       {
                         id: 'fieldName',
                         title: 'Managed Property',
+                        required: true,
                         type: this._customCollectionFieldType.custom,
                         onCustomRender: (field, value, onUpdate, item, rowUniqueId) => {
                           return(

@@ -1,0 +1,18 @@
+.ManagedPropertyPicker {
+    position: relative;
+    margin: 23px 0px !important;
+
+    .spinner {
+        position: absolute;
+        top: 11px;
+        right: 0px;
+    }
+
+    .autocomplete {
+        border: 1px solid #a6a6a6;
+        background: #ffffff;
+        height: 28px;
+        padding-left: 12px;
+        width: 100%;
+    }
+}

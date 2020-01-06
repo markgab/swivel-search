@@ -202,8 +202,8 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                     key: 'searchConfig',
                     enableSorting: true,
                     label: 'Choose Result Columns',
-                    panelHeader: 'Result Columns',
-                    manageBtnLabel: 'Choose Result Columns',
+                    panelHeader: 'Search Fields',
+                    manageBtnLabel: 'Choose Search Fields',
                     value: this.properties.searchConfig,
                     fields: [{
                       id: 'name',
@@ -214,6 +214,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                     {
                       id: 'property',
                       title: 'Managed Property',
+                      required: true,
                       type: this._customCollectionFieldType.custom,
                       onCustomRender: (field, value, onUpdate, item, rowUniqueId) => {
                         return(
@@ -234,6 +235,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                     {
                       id: 'type',
                       title: 'Data Type',
+                      required: true,
                       type: this._customCollectionFieldType.dropdown,
                       options: [
                         {
