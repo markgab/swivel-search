@@ -22,6 +22,7 @@ import { ISwivelSearchProps } from './components/ISwivelSearchProps';
 import { IDynamicDataPropertyDefinition, IDynamicDataCallables } from '@microsoft/sp-dynamic-data';
 import ManagedPropertyPicker from '../../components/ManagedPropertyPicker';
 import { TextField, ITextFieldProps } from 'office-ui-fabric-react/lib/TextField';
+import { sp } from '@pnp/sp';
 
 export interface ISwivelSearchWebPartProps {
   searchConfig: Array<Model.ISearchProperty>;
@@ -39,6 +40,12 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
 
   protected onInit(): Promise<void> {
     return super.onInit().then(_ => {
+
+      // setup required by PeoplePicker
+      sp.setup({
+        spfxContext: this.context
+      });
+
       // register this web part as dynamic data source
       this.context.dynamicDataSourceManager.initializeSource(this);
 

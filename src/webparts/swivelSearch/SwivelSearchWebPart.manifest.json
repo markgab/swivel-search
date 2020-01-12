@@ -100,20 +100,20 @@
             }
           },
           {
-            "uniqueId": "53c76803-8fd2-4d13-a8d9-6173a581c0bb",
-            "name": "Created By",
-            "property": "CreatedBy",
-            "type": "Person",
-            "operator": "Equals",
-            "choices": null,
-            "sortIdx": 7,
-            "propIndex": 6
-          },
-          {
             "uniqueId": "f3041437-634a-4ce0-a875-c0de35e603df",
             "name": "Last Modified By",
             "property": "ModifiedBy",
             "type": "Person",
+            "operator": "Equals",
+            "choices": null,
+            "propIndex": 6,
+            "sortIdx": 7
+          },
+          {
+            "uniqueId": "8c35cb9e-59d1-4a9a-b7fd-432caf31b03e",
+            "name": "Is Document",
+            "property": "IsDocument",
+            "type": "Boolean",
             "operator": "Equals",
             "choices": null,
             "propIndex": 7
