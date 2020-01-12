@@ -151,11 +151,20 @@ export default class SearchQueryBuilder {
                     oper = dateVal.operator as any;
                     break;
                 case Model.PropertyValueType.Numeric:
-                    if(!numbVal || !numbVal.number || (numbVal.operator === NumberRangeOperator.Between && !numbVal.numberEnd)) {
-                        // skip if range value is invalid
-                        continue;
+                    if((field.operator === Model.SearchOperator.Equals)) {
+                        if(!value) {
+                            // skip if value is invalid
+                            continue;
+                        }
+                        oper = field.operator;
+                    } else if(field.operator === Model.SearchOperator.NumberRange) { 
+                        if(!numbVal || !numbVal.number || 
+                          (numbVal.operator === NumberRangeOperator.Between && !numbVal.numberEnd)) {
+                            // skip if value is invalid
+                            continue;
+                        }
+                        oper = numbVal.operator as any;
                     }
-                    oper = numbVal.operator as any;
                     break;
                 default:
                     if(!value || (typeof value === 'object') && !value['value']) {
@@ -167,10 +176,12 @@ export default class SearchQueryBuilder {
             switch (oper) {
                 case Model.SearchOperator.Equals:
                     if(field.type === Model.PropertyValueType.Numeric) {
-                        criteria.push(prop + '=' + value);
+                        criteria.push(prop + '=' + (numbVal.number || value));
                     } else if(field.type === Model.PropertyValueType.Person) {
                         let name = perVal[0].text;
                         criteria.push(prop + ':"*' + name + '*"');
+                    } else if(field.type === Model.PropertyValueType.DateTime) {
+                        criteria.push(prop + '=' + dateVal.date.toISOString());
                     } else {
                         if(typeof value !== 'string') {
                             value = choiceVal.value || choiceVal.text;
