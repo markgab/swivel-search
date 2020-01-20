@@ -1,4 +1,4 @@
-![logo](./assets/swivel_logo.png)
+![logo](./assets/swivel-logo.png)
 # Swivel Search
 
 Swivel Search provides customizable web parts for performing metadata property searches against lists and document libraries in Office 365 SharePoint Online.
