@@ -1,7 +1,7 @@
 define([], function() {
   return {
-    "PropertyPaneDescription": "Advanced Searh Settings",
-    "BasicGroupName": "Options",
+    "PropertyPaneDescription": "",
+    "BasicGroupName": "",
     "DescriptionFieldLabel": "Description Field",
     "ResultsConfigFieldLabel": "Results Columns Config",
     "ResultsConfigFieldDesc": "JSON string describing the search results columns",

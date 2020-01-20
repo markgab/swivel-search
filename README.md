@@ -1,18 +1,21 @@
+![logo](./assets/swivel_logo.png)
 # Swivel Search
 
 Swivel Search provides customizable web parts for performing metadata property searches against lists and document libraries in Office 365 SharePoint Online.
+
+![Swivel Search](./assets/Swivel-Search.png)
 
 ## Search Web Part
 
 Inspired by classic SharePoint Advanced Search pages, Swivel Search provides an easy interface to perform metadata search queries.
 
-![alt text](./assets/Search.Interface.png "Search Interface")
+![Search Interface](./assets/Search.Interface.png)
 
 ### Customization
 
 The default query fields can be easily modified to any desired search schema that is available on your tenant. 
 
-![alt text](./assets/Search.Fields.png "Search Interface Properties")
+![Search Interface Properties](./assets/Search.Fields.png)
 
 #### Controls by Data Type
 
@@ -23,17 +26,23 @@ Aside from a text box, the search web part provides custom controls for query co
 * Number Range Picker
 * Select Box
 
-##  Search Results Web Part
+## Search Results Web Part
 
-The Swivel Results web part is designed to bring the modern list view asthetic to search results. Although it is intended to work in conjunction with the Search web part, the results web part is capable of standing alone as well.
+The Swivel Results web part is designed to bring the modern list view aesthetic to search results. Although it is intended to work in conjunction with the Search web part, the results web part is capable of standing alone as well.
 
-![alt text](./assets/Results.Interface.png "Search Results Interface")
+![Search Results Interface](./assets/Results.Interface.png)
 
 ### Customization
 
 Likewise, the Swivel Search Results web part allows you to select which columns are displayed.
 
-![alt text](./assets/Results.Columns.png "Search Results Columns")
+![Search Results Columns](./assets/Results.Columns.png)
+
+### For more information
+
+* [Swivel Search Customization](./Search-Customization.md)
+* [Swivel Search Results Customization](./Results-Customization.md)
+* [Selecting Managed Properties](./Selecting-Managed-Properties.md)
 
 ### Building the code
 

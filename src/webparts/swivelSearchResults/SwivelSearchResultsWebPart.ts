@@ -212,7 +212,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                 this._propertyFieldCollectionData('columns', {
                     key: 'resultsConfig',
                     enableSorting: true,
-                    label: 'Choose Result Columns',
+                    //label: 'Choose Result Columns',
                     panelHeader: 'Result Columns',
                     manageBtnLabel: 'Choose Result Columns',
                     value: this.properties.columns,

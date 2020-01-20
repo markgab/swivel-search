@@ -64,6 +64,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
   private _propertyFieldCollectionData;
   private _customCollectionFieldType;
   private _propertyPanePropertyEditor;
+  private _propertPaneWebPartInformation;
 
   /**
    * Return list of dynamic data properties that this dynamic data source
@@ -129,9 +130,15 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
       '@pnp/spfx-property-controls/lib/PropertyPanePropertyEditor'
     );
 
+    const { PropertyPaneWebPartInformation } = await import (
+      /* webpackChunkName: 'pnp-propcontrols-webpartinformation' */
+      '@pnp/spfx-property-controls/lib/PropertyPaneWebPartInformation'
+    );
+
     this._propertyFieldCollectionData = PropertyFieldCollectionData;
     this._customCollectionFieldType = CustomCollectionFieldType;
     this._propertyPanePropertyEditor = PropertyPanePropertyEditor;
+    this._propertPaneWebPartInformation = PropertyPaneWebPartInformation;
 
   }
 
@@ -205,11 +212,17 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                   label: strings.StartMinimizedLabel,
                   disabled: !this.properties.includeKeywordSearch
                 }),
+                this._propertPaneWebPartInformation({
+                  description: `<p>To better configure the search web part, <a href="${this.context.pageContext.web.absoluteUrl}/_layouts/15/listmanagedproperties.aspx?level=site" target="_blank">review the search schema</a></p>`,
+                  moreInfoLink: `https://docs.microsoft.com/en-us/sharepoint/manage-search-schema#create-a-new-managed-property`,
+                  key: 'webPartInfoId'
+                }),
                 this._propertyFieldCollectionData('searchConfig', {
                     key: 'searchConfig',
                     enableSorting: true,
-                    label: 'Choose Result Columns',
+                    //label: 'Choose Result Columns',
                     panelHeader: 'Search Fields',
+                    panelDescription: 'Select which search fields you wish to include.',
                     manageBtnLabel: 'Choose Search Fields',
                     value: this.properties.searchConfig,
                     fields: [{
