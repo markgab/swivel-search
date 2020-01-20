@@ -1,7 +1,7 @@
 ![logo](./assets/Swivel-logo.png)
 # Swivel Search
 
-Swivel Search provides customizable web parts for performing metadata property searches against lists and document libraries in Office 365 SharePoint Online.
+Swivel Search is a set of SPFx client side web parts which provide a highly customizable interface for performing metadata property searches against lists and document libraries in Office 365 SharePoint Online.
 
 ![Swivel Search](./assets/Swivel-Search.png)
 
