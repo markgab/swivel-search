@@ -61,3 +61,10 @@ three|3
 Add any Keyword Query Language (KQL) criteria to this textbox. This will be appended to each search query at runtime.
 
 [Please see more information about KQL](https://docs.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference)
+
+### For more information
+
+* [README](./README.md)
+* [Swivel Search Customization](./Search-Customization.md)
+* [Swivel Search Results Customization](./Results-Customization.md)
+* [Selecting Managed Properties](./Selecting-Managed-Properties.md)

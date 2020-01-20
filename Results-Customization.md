@@ -57,3 +57,11 @@ Select the property to sort the result source by.
 ## Sort Direction
 
 Select the direction of the sorting.
+
+
+### For more information
+
+* [README](./README.md)
+* [Swivel Search Customization](./Search-Customization.md)
+* [Swivel Search Results Customization](./Results-Customization.md)
+* [Selecting Managed Properties](./Selecting-Managed-Properties.md)

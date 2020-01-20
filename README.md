@@ -40,6 +40,7 @@ Likewise, the Swivel Search Results web part allows you to select which columns 
 
 ### For more information
 
+* [README](./README.md)
 * [Swivel Search Customization](./Search-Customization.md)
 * [Swivel Search Results Customization](./Results-Customization.md)
 * [Selecting Managed Properties](./Selecting-Managed-Properties.md)

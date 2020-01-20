@@ -65,3 +65,10 @@ Want to cover all the bases? There is a collection of predefined managed propert
 
 [Refinable managed properties](https://docs.microsoft.com/en-us/sharepoint/manage-search-schema#refine-on-managed-properties) can be mapped to any existing crawled property and are queryable, retrievable, sortable and can be mapped to most data types. To review these, open the search schema in SharePoint Online and search the managed properties with the keyword "refinable". Pick a refinable managed property of the appropriate data type, then add the appropriate mapping to the corresponding crawled property that matches your list column.
 
+
+### For more information
+
+* [README](./README.md)
+* [Swivel Search Customization](./Search-Customization.md)
+* [Swivel Search Results Customization](./Results-Customization.md)
+* [Selecting Managed Properties](./Selecting-Managed-Properties.md)
