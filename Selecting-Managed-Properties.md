@@ -1,12 +1,12 @@
-# Choosing Search Managed Properties
+# Selecting Managed Properties
 
-To get the expected search result set, choosing the appropriate SharePoint search managed property is critical. However, there are some pitfalls, here is how to get the best results.
+To get the expected search results, choosing the appropriate SharePoint search managed property is critical. However, there are some pitfalls, here is how to get the best results.
 
 ## SharePoint Online's Automatically Generated Managed Properties 
 
 ### TL;DR - Automatically Generated Managed Properties 
 
-Be careful using SharePoint Online's automatically generated managed properties. These fields are best used for querying against Text, Choice, Person or Yes / No values. They do not work well for querying Numeric or Date and Time values. And while they can be used to display results of any type, they cannot be used for sorting result sets. It is recommended that you create your own managed properties for these situations.
+Be careful using SharePoint Online's automatically generated managed properties. These fields are best used for querying against: Text, Choice, Person or Yes / No values. They do not work well for querying Numeric or Date and Time values. And while they can be used to display results of any type, they cannot be used for sorting result sets. It is recommended that you create your own managed properties for these situations.
 
 ### Identifying Automatically Generated Managed Properties
 
@@ -33,11 +33,11 @@ However, properties like these do not work well in every situation and it may be
 
 ## Managed Property Pickers
 
-Both the Swivel Search and Search Results web parts employ Managed Property Pickers. The autocomplete functionality can greatly assist the difficult process of finding the correct property to search against. However, it is important to understand that not all managed properties will appear in the autocomplete menu.
+Both the Swivel Search and Search Results web parts employ Managed Property Pickers. The autocomplete functionality of the picker can greatly assist the difficult process of finding the correct property to search against. However, it is important to understand that not all managed properties will appear in the autocomplete menu.
 
 ![Property Picker](/assets/Property.Picker.png)
 
-If the Managed Property you are targeting does not appear in the autocomplete menu, simply type in the full name of the property. This will still work if the managed property is configured correctly.
+If the managed property you are targeting does not appear in the autocomplete menu, simply type in the full name of the property. This will still work if the managed property is configured correctly.
 
 ## Creating a Managed Property
 
@@ -64,7 +64,6 @@ Many of the properties in the SharePoint Online search service are forced to the
 Want to cover all the bases? There is a collection of predefined managed properties available to use that meet all the requirements for the Swivel Search web parts.
 
 [Refinable managed properties](https://docs.microsoft.com/en-us/sharepoint/manage-search-schema#refine-on-managed-properties) can be mapped to any existing crawled property and are queryable, retrievable, sortable and can be mapped to most data types. To review these, open the search schema in SharePoint Online and search the managed properties with the keyword "refinable". Pick a refinable managed property of the appropriate data type, then add the appropriate mapping to the corresponding crawled property that matches your list column.
-
 
 ### For more information
 

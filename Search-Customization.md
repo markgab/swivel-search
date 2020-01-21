@@ -8,13 +8,13 @@ Toggles the visibility of the keyword search textbox at the top of the Swivel Se
 
 This field is contingent on the *Include Keyword Search Box* being toggled on.
 
-When toggled on, the initial state of the web part will only display the keyword search box. The filtering controls will appear after the user clicks the advanced button.
+When toggled on, the initial state of the web part will only display the keyword search box. The filtering controls will appear after the user clicks the **Advanced** button.
 
 When toggled off, all the search controls are visible after page load.
 
 ## Choosing Search Fields
 
-Clicking on the Choose Search Fields button will present the field picker interface. Use this to decide which fields will be visible. 
+Clicking on the **Choose Search Fields** button will present the field picker interface. Use this to decide which fields will be visible. 
 
 ### Column Display Name
 
@@ -22,7 +22,7 @@ This is the text that will appear on the label for this search field
 
 ### Managed Property
 
-This is the name of the property that will be included in a search query for this field. This will be covered in depth in [Choosing Search Managed Properties](./Selecting-Managed-Properties.md)
+This is the name of the property that will be included in a search query for this field. This topic is covered in depth in [Choosing Search Managed Properties](./Selecting-Managed-Properties.md).
 
 ### Data Type
 
