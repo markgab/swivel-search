@@ -50,6 +50,8 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
   public onInit(): Promise<void> {
     return super.onInit().then(_ => {
 
+      this.properties.isDebug = true;
+
       this.searchSchemaHelper = new SearchSchemaHelper(
         document.location.origin,
         this.context.pageContext.web.serverRelativeUrl, 

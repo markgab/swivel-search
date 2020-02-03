@@ -17,6 +17,7 @@
 * Adding columns to results interface does not take effect until after a save followed by a full page refresh
 * ~~Default columns need to include Data Type now~~
 * ~~Row Limit property potentially obsolete~~
+* Column text selects on double-click
 
 ## Both
 

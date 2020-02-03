@@ -390,13 +390,19 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     protected frame_load = (e: React.SyntheticEvent<HTMLIFrameElement, Event>): void => {
         let frame: HTMLIFrameElement = e.target as any;
         let doc: Document = frame.contentDocument;
+        let selected: IAdvancedSearchResult = this._getSelectionDetails();
 
         if(doc) {
 
             let s = doc.createElement('style') as HTMLStyleElement;
-            s.innerText = '.OneUp-commandBar { display: none; } .OneUp-content{ top: 0 !important; }';
+
+            if(selected.FileType === "pdf") {
+                s.innerText = 'button.ms-Button--commandBar[title="Close"]{ display:none; }';
+            } else {
+                s.innerText = '.OneUp-commandBar { display: none; } .OneUp-content{ top: 0 !important; }';
+            }
+
             doc.head.appendChild(s);
-            
         }
 
     }
@@ -412,7 +418,8 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             case 'view':
                 console.log(action, selected);
                 newState.documentReaderOpen = true;
-                if(selected.ResultItemType === Model.ResultItemType.Image) {
+                if(selected.ResultItemType === Model.ResultItemType.Image || 
+                   selected.FileType === 'pdf') {
                     newState.documentReaderUrl = this._buildListPreviewLink(selected);
                 } else {
                     newState.documentReaderUrl = selected.ServerRedirectedEmbedURL;
