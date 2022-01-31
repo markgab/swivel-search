@@ -217,14 +217,14 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                     </div>
                     <div className={styles.buttonRow}>
                         
-                        <PrimaryButton
-                            primary={true}
+                        <DefaultButton
+                            primary={false}
                             data-automation-id="test"
                             text="Search"
                             onClick={this.btnSearch_click}
                         />
-                        <PrimaryButton
-                            primary={true}
+                        <DefaultButton
+                            primary={false}
                             data-automation-id="test"
                             text="Reset"
                             onClick={this.btnReset_click}
