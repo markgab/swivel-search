@@ -18,6 +18,16 @@
   .searchInterface {
     box-shadow: 0 3px 5px 0 rgba(0,0,0,.18), 0 3px 5px 2px rgba(0,0,0,.15);
     padding:30px;
+
+    button {
+      border-width: 0;
+      background-color: rgb(243, 242, 241);
+
+      &:hover {
+        background-color: rgb(237, 235, 233);
+        color: rgb(32, 31, 30);
+      }
+    }
   }
 
   .buttonRow {
@@ -49,6 +59,10 @@
           height: 100%;
           min-width: 60px;
         }
+      }
+
+      .ms-TextField-field::placeholder {
+        color: #999;
       }
 
       .ms-TextField-suffix {

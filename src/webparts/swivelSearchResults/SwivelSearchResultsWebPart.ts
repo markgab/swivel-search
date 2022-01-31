@@ -3,17 +3,19 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
+  IWebPartPropertiesMetadata,
+} from '@microsoft/sp-webpart-base';
+import {
   IPropertyPaneConfiguration,
   IPropertyPaneConditionalGroup,
   PropertyPaneTextField,
   PropertyPaneToggle,
   PropertyPaneDynamicField,
   PropertyPaneButton,
-  IWebPartPropertiesMetadata,
   DynamicDataSharedDepth,
   PropertyPaneDropdown,
   IPropertyPaneDropdownOption
-} from '@microsoft/sp-webpart-base';
+} from '@microsoft/sp-property-pane';
 import * as Model from '../../model/AdvancedSearchModel';
 import * as strings from 'SwivelSearchResultsWebPartStrings';
 import SwivelSearchResults, { ISwivelSearchResultsProps } from './components/SwivelSearchResults';
@@ -50,7 +52,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
   public onInit(): Promise<void> {
     return super.onInit().then(_ => {
 
-      this.properties.isDebug = true;
+      //this.properties.isDebug = true;
 
       this.searchSchemaHelper = new SearchSchemaHelper(
         document.location.origin,

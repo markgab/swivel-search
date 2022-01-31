@@ -68,3 +68,5 @@ Add any Keyword Query Language (KQL) criteria to this textbox. This will be appe
 * [Swivel Search Customization](./Search-Customization.md)
 * [Swivel Search Results Customization](./Results-Customization.md)
 * [Selecting Managed Properties](./Selecting-Managed-Properties.md)
+* [Github Repositry](
+https://github.com/markgab/swivel-search)

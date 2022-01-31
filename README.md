@@ -44,6 +44,8 @@ Likewise, the Swivel Search Results web part allows you to select which columns 
 * [Swivel Search Customization](./Search-Customization.md)
 * [Swivel Search Results Customization](./Results-Customization.md)
 * [Selecting Managed Properties](./Selecting-Managed-Properties.md)
+* [Github Repositry](
+https://github.com/markgab/swivel-search)
 
 ### Building the code
 

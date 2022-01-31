@@ -71,3 +71,5 @@ Want to cover all the bases? There is a collection of predefined managed propert
 * [Swivel Search Customization](./Search-Customization.md)
 * [Swivel Search Results Customization](./Results-Customization.md)
 * [Selecting Managed Properties](./Selecting-Managed-Properties.md)
+* [Github Repositry](
+https://github.com/markgab/swivel-search)

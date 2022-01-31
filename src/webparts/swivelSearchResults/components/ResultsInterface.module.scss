@@ -74,6 +74,10 @@
   .commandBar {
     border-top: 5px solid #FFF;
     z-index: 10;
+
+    button {
+      border-width: 0;
+    }
   }
 
   .commandbarLabelItem {
