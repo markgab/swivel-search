@@ -193,7 +193,7 @@ export default class NumberRange extends React.Component<INumberRangeProps, INum
 
                     <TextField
                         value={this.state.value.number || '' as any}
-                        onChanged={this.onNumber1_changed}
+                        onChange={this.onNumber1_changed}
                         onBlur={this.onNumber1_blur}
                         placeholder={NumberRangeOperatorMeta[this.state.value.operator].placeholder1}
                         autoComplete={"off"}
@@ -202,7 +202,7 @@ export default class NumberRange extends React.Component<INumberRangeProps, INum
 
                     <TextField
                         value={this.state.value.numberEnd || '' as any}
-                        onChanged={this.onNumber2_changed} 
+                        onChange={this.onNumber2_changed} 
                         placeholder={NumberRangeOperatorMeta[this.state.value.operator].placeholder2}
                         autoComplete={"off"}
                         className={this.state.classNameNumberEnd}
@@ -238,7 +238,7 @@ export default class NumberRange extends React.Component<INumberRangeProps, INum
         () => this.onOperator_changed(val.operator));          // Call operator change handler in case new operator was provided
     }
 
-    protected onNumber1_changed = (newValue: string): void => {
+    protected onNumber1_changed = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue: string): void => {
         console.log(newValue);
 
         this.setState({
@@ -260,7 +260,7 @@ export default class NumberRange extends React.Component<INumberRangeProps, INum
         }
     }
 
-    protected onNumber2_changed = (newValue: string): void => {
+    protected onNumber2_changed = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue: string): void => {
 
         this.setState({
             ...this.state,

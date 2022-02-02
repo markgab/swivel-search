@@ -1,6 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
+    "developer": {
+      "name": "Mark Gabriel",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "websiteUrl": "",
+      "mpnId": "Undefined-1.13.1"
+    },
     "name": "Swivel Search Web Parts",
     "id": "3fb9e8f1-2d94-46d4-a36c-20ad8deab8ec",
     "version": "1.0.0.1",

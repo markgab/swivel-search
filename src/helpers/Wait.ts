@@ -1,3 +1,4 @@
+import { Thenable } from "es6-promise";
 
 export class WaitPromise<T> extends Promise<T> {
     constructor(callback: (resolve : (value?: T | Thenable<T>) => void, reject: (error?: any) => void) => void) {

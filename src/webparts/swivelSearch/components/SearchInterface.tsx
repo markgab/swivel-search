@@ -117,7 +117,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                                     spellCheck={false}
                                     placeholder={field.operator}
                                     label={field.name} 
-                                    onChanged={(e) => this.ctrl_changed(e, field)}
+                                    onChange={(ev, e) => this.ctrl_changed(e, field)}
                                     data-index={i}
                                     type={field.type === Model.PropertyValueType.Numeric ? "numeric" : ""}
                                     componentRef={(component: ITextField): void => {
@@ -261,7 +261,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                     <TextField
                         placeholder="Search"
                         value={this.state.keywordSearch}
-                        onChanged={this.keywordSearch_changed}
+                        onChange={this.keywordSearch_changed}
                         autoFocus={true}
                         autoComplete={"off"}
                         onRenderPrefix={(props: ITextFieldProps): JSX.Element => {
@@ -299,7 +299,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
         }
     }
 
-    protected keywordSearch_changed = (keywordSearch: string): void => {
+    protected keywordSearch_changed = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, keywordSearch: string): void => {
         console.log('keywordSearch: ', keywordSearch);
          this.setState({
             ...this.state,

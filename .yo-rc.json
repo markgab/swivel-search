@@ -2,7 +2,7 @@
   "@microsoft/generator-sharepoint": {
     "isCreatingSolution": false,
     "environment": "spo",
-    "version": "1.9.1",
+    "version": "1.13.1",
     "libraryName": "swivel-search",
     "libraryId": "3fb9e8f1-2d94-46d4-a36c-20ad8deab8ec",
     "packageManager": "npm",
