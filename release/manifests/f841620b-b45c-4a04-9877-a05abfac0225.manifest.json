@@ -1,0 +1,214 @@
+{
+  "id": "f841620b-b45c-4a04-9877-a05abfac0225",
+  "alias": "SwivelSearchWebPart",
+  "componentType": "WebPart",
+  "version": "0.0.1",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "supportedHosts": [
+    "SharePointWebPart",
+    "TeamsPersonalApp",
+    "TeamsTab",
+    "SharePointFullPage"
+  ],
+  "preconfiguredEntries": [
+    {
+      "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+      "group": {
+        "default": "Other"
+      },
+      "title": {
+        "default": "Swivel Search"
+      },
+      "description": {
+        "default": "Customizable interface for advanced search queries"
+      },
+      "officeFabricIconFontName": "Page",
+      "iconImageUrl": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0gQ3JlYXRlZCB3aXRoIElua3NjYXBlIChodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy8pIC0tPgoKPHN2ZwogICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiCiAgIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIKICAgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogICB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiCiAgIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIgogICB3aWR0aD0iMTQ5LjgyMDY2bW0iCiAgIGhlaWdodD0iMTUyLjUzOTg2bW0iCiAgIHZpZXdCb3g9IjAgMCAxNDkuODIwNjYgMTUyLjUzOTg2IgogICB2ZXJzaW9uPSIxLjEiCiAgIGlkPSJzdmc4IgogICBpbmtzY2FwZTp2ZXJzaW9uPSIwLjkyLjQgKDVkYTY4OWMzMTMsIDIwMTktMDEtMTQpIgogICBzb2RpcG9kaTpkb2NuYW1lPSJTd2l2ZWwuc3ZnIgogICBpbmtzY2FwZTpleHBvcnQtZmlsZW5hbWU9IkM6XFVzZXJzXGdvbGdhXERlc2t0b3BcU3dpdmVsXFN3aXZlbC5wbmciCiAgIGlua3NjYXBlOmV4cG9ydC14ZHBpPSI5NiIKICAgaW5rc2NhcGU6ZXhwb3J0LXlkcGk9Ijk2Ij4KICA8ZGVmcwogICAgIGlkPSJkZWZzMiIgLz4KICA8c29kaXBvZGk6bmFtZWR2aWV3CiAgICAgaWQ9ImJhc2UiCiAgICAgcGFnZWNvbG9yPSIjZmZmZmZmIgogICAgIGJvcmRlcmNvbG9yPSIjNjY2NjY2IgogICAgIGJvcmRlcm9wYWNpdHk9IjEuMCIKICAgICBpbmtzY2FwZTpwYWdlb3BhY2l0eT0iMC4wIgogICAgIGlua3NjYXBlOnBhZ2VzaGFkb3c9IjIiCiAgICAgaW5rc2NhcGU6em9vbT0iMC40NTI1NDgzNCIKICAgICBpbmtzY2FwZTpjeD0iMTc1LjM1MjE1IgogICAgIGlua3NjYXBlOmN5PSIyNDkuMjg2NDciCiAgICAgaW5rc2NhcGU6ZG9jdW1lbnQtdW5pdHM9Im1tIgogICAgIGlua3NjYXBlOmN1cnJlbnQtbGF5ZXI9ImxheWVyMSIKICAgICBzaG93Z3JpZD0iZmFsc2UiCiAgICAgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxOTIwIgogICAgIGlua3NjYXBlOndpbmRvdy1oZWlnaHQ9IjEwMDEiCiAgICAgaW5rc2NhcGU6d2luZG93LXg9Ii05IgogICAgIGlua3NjYXBlOndpbmRvdy15PSItOSIKICAgICBpbmtzY2FwZTp3aW5kb3ctbWF4aW1pemVkPSIxIiAvPgogIDxtZXRhZGF0YQogICAgIGlkPSJtZXRhZGF0YTUiPgogICAgPHJkZjpSREY+CiAgICAgIDxjYzpXb3JrCiAgICAgICAgIHJkZjphYm91dD0iIj4KICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD4KICAgICAgICA8ZGM6dHlwZQogICAgICAgICAgIHJkZjpyZXNvdXJjZT0iaHR0cDovL3B1cmwub3JnL2RjL2RjbWl0eXBlL1N0aWxsSW1hZ2UiIC8+CiAgICAgICAgPGRjOnRpdGxlPjwvZGM6dGl0bGU+CiAgICAgIDwvY2M6V29yaz4KICAgIDwvcmRmOlJERj4KICA8L21ldGFkYXRhPgogIDxnCiAgICAgaW5rc2NhcGU6bGFiZWw9IkxheWVyIDEiCiAgICAgaW5rc2NhcGU6Z3JvdXBtb2RlPSJsYXllciIKICAgICBpZD0ibGF5ZXIxIgogICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yNS44ODIyLC0yOC45MDQzMDkpIj4KICAgIDxnCiAgICAgICBzdHlsZT0iZmlsbDojMDAwMDAwIgogICAgICAgaWQ9ImczNzYwIgogICAgICAgdHJhbnNmb3JtPSJtYXRyaXgoNC4xNjE2ODUsMCwwLDQuMjM3MjE4NCwtMTA3LjI5MTcyLC0xMDYuNjg2NjgpIj4KICAgICAgPGcKICAgICAgICAgaWQ9ImczNzQ3IgogICAgICAgICBzdHlsZT0iZmlsbDpub25lO2ZpbGwtcnVsZTpldmVub2RkO3N0cm9rZTpub25lO3N0cm9rZS13aWR0aDoxIj4KICAgICAgICA8ZwogICAgICAgICAgIGlkPSJnMzc0NSIKICAgICAgICAgICBzdHlsZT0iZmlsbDojMDAwMDAwO2ZpbGwtcnVsZTpub256ZXJvIj4KICAgICAgICAgIDxwYXRoCiAgICAgICAgICAgICBpZD0icGF0aDM3NDMiCiAgICAgICAgICAgICBkPSJtIDY3LjcwNzEwNyw2Ni4yOTI4OTMgYyAwLjM5MDUyNCwwLjM5MDUyNSAwLjM5MDUyNCwxLjAyMzY4OSAwLDEuNDE0MjE0IC0wLjM5MDUyNSwwLjM5MDUyNCAtMS4wMjM2ODksMC4zOTA1MjQgLTEuNDE0MjE0LDAgTCA1NS41MjQ4MjcsNTYuOTM5MDQgYyAtMC4xOTc0OCwtMC4xOTc0OCAtMC41MzI4NzEsLTAuMjEyNTYgLTAuNzQzMzgxLC0wLjA0MDY2IDAsMCAtMC4xNjM4NDYsMC4xNDE2NDkgLTAuNDUxNjgzLDAuMzU1MDU3IEMgNTIuMDAyMDYzLDU4Ljk3OTI0MiA0OS4xMjAyMzcsNjAgNDYsNjAgMzguMjY4MDE0LDYwIDMyLDUzLjczMTk4NiAzMiw0NiBjIDAsLTcuNzMxOTg2IDYuMjY4MDE0LC0xNCAxNCwtMTQgNy43MzE5ODYsMCAxNCw2LjI2ODAxNCAxNCwxNCAwLDMuMDQ5MTQzIC0wLjk3NDc3Myw1Ljg3MDYxNiAtMi42Mjk2OTUsOC4xNjk3OTYgLTAuMjQ4MDAxLDAuMzQ0NTQ3IC0wLjQ3MTc0OCwwLjYwODQ3MyAtMC40NzE3NDgsMC42MDg0NzMgLTAuMTc1MTIyLDAuMjE0ODMyIC0wLjE1OTgxLDAuNTQ2MjY0IDAuMDQwNDgsMC43NDY1NTggeiBNIDQ2LDU4IGMgNi42Mjc0MTcsMCAxMiwtNS4zNzI1ODMgMTIsLTEyIDAsLTYuNjI3NDE3IC01LjM3MjU4MywtMTIgLTEyLC0xMiAtNi42Mjc0MTcsMCAtMTIsNS4zNzI1ODMgLTEyLDEyIDAsNi42Mjc0MTcgNS4zNzI1ODMsMTIgMTIsMTIgeiIKICAgICAgICAgICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiIC8+CiAgICAgICAgPC9nPgogICAgICA8L2c+CiAgICA8L2c+CiAgICA8ZwogICAgICAgc3R5bGU9ImZpbGw6IzAwMDAwMCIKICAgICAgIGlkPSJnMzgxOCIKICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDEuMTIzNzQxMiwwLDAsMS4xNDQxMzY5LDI3Ljk1ODcyLDMzLjgxMTM4NCkiPgogICAgICA8cGF0aAogICAgICAgICBpZD0icGF0aDM3ODYiCiAgICAgICAgIGQ9Ik0gNTAsNSBDIDI1LjE4Nyw1IDUsMjUuMTg3IDUsNTAgNSw3NC44MTMgMjUuMTg3LDk1IDUwLDk1IDc0LjgxMyw5NSA5NSw3NC44MTMgOTUsNTAgOTUsMjUuMTg3IDc0LjgxMyw1IDUwLDUgWiBtIDAsODcgQyAyNi44NDEsOTIgOCw3My4xNTkgOCw1MCA4LDI2Ljg0MSAyNi44NDEsOCA1MCw4IDczLjE1OSw4IDkyLDI2Ljg0MSA5Miw1MCA5Miw3My4xNTkgNzMuMTU5LDkyIDUwLDkyIFoiCiAgICAgICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIGlkPSJwYXRoMzc4OCIKICAgICAgICAgZD0iTSA1MSwxMSBDIDI5LjQ5NSwxMSAxMiwyOC40OTUgMTIsNTAgMTIsNzEuNTA1IDI5LjQ5NSw4OSA1MSw4OSA3Mi41MDUsODkgOTAsNzEuNTA1IDkwLDUwIDkwLDI4LjQ5NSA3Mi41MDUsMTEgNTEsMTEgWiBtIDAsNzUgQyAzMS4xNDksODYgMTUsNjkuODUxIDE1LDUwIDE1LDMwLjE0OSAzMS4xNDksMTQgNTEsMTQgNzAuODUxLDE0IDg3LDMwLjE0OSA4Nyw1MCA4Nyw2OS44NTEgNzAuODUxLDg2IDUxLDg2IFoiCiAgICAgICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIGlkPSJwYXRoMzc5MCIKICAgICAgICAgZD0iTSA0OSwxNyBDIDMwLjgwNCwxNyAxNiwzMS44MDQgMTYsNTAgMTYsNjguMTk2IDMwLjgwNCw4MyA0OSw4MyA2Ny4xOTYsODMgODIsNjguMTk2IDgyLDUwIDgyLDMxLjgwNCA2Ny4xOTYsMTcgNDksMTcgWiBtIDAsNjMgQyAzMi40NTgsODAgMTksNjYuNTQyIDE5LDUwIDE5LDMzLjQ1OCAzMi40NTgsMjAgNDksMjAgNjUuNTQyLDIwIDc5LDMzLjQ1OCA3OSw1MCA3OSw2Ni41NDIgNjUuNTQyLDgwIDQ5LDgwIFoiCiAgICAgICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIGlkPSJwYXRoMzc5MiIKICAgICAgICAgZD0iTSA1MSwyMyBDIDM2LjExMiwyMyAyNCwzNS4xMTIgMjQsNTAgMjQsNjQuODg4IDM2LjExMiw3NyA1MSw3NyA2NS44ODgsNzcgNzgsNjQuODg4IDc4LDUwIDc4LDM1LjExMiA2NS44ODgsMjMgNTEsMjMgWiBtIDAsNTEgQyAzNy43NjcsNzQgMjcsNjMuMjMzIDI3LDUwIDI3LDM2Ljc2NyAzNy43NjcsMjYgNTEsMjYgNjQuMjMzLDI2IDc1LDM2Ljc2NyA3NSw1MCA3NSw2My4yMzMgNjQuMjMzLDc0IDUxLDc0IFoiCiAgICAgICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIGlkPSJwYXRoMzc5NCIKICAgICAgICAgZD0iTSA0OSwyOSBDIDM3LjQyLDI5IDI4LDM4LjQyIDI4LDUwIDI4LDYxLjU4IDM3LjQyLDcxIDQ5LDcxIDYwLjU4LDcxIDcwLDYxLjU4IDcwLDUwIDcwLDM4LjQyIDYwLjU4LDI5IDQ5LDI5IFogbSAwLDM5IGMgLTkuOTI1LDAgLTE4LC04LjA3NSAtMTgsLTE4IDAsLTkuOTI1IDguMDc1LC0xOCAxOCwtMTggOS45MjUsMCAxOCw4LjA3NSAxOCwxOCAwLDkuOTI1IC04LjA3NSwxOCAtMTgsMTggeiIKICAgICAgICAgaW5rc2NhcGU6Y29ubmVjdG9yLWN1cnZhdHVyZT0iMCIgLz4KICAgICAgPHBhdGgKICAgICAgICAgaWQ9InBhdGgzNzk2IgogICAgICAgICBkPSJtIDUxLDM1IGMgLTguMjcxLDAgLTE1LDYuNzI5IC0xNSwxNSAwLDguMjcxIDYuNzI5LDE1IDE1LDE1IDguMjcxLDAgMTUsLTYuNzI5IDE1LC0xNSAwLC04LjI3MSAtNi43MjksLTE1IC0xNSwtMTUgeiBtIDAsMjcgYyAtNi42MTcsMCAtMTIsLTUuMzgzIC0xMiwtMTIgMCwtNi42MTcgNS4zODMsLTEyIDEyLC0xMiA2LjYxNywwIDEyLDUuMzgzIDEyLDEyIDAsNi42MTcgLTUuMzgzLDEyIC0xMiwxMiB6IgogICAgICAgICBpbmtzY2FwZTpjb25uZWN0b3ItY3VydmF0dXJlPSIwIiAvPgogICAgICA8cGF0aAogICAgICAgICBpZD0icGF0aDM3OTgiCiAgICAgICAgIGQ9Im0gNDksNDEgYyAtNC45NjIsMCAtOSw0LjAzOCAtOSw5IDAsNC45NjIgNC4wMzgsOSA5LDkgNC45NjIsMCA5LC00LjAzOCA5LC05IDAsLTQuOTYyIC00LjAzOCwtOSAtOSwtOSB6IG0gMCwxNSBjIC0zLjMwOSwwIC02LC0yLjY5MSAtNiwtNiAwLC0zLjMwOSAyLjY5MSwtNiA2LC02IDMuMzA5LDAgNiwyLjY5MSA2LDYgMCwzLjMwOSAtMi42OTEsNiAtNiw2IHoiCiAgICAgICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiIC8+CiAgICAgIDxjaXJjbGUKICAgICAgICAgaWQ9ImNpcmNsZTM4MDAiCiAgICAgICAgIHI9IjMiCiAgICAgICAgIGN5PSI1MCIKICAgICAgICAgY3g9IjUxIiAvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+Cg==",
+      "properties": {
+        "searchConfig": [
+          {
+            "uniqueId": "0398e9f1-8e8e-40aa-ad41-5d066e3479b6",
+            "name": "Author",
+            "property": "Author",
+            "type": "Person",
+            "operator": "Equals",
+            "choices": null,
+            "sortIdx": 1,
+            "propIndex": 0
+          },
+          {
+            "uniqueId": "021bab5f-e9e5-48e6-a385-2e20cd1e13b6",
+            "name": "Description",
+            "property": "Description",
+            "type": "String",
+            "operator": "Contains",
+            "choices": null,
+            "sortIdx": 2,
+            "propIndex": 1
+          },
+          {
+            "uniqueId": "eee603c9-d8a2-4be7-97bb-ee8df8e71c51",
+            "name": "Name",
+            "property": "Filename",
+            "type": "String",
+            "operator": "Contains",
+            "choices": null,
+            "propIndex": 2,
+            "sortIdx": 3
+          },
+          {
+            "uniqueId": "af512fab-e601-466a-8ef2-72f78ada4fba",
+            "name": "Size (bytes)",
+            "property": "Size",
+            "type": "Numeric",
+            "operator": "Number Range",
+            "choices": null,
+            "sortIdx": 4,
+            "propIndex": 3
+          },
+          {
+            "uniqueId": "ebb5afad-3f70-4179-a44f-bdcdffe4c191",
+            "name": "URL",
+            "property": "SPSiteURL",
+            "type": "String",
+            "operator": "Contains",
+            "choices": null,
+            "sortIdx": 5,
+            "propIndex": 4
+          },
+          {
+            "uniqueId": "ee66588c-db21-4f57-895d-c83aeff07eef",
+            "name": "Last Modified Date",
+            "property": "LastModifiedTime",
+            "type": "DateTime",
+            "operator": "Date Range",
+            "choices": null,
+            "sortIdx": 6,
+            "propIndex": 5,
+            "data": {
+              "value": {
+                "operator": "Equals",
+                "date": null
+              }
+            },
+            "value": {
+              "operator": "equals",
+              "date": null
+            }
+          },
+          {
+            "uniqueId": "f3041437-634a-4ce0-a875-c0de35e603df",
+            "name": "Last Modified By",
+            "property": "ModifiedBy",
+            "type": "Person",
+            "operator": "Equals",
+            "choices": null,
+            "propIndex": 6,
+            "sortIdx": 7
+          },
+          {
+            "uniqueId": "8c35cb9e-59d1-4a9a-b7fd-432caf31b03e",
+            "name": "Is Document",
+            "property": "IsDocument",
+            "type": "Boolean",
+            "operator": "Equals",
+            "choices": null,
+            "propIndex": 7
+          }
+        ],
+        "includeKeywordSearch": true,
+        "startMinimized": true
+      }
+    }
+  ],
+  "loaderConfig": {
+    "internalModuleBaseUrls": [
+      "<!-- PATH TO CDN -->"
+    ],
+    "entryModuleId": "swivel-search-web-part",
+    "scriptResources": {
+      "swivel-search-web-part": {
+        "type": "path",
+        "path": "swivel-search-web-part_6150f01dc5032143107c.js"
+      },
+      "office-ui-fabric-react": {
+        "type": "path",
+        "path": "office-ui-fabric-react_66ad086e45c8db9dbbf262471b0549ae.js"
+      },
+      "@microsoft/sp-property-pane": {
+        "type": "component",
+        "id": "f9e737b7-f0df-4597-ba8c-3060f82380db",
+        "version": "1.13.1"
+      },
+      "SwivelSearchWebPartStrings": {
+        "type": "path",
+        "path": "SwivelSearchWebPartStrings_en-us_a76d8b90e26f49e2e13ad91f12d455e3.js"
+      },
+      "@microsoft/sp-lodash-subset": {
+        "type": "component",
+        "id": "73e1dc6c-8441-42cc-ad47-4bd3659f8a3a",
+        "version": "1.13.1"
+      },
+      "@microsoft/sp-core-library": {
+        "type": "component",
+        "id": "7263c7d0-1d6a-45ec-8d85-d4d1d234171b",
+        "version": "1.13.1"
+      },
+      "@microsoft/sp-webpart-base": {
+        "type": "component",
+        "id": "974a7777-0990-4136-8fa6-95d80114c2e0",
+        "version": "1.13.1"
+      },
+      "react": {
+        "type": "component",
+        "id": "0d910c1c-13b9-4e1c-9aa4-b008c5e42d7d",
+        "version": "16.13.1"
+      },
+      "react-dom": {
+        "type": "component",
+        "id": "aa0a46ec-1505-43cd-a44a-93f3a5aa460a",
+        "version": "16.13.1"
+      },
+      "@microsoft/sp-http": {
+        "type": "component",
+        "id": "c07208f0-ea3b-4c1a-9965-ac1b825211a6",
+        "version": "1.13.1"
+      },
+      "PropertyControlStrings": {
+        "type": "localizedPath",
+        "paths": {
+          "bg-BG": "PropertyControlStrings_bg-bg_0f530fd9341d511d823f544336e05451.js",
+          "ca-ES": "PropertyControlStrings_ca-es_d0bea49bdde90c515176e5ca95aa4505.js",
+          "da-DK": "PropertyControlStrings_da-dk_09260ca2ba6359b55c5cc2de35476162.js",
+          "de-DE": "PropertyControlStrings_de-de_26e838864f35345662f9cb69d075fc59.js",
+          "el-GR": "PropertyControlStrings_el-gr_8a3df889e1de9d5be1de15247b784967.js",
+          "en-US": "PropertyControlStrings_en-us_8d31c2c7b3eabe41420cdd4d07649433.js",
+          "es-ES": "PropertyControlStrings_es-es_bf3fed45d9ab4bfcbc1a8f1154ed3efd.js",
+          "et-EE": "PropertyControlStrings_et-ee_0185ff30ae87ce90e4e92ca552c72113.js",
+          "fi-FI": "PropertyControlStrings_fi-fi_e66a7d8987f635dff1180d38d4f4be02.js",
+          "fr-FR": "PropertyControlStrings_fr-fr_10fb9a63e4d55688a6a32651ecd0d7c2.js",
+          "it-IT": "PropertyControlStrings_it-it_579aa7ec6184af74b68c440d900fcb7c.js",
+          "ja-JP": "PropertyControlStrings_ja-jp_6faa5fb558332503e84dbc4ba1ec61ec.js",
+          "lt-LT": "PropertyControlStrings_lt-lt_c33bb88fb983aad30cc086b3a21bc9c0.js",
+          "lv-LV": "PropertyControlStrings_lv-lv_b8a04cf55550c75c8330aee5c48ef7ec.js",
+          "nb-NO": "PropertyControlStrings_nb-no_c8c149a62776c9fd5fbde81d4afe2f88.js",
+          "nl-NL": "PropertyControlStrings_nl-nl_bb4b9bbcf3528f84f65c176d10697197.js",
+          "no": "PropertyControlStrings_no_ffa809fb347866c01f72c107382c6e6e.js",
+          "pl-PL": "PropertyControlStrings_pl-pl_b29005ae2cc04860a049f69dfb1b386c.js",
+          "pt-PT": "PropertyControlStrings_pt-pt_7fc41a3593a2c19de649ddfd9131fbf9.js",
+          "ro-RO": "PropertyControlStrings_ro-ro_ea10add64697b82579199bba6fb33c1b.js",
+          "ru-RU": "PropertyControlStrings_ru-ru_374991af888dea8806509ee0d8dd0593.js",
+          "sk-SK": "PropertyControlStrings_sk-sk_469150295d10e7f0030756f1a4f98d92.js",
+          "sr-Latn-RS": "PropertyControlStrings_sr-latn-rs_e4e114a085eae9b87ea6f63a577ed836.js",
+          "sv-SE": "PropertyControlStrings_sv-se_8a45b8df6db70f6d875ae3cbcb0bfcb2.js",
+          "tr-TR": "PropertyControlStrings_tr-tr_d5426979b2be36a1121cf27a106d30e0.js",
+          "vi-VN": "PropertyControlStrings_vi-vn_f80d9ea3b90ca91c58c3c42b89f8bf41.js",
+          "zh-CN": "PropertyControlStrings_zh-cn_0e28954ea11f5378ff43ace8394b8355.js",
+          "zh-TW": "PropertyControlStrings_zh-tw_b8ea9e303468568f4c4f40e6502e5b93.js"
+        },
+        "defaultPath": "PropertyControlStrings_en-us_8d31c2c7b3eabe41420cdd4d07649433.js"
+      }
+    }
+  }
+}
