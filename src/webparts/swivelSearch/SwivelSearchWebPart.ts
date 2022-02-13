@@ -3,26 +3,27 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
+} from '@microsoft/sp-webpart-base';
+import {
   IPropertyPaneConfiguration,
   PropertyPaneTextField,
-  IPropertyPaneTextFieldProps,
   PropertyPaneToggle
-} from '@microsoft/sp-webpart-base';
-import { 
-  Dropdown, 
-  IDropdown, 
-  DropdownMenuItemType, 
-  IDropdownOption, 
-  IDropdownProps
-} from 'office-ui-fabric-react/lib/Dropdown';
+} from '@microsoft/sp-property-pane';
 import * as Model from '../../model/AdvancedSearchModel';
 import * as strings from 'SwivelSearchWebPartStrings';
 import SwivelSearch from './components/SwivelSearch';
 import { ISwivelSearchProps } from './components/ISwivelSearchProps';
-import { IDynamicDataPropertyDefinition, IDynamicDataCallables } from '@microsoft/sp-dynamic-data';
+import { IDynamicDataPropertyDefinition } from '@microsoft/sp-dynamic-data';
 import ManagedPropertyPicker from '../../components/ManagedPropertyPicker';
+import AdvancedSearchData from '../../model/AdvancedSearchData';
+import { globalsSetup } from '../../model/SwivelSearchGlobals';
+
 import { TextField, ITextFieldProps } from 'office-ui-fabric-react/lib/TextField';
-import { sp } from '@pnp/sp';
+import { 
+  Dropdown,  
+  IDropdownOption, 
+  IDropdownProps
+} from 'office-ui-fabric-react/lib/Dropdown';
 
 export interface ISwivelSearchWebPartProps {
   searchConfig: Array<Model.ISearchProperty>;
@@ -41,10 +42,9 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
   protected onInit(): Promise<void> {
     return super.onInit().then(_ => {
 
-      // setup required by PeoplePicker
-      sp.setup({
-        spfxContext: this.context
-      });
+      this.data = new AdvancedSearchData(this.context, []);
+
+      globalsSetup(this.data);
 
       // register this web part as dynamic data source
       this.context.dynamicDataSourceManager.initializeSource(this);
@@ -56,6 +56,8 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
   }
 
   public searchConfig: Model.IAdvancedSearchConfig;
+
+  public data: AdvancedSearchData;
 
   /**
    * Currently submitted search query

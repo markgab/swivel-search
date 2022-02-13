@@ -1,6 +1,7 @@
 import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { TextField, ITextFieldProps, ITextField } from 'office-ui-fabric-react/lib/TextField';
 import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
+
 import * as React from 'react';
 import DateRange from '../../../components/DateRange';
 import NumberRange from '../../../components/NumberRange';

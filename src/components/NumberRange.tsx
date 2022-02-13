@@ -1,8 +1,6 @@
 import * as React from 'react';
 import {
     Dropdown, 
-    IDropdown, 
-    DropdownMenuItemType, 
     IDropdownOption 
 } from 'office-ui-fabric-react/lib/Dropdown';
 import { TextField, ITextField } from 'office-ui-fabric-react/lib/TextField';

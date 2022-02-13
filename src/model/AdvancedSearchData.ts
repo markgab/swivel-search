@@ -1,15 +1,19 @@
+
+import { setup as pnpSetup } from "@pnp/common";
+import "@pnp/sp/search";
 import { 
-    sp, 
-    SearchResults,
-    SearchResult,
-    SearchQuery 
-} from '@pnp/sp';
+    Search, 
+    ISearchQuery, 
+    ISearch,
+    ISearchResult, 
+    SearchResults, 
+    SearchQueryBuilder 
+} from "@pnp/sp/search";
 import { uniq } from '@microsoft/sp-lodash-subset';
 import { BaseComponentContext } from '@microsoft/sp-component-base';
 import * as Model from './AdvancedSearchModel';
-import { SearchQueryBuilder } from "@pnp/polyfill-ie11/dist/searchquerybuilder";
 
-export interface IAdvancedSearchResult extends SearchResult {
+export interface IAdvancedSearchResult extends ISearchResult {
     Title: string; 
     Filename: string;
     TitleOrFilename?: string;
@@ -30,9 +34,10 @@ export interface IAdvancedSearchResult extends SearchResult {
 
 export default class AdvancedSearchData {
     constructor(public context: BaseComponentContext, public columns: Array<Model.IResultProperty>) {
-        sp.setup({
+        pnpSetup({
             spfxContext: context
         });
+        this.searcher = Search(context.pageContext.web.absoluteUrl);
     }
 
     public rowLimit: number = 30;
@@ -40,6 +45,7 @@ export default class AdvancedSearchData {
     public totalRows: number;
     //public resultsConfig: Model.IResultsConfig;
     public currentResults: SearchResults;
+    public searcher: ISearch;
 
     public get customSelectProperties(): Array<string> {
         let props: Array<string> = [];
@@ -88,7 +94,7 @@ export default class AdvancedSearchData {
             ...this.customSelectProperties 
         ]);
 
-        const queryOptions: SearchQuery = {
+        const queryOptions: ISearchQuery = {
             SelectProperties: props,
             RowsPerPage: this.rowLimit,
             RowLimit: this.rowLimit
@@ -96,7 +102,7 @@ export default class AdvancedSearchData {
 
         const q = SearchQueryBuilder(queryText, queryOptions);
 
-        return sp.search(q).then((r: SearchResults) => {
+        return this.searcher(q).then((r: SearchResults) => {
 
             this.currentResults = r;                                        // update the current results
             this.page = 1;                                                  // reset if needed

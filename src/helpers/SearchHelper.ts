@@ -1,5 +1,4 @@
-import { sp, Web, SearchResult, SearchResults } from '@pnp/sp';
-import { escape } from '@microsoft/sp-lodash-subset';
+
 
 /* interface ISynonymValue {
     Title: string;

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
-
 import { 
     Panel, 
     PanelType,
     IPanelProps
 } from 'office-ui-fabric-react/lib/Panel';
+
 import styles from './ItemPropertiesPanel.module.scss';
 import { on } from '../../../helpers/events';
 

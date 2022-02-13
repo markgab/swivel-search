@@ -1,9 +1,10 @@
 
 import { IColumn } from 'office-ui-fabric-react/lib/DetailsList';
-import { IDateRangeValue, DateRangeOperator } from '../components/DateRange';
 import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
-import { INumberRangeValue, NumberRangeOperator } from '../components/NumberRange';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
+
+import { IDateRangeValue, DateRangeOperator } from '../components/DateRange';
+import { INumberRangeValue, NumberRangeOperator } from '../components/NumberRange';
 
 export interface ISearchProperty {
     name: string;

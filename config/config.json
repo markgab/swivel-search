@@ -20,13 +20,11 @@
     }
   },
   "externals": {
-    "@pnp/sp": "./node_modules/@pnp/sp/dist/sp.es5.umd.bundle.min.js"
   },
   "localizedResources": {
     "SwivelSearchWebPartStrings": "lib/webparts/swivelSearch/loc/{locale}.js",
     "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js",
     "SwivelSearchResultsWebPartStrings": "lib/webparts/swivelSearchResults/loc/{locale}.js",
-    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
-    "SwivelControlStrings": "lib/components/loc/{locale}.js"
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
   }
 }

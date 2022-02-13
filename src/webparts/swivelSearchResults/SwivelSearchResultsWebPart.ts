@@ -3,17 +3,18 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
+  IWebPartPropertiesMetadata,
+} from '@microsoft/sp-webpart-base';
+import {
   IPropertyPaneConfiguration,
   IPropertyPaneConditionalGroup,
   PropertyPaneTextField,
   PropertyPaneToggle,
   PropertyPaneDynamicField,
-  PropertyPaneButton,
-  IWebPartPropertiesMetadata,
   DynamicDataSharedDepth,
   PropertyPaneDropdown,
-  IPropertyPaneDropdownOption
-} from '@microsoft/sp-webpart-base';
+  IPropertyPaneDropdownOption,
+} from '@microsoft/sp-property-pane';
 import * as Model from '../../model/AdvancedSearchModel';
 import * as strings from 'SwivelSearchResultsWebPartStrings';
 import SwivelSearchResults, { ISwivelSearchResultsProps } from './components/SwivelSearchResults';
@@ -21,7 +22,7 @@ import { DynamicProperty } from '@microsoft/sp-component-base';
 import { IDynamicDataSource } from '@microsoft/sp-dynamic-data';
 import SearchSchemaHelper from '../../helpers/SearchSchemaHelper';
 import ManagedPropertyPicker from '../../components/ManagedPropertyPicker';
-import { SortDirection } from '@pnp/sp';
+import { SortDirection } from '@pnp/sp/search';
 //import '@pnp/polyfill-ie11'
 
 const defaultSortProperties: Array<string> = [

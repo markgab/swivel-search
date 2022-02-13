@@ -7,7 +7,6 @@ export interface IManagedPropertyPickerProps extends IComboBoxProps {
     context: WebPartContext;
 }
 
-
 export interface IManagedPropertyPickerState {
     options: Array<IComboBoxOption>;
 }

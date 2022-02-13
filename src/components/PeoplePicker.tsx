@@ -1,21 +1,19 @@
 import * as React from 'react';
 import { 
-    sp, 
     SearchResults,
-    SearchResult, 
+    ISearchResult, 
     SearchQueryBuilder,
-    SearchQuery 
-} from '@pnp/sp';
+    ISearchQuery
+} from '@pnp/sp/search';
+import globals from '../model/SwivelSearchGlobals';
 import {
-    NormalPeoplePicker, 
     CompactPeoplePicker, 
-    IPeoplePickerProps, 
     IBasePicker,
-    ValidationState
 } from 'office-ui-fabric-react/lib/Pickers';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import styles from './PeoplePicker.module.scss';
+
 
 export interface PeoplePickerProps {
     label?: string;
@@ -30,7 +28,7 @@ export interface PeoplePickerState {
 
 }
 
-export interface PeopleSearchResult extends SearchResult {
+export interface PeopleSearchResult extends ISearchResult {
     JobTitle: string;
     PictureURL: string;
     PreferredName: string;
@@ -51,7 +49,6 @@ export default class PeoplePicker extends React.Component<PeoplePickerProps, Peo
     private _timerId: number;
     private _pauseDuration: number = 500;
     private _picker: IBasePicker<IPersonaProps>;
-
     
     public render(): React.ReactElement<PeoplePickerProps> {
         return (
@@ -127,7 +124,6 @@ export default class PeoplePicker extends React.Component<PeoplePickerProps, Peo
         }
 
     }
-
     
     protected onPersonPicker_ResolveSuggestions = (filter: string, selectedItems?: IPersonaProps[]): IPersonaProps[] | PromiseLike<IPersonaProps[]> => {
         if(filter.length > 2) {
@@ -182,6 +178,7 @@ export default class PeoplePicker extends React.Component<PeoplePickerProps, Peo
     }
 
     private _searchPeople(searchTerms: string): Promise<Array<IPersonaProps>> {
+        let search = globals.data.searcher;
         let SelectProperties = [
             "PreferredName",
             "JobTItle",
@@ -190,7 +187,7 @@ export default class PeoplePicker extends React.Component<PeoplePickerProps, Peo
         let SourceId = 'b09a7990-05ea-4af9-81ef-edfab16c4e31';
         let RowLimit = this.RowLimit;
         let EnablePhonetic = true;
-        const queryOptions: SearchQuery = {
+        const queryOptions: ISearchQuery = {
             SelectProperties,
             RowLimit,
             SourceId,
@@ -201,7 +198,7 @@ export default class PeoplePicker extends React.Component<PeoplePickerProps, Peo
         
         const q = SearchQueryBuilder(query, queryOptions);
 
-        return sp.search(q).then((r: SearchResults) => {
+        return search(q).then((r: SearchResults) => {
             return r.PrimarySearchResults.map((row: PeopleSearchResult) => {
                 return {
                     secondaryText: row.JobTitle,
@@ -213,6 +210,7 @@ export default class PeoplePicker extends React.Component<PeoplePickerProps, Peo
     }
 
     private _searchManagedProperty(searchTerms: string, managedProperty: string): Promise<Array<IPersonaProps>> {
+        let search = globals.data.searcher;
         let SelectProperties = [
             managedProperty
         ];
@@ -220,7 +218,7 @@ export default class PeoplePicker extends React.Component<PeoplePickerProps, Peo
         let TrimDuplicates = true;
         let EnablePhonetic = false;
 
-        const queryOptions: SearchQuery = {
+        const queryOptions: ISearchQuery = {
             SelectProperties,
             RowLimit,
             TrimDuplicates,
@@ -229,7 +227,7 @@ export default class PeoplePicker extends React.Component<PeoplePickerProps, Peo
         
         const q = SearchQueryBuilder(searchTerms, queryOptions);
 
-        return sp.search(q).then((r: SearchResults) => {
+        return search(q).then((r: SearchResults) => {
             try {
                 if(r.RowCount) {
                     console.log('results: ', r.PrimarySearchResults);

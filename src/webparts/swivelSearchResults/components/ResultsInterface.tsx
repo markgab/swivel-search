@@ -1,5 +1,22 @@
 import * as React from 'react';
 import styles from './ResultsInterface.module.scss';
+import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { 
+    ISearchResult,
+    SearchResults,
+    ISort,
+} from '@pnp/sp/search';
+import * as Model from '../../../model/AdvancedSearchModel';
+import AdvancedSearchData, {
+    IAdvancedSearchResult
+} from '../../../model/AdvancedSearchData';
+
+import { getFileTypeIconProps, initializeFileTypeIcons, FileIconType } from '@uifabric/file-type-icons';
+import { uniq } from '@microsoft/sp-lodash-subset';
+import ItemPropertiesPanel, {
+    PageTypes
+} from './ItemPropertiesPanel';
+
 import {
     DetailsList,
     DetailsListLayoutMode,
@@ -13,28 +30,13 @@ import {
     CommandBar,
     ICommandBarItemProps 
 } from 'office-ui-fabric-react/lib/CommandBar';
-import * as Model from '../../../model/AdvancedSearchModel';
-import AdvancedSearchData, {
-    IAdvancedSearchResult
-} from '../../../model/AdvancedSearchData';
-import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { 
-    SearchResults, 
-    SearchResult,
-    Sort,
-    SortDirection
-} from '@pnp/sp';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
-import { getFileTypeIconProps, initializeFileTypeIcons, FileIconType } from '@uifabric/file-type-icons';
-import { uniq } from '@microsoft/sp-lodash-subset';
-import ItemPropertiesPanel, {
-    PageTypes
-} from './ItemPropertiesPanel';
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { Label } from 'office-ui-fabric-react/lib/Label';
-import OfficeURIHelper from '../../../helpers/OfficeURIHelper';
 import { IContextualMenuItem } from 'office-ui-fabric-react/lib/ContextualMenu';
+
+import OfficeURIHelper from '../../../helpers/OfficeURIHelper';
 import stickybits from 'stickybits';
 
 export interface IResultsInterfaceProps {
@@ -44,7 +46,7 @@ export interface IResultsInterfaceProps {
     searchQuery: string;
     context: WebPartContext;
     rowLimit: number;
-    sort?: Sort;
+    sort?: ISort;
 }
 
 export interface IResultInterfaceState {
@@ -52,7 +54,7 @@ export interface IResultInterfaceState {
     overflowItems: ICommandBarItemProps[];
     faritems: ICommandBarItemProps[];
     searchQuery: string;
-    results: SearchResult[];
+    results: ISearchResult[];
     columns: Model.IResultProperty[];
     spWebUrl: string;
     listID: string;
@@ -62,7 +64,7 @@ export interface IResultInterfaceState {
     documentReaderOpen: boolean;
     documentReaderUrl: string;
     showLoading: boolean;
-    sort?: Sort;
+    sort?: ISort;
 }
 
 const ColumnDefaults: any = {
