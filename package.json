@@ -19,7 +19,7 @@
     "@pnp/graph": "^2.11.0",
     "@pnp/polyfill-ie11": "^1.0.2",
     "@pnp/sp": "^2.11.0",
-    "@pnp/spfx-controls-react": "^3.5.0",
+    "@pnp/spfx-controls-react": "3.6.0",
     "@pnp/spfx-property-controls": "^3.3.0",
     "@uifabric/file-type-icons": "^7.1.1",
     "office-ui-fabric-react": "7.174.1",

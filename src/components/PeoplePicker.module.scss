@@ -1,5 +1,8 @@
 .PeoplePicker {
     :global {
+        .ms-BasePicker-text {
+            background-color: #FFF;
+        }
         .ms-BasePicker-input {
             height: 30px;
             padding: 0 12px;

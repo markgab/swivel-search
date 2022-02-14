@@ -12,7 +12,6 @@ interface CssExports {
   'keywordSearch': string;
   'pnlAdvanced': string;
   'pnlAdvancedMinimized': string;
-  'row': string;
   'searchInterface': string;
   'swivelSearch': string;
 }

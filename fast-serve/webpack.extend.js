@@ -16,7 +16,7 @@ const webpackConfig = {
 const transformConfig = function (initialWebpackConfig) {
   // transform the initial webpack config here, i.e.
   // initialWebpackConfig.plugins.push(new webpack.Plugin()); etc.
-  
+/*   
   const lastDirName = path.basename(__dirname);
   const dropPath = path.join(__dirname, 'temp', 'stats');
   initialWebpackConfig.plugins.push(new bundleAnalyzer.BundleAnalyzerPlugin({
@@ -26,7 +26,7 @@ const transformConfig = function (initialWebpackConfig) {
       generateStatsFile: true,
       statsFilename: path.join(dropPath, `${lastDirName}.stats.json`),
       logLevel: 'error'
-  }));
+  })); */
 
   return initialWebpackConfig;
 }

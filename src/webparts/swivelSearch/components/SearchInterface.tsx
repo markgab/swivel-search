@@ -1,4 +1,4 @@
-import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
+import { DefaultButton, PrimaryButton, ActionButton } from 'office-ui-fabric-react/lib/Button';
 import { TextField, ITextFieldProps, ITextField } from 'office-ui-fabric-react/lib/TextField';
 import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 
@@ -267,7 +267,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                         autoComplete={"off"}
                         onRenderPrefix={(props: ITextFieldProps): JSX.Element => {
                             return (
-                                <DefaultButton
+                                <ActionButton
                                     iconProps={{
                                         iconName: 'Search'
                                     }}
@@ -281,7 +281,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                             const { suffix } = props;
                             if(this.props.startMinimized) {
                                 return (
-                                    <DefaultButton 
+                                    <ActionButton 
                                         text={suffix}
                                         onClick={this.btnAdvanced_click}
                                         className="btnAdvanced"
@@ -465,7 +465,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
             );
         });
         return (
-            <div className={styles.row} key={key++}>
+            <div key={key++}>
                 {cells}
             </div>
         );
