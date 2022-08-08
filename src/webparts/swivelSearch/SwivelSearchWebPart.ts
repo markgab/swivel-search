@@ -43,7 +43,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
     return super.onInit().then(_ => {
 
       this.data = new AdvancedSearchData(this.context, []);
-
+      this.properties.isDebug = true;
       globalsSetup(this.data);
 
       // register this web part as dynamic data source
