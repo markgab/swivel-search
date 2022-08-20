@@ -7,9 +7,10 @@ import {
 import {
   IPropertyPaneConfiguration,
   PropertyPaneTextField,
-  PropertyPaneToggle
+  PropertyPaneToggle,
+  PropertyPaneChoiceGroup
 } from '@microsoft/sp-property-pane';
-import * as Model from '../../model/AdvancedSearchModel';
+import { ISearchProperty, PropertyValueType, SearchApi, IAdvancedSearchConfig, SearchOperator } from '../../model/AdvancedSearchModel';
 import * as strings from 'SwivelSearchWebPartStrings';
 import SwivelSearch from './components/SwivelSearch';
 import { ISwivelSearchProps } from './components/ISwivelSearchProps';
@@ -26,7 +27,8 @@ import {
 } from 'office-ui-fabric-react/lib/Dropdown';
 
 export interface ISwivelSearchWebPartProps {
-  searchConfig: Array<Model.ISearchProperty>;
+  searchApi: SearchApi;
+  searchConfig: Array<ISearchProperty>;
   addCriteria: string;
   includeKeywordSearch: boolean;
   startMinimized: boolean;
@@ -55,7 +57,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
     });
   }
 
-  public searchConfig: Model.IAdvancedSearchConfig;
+  public searchConfig: IAdvancedSearchConfig;
 
   public data: AdvancedSearchData;
 
@@ -155,14 +157,14 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
 
   private _indexProperties() {
     if(this.properties.searchConfig) {
-      this.properties.searchConfig.forEach((field: Model.ISearchProperty, idx: number) => {
+      this.properties.searchConfig.forEach((field: ISearchProperty, idx: number) => {
         field.propIndex = idx;
       });
     }
   }
 
-  private _deepCopyConfig(config: Array<Model.ISearchProperty>): Array<Model.ISearchProperty> {
-    let copy: Array<Model.ISearchProperty> = [];
+  private _deepCopyConfig(config: Array<ISearchProperty>): ISearchProperty[] {
+    let copy: ISearchProperty[] = [];
 
     config.forEach(p =>{
       copy.push({ ...p });
@@ -178,14 +180,14 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
   protected onPropertyPaneFieldChanged(propertyPath: string, oldValue: any, newValue: any): void {
     super.onPropertyPaneFieldChanged(propertyPath, oldValue, newValue);
 
-    console.log('Property Pane Change. Path: ', propertyPath);
-    console.log(newValue);
+    //console.log('Property Pane Change. Path: ', propertyPath);
+    //console.log(newValue);
 
     this._indexProperties();
   }
 
   protected onDataType_change = (option: IDropdownOption, index?: number): void => {
-    console.log('change', option.text);
+    //console.log('change', option.text);
   }
 
   protected get dataVersion(): Version {
@@ -207,6 +209,16 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
             {
               groupName: strings.BasicGroupName,
               groupFields: [
+                PropertyPaneChoiceGroup('searchApi', { 
+                  label: "Search Engine",
+                  options: [{
+                    text: "Microsoft Graph Search",
+                    key: SearchApi.MicrosoftGraphSearch,
+                  },{
+                    text: "SharePoint Search",
+                    key: SearchApi.SharePointSearch,
+                  }]
+                }),
                 PropertyPaneToggle('includeKeywordSearch', {
                   label: strings.IncludeKeywordSearchLabel
                 }),
@@ -261,29 +273,29 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                       type: this._customCollectionFieldType.dropdown,
                       options: [
                         {
-                          key: Model.PropertyValueType.Boolean,
+                          key: PropertyValueType.Boolean,
                           text: 'Boolean',
-                          value: Model.PropertyValueType.Boolean
+                          value: PropertyValueType.Boolean
                         },
                         {
-                          key: Model.PropertyValueType.DateTime,
+                          key: PropertyValueType.DateTime,
                           text: 'Date Time',
-                          value: Model.PropertyValueType.DateTime
+                          value: PropertyValueType.DateTime
                         },
                         {
-                          key: Model.PropertyValueType.Numeric,
+                          key: PropertyValueType.Numeric,
                           text: 'Numeric',
-                          value: Model.PropertyValueType.Numeric
+                          value: PropertyValueType.Numeric
                         },
                         {
-                          key: Model.PropertyValueType.Person,
+                          key: PropertyValueType.Person,
                           text: 'Person',
-                          value: Model.PropertyValueType.Person
+                          value: PropertyValueType.Person
                         },
                         {
-                          key: Model.PropertyValueType.String,
+                          key: PropertyValueType.String,
                           text: 'Text',
-                          value: Model.PropertyValueType.String
+                          value: PropertyValueType.String
                         }
                       ]
                     },
@@ -292,53 +304,53 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                       title: 'Operator',
                       required: true,
                       type: this._customCollectionFieldType.custom,
-                      onCustomRender: (field, value: Model.SearchOperator, onUpdate, item: Model.ISearchProperty, itemId) => {
+                      onCustomRender: (field, value: SearchOperator, onUpdate, item: ISearchProperty, itemId) => {
                         let options: Array<IDropdownOption>;
                         switch(item.type) {
-                          case Model.PropertyValueType.DateTime:
+                          case PropertyValueType.DateTime:
                               options = [{
-                                  key: Model.SearchOperator.DateRange,
+                                  key: SearchOperator.DateRange,
                                   text: 'Date Range',
                                   selected: true
                                 }
                               ];
-                              if(value !== Model.SearchOperator.DateRange) {
-                                onUpdate(field.id, Model.SearchOperator.DateRange);
+                              if(value !== SearchOperator.DateRange) {
+                                onUpdate(field.id, SearchOperator.DateRange);
                               }
                             break;
-                          case Model.PropertyValueType.String:
+                          case PropertyValueType.String:
                             options = [{
-                                key: Model.SearchOperator.Equals,
+                                key: SearchOperator.Equals,
                                 text: 'Equals'
                               },
                               {
-                                key: Model.SearchOperator.Contains,
+                                key: SearchOperator.Contains,
                                 text: 'Contains'
                               }
                             ];
                             break;
-                          case Model.PropertyValueType.Double:
-                          case Model.PropertyValueType.Int32:
-                          case Model.PropertyValueType.Int64:
-                          case Model.PropertyValueType.Numeric:
+                          case PropertyValueType.Double:
+                          case PropertyValueType.Int32:
+                          case PropertyValueType.Int64:
+                          case PropertyValueType.Numeric:
                             options = [{
-                              key: Model.SearchOperator.NumberRange,
+                              key: SearchOperator.NumberRange,
                               text: 'Number Range'
                             },
                             {
-                              key: Model.SearchOperator.Equals,
+                              key: SearchOperator.Equals,
                               text: 'Equals'
                             }];
                             break;
                           default: 
                             options = [{
-                                key: Model.SearchOperator.Equals,
+                                key: SearchOperator.Equals,
                                 text: 'Equals',
                                 selected: true
                               }
                             ];
-                            if(value !== Model.SearchOperator.Equals) {
-                              onUpdate(field.id, Model.SearchOperator.Equals);
+                            if(value !== SearchOperator.Equals) {
+                              onUpdate(field.id, SearchOperator.Equals);
                             }
                             break;
                         }
@@ -358,13 +370,13 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                       id: 'choices',
                       title: 'Choices',
                       type: this._customCollectionFieldType.custom,
-                      onCustomRender: (field, val: string, onUpdate, item: Model.ISearchProperty, itemId) => {
+                      onCustomRender: (field, val: string, onUpdate, item: ISearchProperty, itemId) => {
                         let disabled: boolean = false;
                         let { type, operator } = item; 
-                        if(type === Model.PropertyValueType.DateTime || 
-                           type === Model.PropertyValueType.Boolean  ||
-                           type === Model.PropertyValueType.Person   || 
-                           operator === Model.SearchOperator.NumberRange) {
+                        if(type === PropertyValueType.DateTime || 
+                           type === PropertyValueType.Boolean  ||
+                           type === PropertyValueType.Person   || 
+                           operator === SearchOperator.NumberRange) {
                           disabled = true;
                         }
                         return (

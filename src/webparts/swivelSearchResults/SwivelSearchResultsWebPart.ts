@@ -23,7 +23,6 @@ import { IDynamicDataSource } from '@microsoft/sp-dynamic-data';
 import SearchSchemaHelper from '../../helpers/SearchSchemaHelper';
 import ManagedPropertyPicker from '../../components/ManagedPropertyPicker';
 import { SortDirection } from '@pnp/sp/search';
-//import '@pnp/polyfill-ie11'
 
 const defaultSortProperties: Array<string> = [
   'Rank'
@@ -33,7 +32,6 @@ export interface ISwivelSearchResultsWebPartProps {
   includeIdentityColumn: boolean;
   isDebug: boolean;
   rowLimit: number;
-  //resultsConfig: string;
   columns: Array<Model.IResultProperty>;
   searchQuery: DynamicProperty<string>;
   sortProperty: string;

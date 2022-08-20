@@ -3,7 +3,7 @@ import { TextField, ITextFieldProps, ITextField } from 'office-ui-fabric-react/l
 import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 
 import * as React from 'react';
-import DateRange from '../../../components/DateRange';
+import DateRange, { EmptyValue, IDateRangeValue } from '../../../components/DateRange';
 import NumberRange from '../../../components/NumberRange';
 import PeoplePicker from '../../../components/PeoplePicker';
 import * as Model from '../../../model/AdvancedSearchModel';
@@ -166,14 +166,14 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                 case Model.PropertyValueType.DateTime:
                     //field.options = field.options || {} as Model.ISearchPropertyOptions;
                     field.data = field.data || {} as any;
-                    field.data.value = field.data.value || DateRange.emptyValue; 
+                    field.data.value = field.data.value || EmptyValue(); 
 
                     controls.push(
                         <DateRange
                             placeHolder={field.name} 
                             label={field.name}
                             onChanged={e => this.ctrl_changed(e, field)}
-                            //value={field.data.value as any}
+                            value={field.data.value as IDateRangeValue}
                             data-index={i}
                             key={key++}
                         />
@@ -391,13 +391,24 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     }
 
     protected ctrl_changed(val: any, field: Model.ISearchProperty): void {
+
+        console.log('ctrl_changed', arguments);
+
+        const { config } = this.state;
+        const newProp = config[field.propIndex];
+        newProp.value = val;
+/* 
+        this.setState({
+            config,
+        }); */
         
         //let config = [ ...this.state.config ] as Array<Model.ISearchProperty>;
         //let newProp = config[field.propIndex];
         //newProp.value = (!!val && val.value !== undefined) ? val.value : val;
         //newProp.value = val;
 
-        field.value = val;
+        //field.value = val;
+
 /* 
         this.setState({
             ...this.state,
@@ -484,7 +495,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
         config.forEach(field => {
             if(field.type == Model.PropertyValueType.Boolean) {
-                field.data = field.data || DateRange.emptyValue;
+                field.data = field.data || EmptyValue();
 
                 field.propertyChoices = [
                     { key: `${field.property}-1`, text: 'Yes', value: 'true' }, 

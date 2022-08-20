@@ -76,6 +76,11 @@ export interface IResultProperty extends IColumn {
     type: ResultPropertyValueType;
 }
 
+export enum SearchApi {
+    SharePointSearch = "SharePointSearch",
+    MicrosoftGraphSearch = "MicrosoftGraphSearch",
+}
+
 export enum ResultPropertyValueType {
     Boolean = "Edm.Boolean",
     DateTime = "Edm.DateTime",
