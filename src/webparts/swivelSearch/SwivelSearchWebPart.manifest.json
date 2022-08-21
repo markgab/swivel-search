@@ -98,7 +98,7 @@
               }
             },
             "value": {
-              "operator": "equals",
+              "operator": "Equals",
               "date": null
             }
           },

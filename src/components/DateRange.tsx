@@ -76,7 +76,7 @@ export const DateRangeOperatorMeta: IDateRangeOperatorMeta = {
     value?: IDateRangeValue;
     placeHolder?: string;
     label?: string;
-    onChanged?: Function;
+    onChanged?: (val: any) => void;
 }
 
 export default function DateRange(props: IDateRangeProps): JSX.Element {
@@ -86,19 +86,17 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
     const refDate = React.useRef(null);
     const refDateEnd = React.useRef(null);
     const [showEndDate, setShowEndDate] = React.useState(false);
-    const changed = () => {
-        console.log('refOperator', refOperator.current);
-        console.log('refDate', refDate.current);
-        console.log('refDateEnd', refDateEnd.current);
 
-        const operator = first(refOperator.current.selectedOptions as IDropdownOption[]).key as DateRangeOperator;
-        const date = (refDate.current.state as IDatePickerState).selectedDate;
-        const dateEnd = operator == DateRangeOperator.Between ? (refDateEnd.current.state as IDatePickerState).selectedDate : null;
-        const value = {
+    const changed = () => {
+
+        const operator = getOperator();
+        const date = getDate();
+        const dateEnd = getDateEnd();
+        const value: IDateRangeValue = {
             operator,
             date,
             dateEnd,
-        } as IDateRangeValue;
+        };
 
         setShowEndDate(operator == DateRangeOperator.Between);
 
@@ -108,15 +106,29 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
     function datePlaceholder(isEndDate = false) {
 
         const phProp = isEndDate ? 'placeholder2' : 'placeholder1';
-        if(refOperator.current) {
-            const operator = first(refOperator.current.selectedOptions as IDropdownOption[])?.key;
-            if(operator) {
-                return DateRangeOperatorMeta[operator][phProp];
-            }
+        const operator = getOperator();
+        if(operator) {
+            return DateRangeOperatorMeta[operator][phProp];
         }
 
         return '';
         
+    }
+
+    function getOperator(): DateRangeOperator {
+        const options: IDropdownOption[] = refOperator.current?.selectedOptions || []; 
+        return first(options)?.key as DateRangeOperator || null;
+    }
+
+    function getDate(): Date {
+        return refDate.current?.state?.selectedDate || null;
+    }
+
+    function getDateEnd(): Date {
+        if(getOperator() !== DateRangeOperator.Between) {
+            return null;
+        }
+        return refDate.current?.state?.selectedDate || null;
     }
 
     return (
@@ -136,7 +148,7 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
                     value={props.value.date}
                     onSelectDate={changed}
                     formatDate={onFormatDate}
-                    //maxDate={this.state.value.dateEnd}
+                    maxDate={getDateEnd()}
                     strings={DateRangeStrings}
                 />
                 <DatePicker 
@@ -146,9 +158,9 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
                     hidden={!showEndDate}
                     onSelectDate={changed} 
                     formatDate={onFormatDate}
-                    minDate={refDate.current?.state?.selectedDate}
+                    minDate={getDate()}
                     strings={DateRangeStrings}
-                    isRequired={refDate.current && refDate.current.state.selectedDate && showEndDate}
+                    isRequired={getDate() && showEndDate}
                 />
             </div>
         </div>
@@ -173,7 +185,7 @@ export function EmptyValue(): IDateRangeValue {
  * Generator options for the date range operator dropdown menu
  */
 function buildOptions(props: IDateRangeProps): IDropdownOption[] {
-    const value = props.value || EmptyValue();
+    const value = props.value?.operator ? props.value : EmptyValue();
     const options = [];
 
     for (const opName in DateRangeOperator) {                                 // Loop through DateRangeOperator values

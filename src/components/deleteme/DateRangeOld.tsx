@@ -7,7 +7,7 @@ import {
     IDropdownOption 
 } from 'office-ui-fabric-react/lib/Dropdown';
 import { Label } from 'office-ui-fabric-react/lib/Label';
-import styles from './DateRange.module.scss';
+import styles from '../DateRange.module.scss';
 import * as strings from 'SwivelSearchWebPartStrings';
 import { PropertyPaneSlider } from '@microsoft/sp-property-pane';
 

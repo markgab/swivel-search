@@ -10,6 +10,7 @@ import * as Model from '../../../model/AdvancedSearchModel';
 import styles from './SwivelSearch.module.scss';
 import DropdownResettable, { IDropdownResettableOption } from '../../../components/DropdownResettable';
 import { on } from '../../../helpers/events';
+import { IPersonaProps } from 'office-ui-fabric-react';
 
 const AdvancedMinimized: string = `${styles.pnlAdvanced} ${styles.pnlAdvancedMinimized}`;
 const AdvancedExpanded: string = styles.pnlAdvanced;
@@ -138,13 +139,13 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                         <PeoplePicker
                             onChanged={e => this.ctrl_changed(e, field)}
                             label={field.name}
-                            componentRef={(component: PeoplePicker): void => {
+              /*               componentRef={(component: PeoplePicker): void => {
                                 this.fieldRefs[field.property] = component;
-                            }}
+                            }} */
                             placeholder={field.operator}
                             data-index={i}
                             key={key++}
-                            //selectedItems={field.value as Array<IPersonaProps>}
+                            selectedItems={field.value as IPersonaProps[]}
                         />
                     );
                     break;
@@ -165,15 +166,15 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                     break;
                 case Model.PropertyValueType.DateTime:
                     //field.options = field.options || {} as Model.ISearchPropertyOptions;
-                    field.data = field.data || {} as any;
-                    field.data.value = field.data.value || EmptyValue(); 
+                    //field.data = field.data || {} as any;
+                    //field.value = field.value || EmptyValue(); 
 
                     controls.push(
                         <DateRange
                             placeHolder={field.name} 
                             label={field.name}
                             onChanged={e => this.ctrl_changed(e, field)}
-                            value={field.data.value as IDateRangeValue}
+                            value={field.value as IDateRangeValue}
                             data-index={i}
                             key={key++}
                         />
@@ -346,7 +347,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
         config.forEach((field: Model.ISearchProperty) => {
 
             if(field.type === Model.PropertyValueType.DateTime) {
-                field.data.value = null;
+                field.value = null;
             } else if(field.type === Model.PropertyValueType.Numeric ||
                       field.type === Model.PropertyValueType.String) {
                 if(field.operator === Model.SearchOperator.NumberRange) {
@@ -364,7 +365,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                 }
             } else if(field.type === Model.PropertyValueType.Person) {
                 field.value = null;
-                let ref: PeoplePicker = this.fieldRefs[field.property];
+                let ref: any = this.fieldRefs[field.property];
                 ref.reset();
             } else if(this._hasChoices(field) || field.type === Model.PropertyValueType.Boolean) {
 
@@ -397,10 +398,10 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
         const { config } = this.state;
         const newProp = config[field.propIndex];
         newProp.value = val;
-/* 
+
         this.setState({
             config,
-        }); */
+        });
         
         //let config = [ ...this.state.config ] as Array<Model.ISearchProperty>;
         //let newProp = config[field.propIndex];

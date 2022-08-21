@@ -17,9 +17,9 @@ export default class SearchQueryBuilder {
         }
 
         var searchString = '';
-        var strAndOperator = ' AND ';
-        var strOrOperator = ' OR ';
-        var timetail = ' 23:59:59';
+        const strAndOperator = ' AND ';
+        const strOrOperator = ' OR ';
+        const timetail = ' 23:59:59';
 
         // Freetext
         /*
