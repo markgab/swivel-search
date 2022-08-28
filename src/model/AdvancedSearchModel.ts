@@ -62,11 +62,11 @@ export enum SearchOperator {
 } */
 
 export interface IAdvancedSearchConfig {
-    properties: Array<ISearchProperty>;
+    properties: ISearchProperty[];
 }
 
 export interface IResultsConfig {
-    columns: Array<IResultProperty>;
+    columns: IResultProperty[];
 }
 
 export interface IResultProperty extends IColumn {

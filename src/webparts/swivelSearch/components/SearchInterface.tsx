@@ -53,7 +53,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     private readonly fieldHeight: number = 61;
     private readonly buttonRowHeight: number = 62;
     private fieldRefs: any = {};
-
+/* 
     public componentWillReceiveProps(nextProps: ISearchInterfaceProps): void {
         const config =  [ ...nextProps.config ];
 
@@ -65,15 +65,13 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
           classNameAdvanced: nextProps.startMinimized && nextProps.includeKeywordSearch ? AdvancedMinimized : AdvancedExpanded,
           showAdvanced: !(nextProps.startMinimized && nextProps.includeKeywordSearch)
         } as ISearchInterfaceState);
-    }
+    } */
     
     public render(): React.ReactElement<ISearchInterfaceProps> {
 
-        let controls: JSX.Element[] = [];
-        let rows: JSX.Element[] = [];
-        let key: number = 1;
+        const controls: JSX.Element[] = [];
 
-        const { config } = this.state;
+        const { config, showAdvanced } = this.state;
 
         config.forEach((field: Model.ISearchProperty, i: number) => {
 
@@ -91,7 +89,8 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                                 label={field.name}
                                 onChanged={e => this.ctrl_changed(e, field)}
                                 data-index={i}
-                                key={key++}
+                                value={field.value as any}
+                                key={field.property}
                             />
                         );
 
@@ -107,7 +106,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                                     selectedKey={field.choicesSelectedKey as any}
                                     onChanged={e => this.ctrl_changed(e, field)}
                                     data-index={i}
-                                    key={key++} 
+                                    key={field.property} 
                                 />
                             );
 
@@ -125,9 +124,9 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                                     componentRef={(component: ITextField): void => {
                                         this.fieldRefs[field.property] = component;
                                     }}
-                                    autoComplete={"off"}
+                                    autoComplete={"new-password"}
                                     //value={field.value ? field.value.toString() : ''}
-                                    key={key++} 
+                                    key={field.property} 
                                 />
                             );
 
@@ -144,7 +143,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                             }} */
                             placeholder={field.operator}
                             data-index={i}
-                            key={key++}
+                            key={field.property}
                             selectedItems={field.value as IPersonaProps[]}
                         />
                     );
@@ -160,7 +159,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                             options={field.propertyChoices as IDropdownResettableOption[]}
                             selectedKey={field.choicesSelectedKey as any}
                             data-index={i} 
-                            key={key++} 
+                            key={field.property} 
                         />
                     );    
                     break;
@@ -176,7 +175,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                             onChanged={e => this.ctrl_changed(e, field)}
                             value={field.value as IDateRangeValue}
                             data-index={i}
-                            key={key++}
+                            key={field.property}
                         />
                     );
 
@@ -186,30 +185,16 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                     break;
             }
 
-    /*         if((i + 1) % this.columns === 0) {
-                let r = this._row(controls, key);
-                key = r.key as number;
-                key++;
-                rows.push(r);
-                controls = [];
-            } */
 
         });
-/* 
-        if(controls.length > 0) {
-            let r = this._row(controls, key);
-            key = r.key as number;
-            key++;
-            rows.push(r);
-        } */
 
-        rows = controls.map((c, i) => this._cell(c, i));
+        const rows = controls.map((c, i) => this._cell(c, `cell${i}`));
         
         return (
             <div className={styles.searchInterface}>
                 {this.keywordSearch()}
                 <div 
-                    className={this.state.classNameAdvanced}
+                    className={showAdvanced ? AdvancedExpanded : AdvancedMinimized}
                     style={{
                         maxHeight: this.state.config.length * this.fieldHeight + this.buttonRowHeight
                     }}
@@ -239,9 +224,9 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     }
 
     public componentDidMount(): void {
-        let si = this.props.parentElement.querySelector('.' + styles.searchInterface) as HTMLElement;
+        //let si = this.props.parentElement.querySelector('.' + styles.searchInterface) as HTMLElement;
 
-        on(si, 'keypress', 'input[type="text"],input[type]', this.onInput_keypress);
+        //on(si, 'keypress', 'input[type="text"],input[type]', this.onInput_keypress);
 
     }
 
@@ -257,6 +242,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     }
 
     protected keywordSearch(): React.ReactElement<HTMLDivElement> {
+        const { showAdvanced } = this.state;
         if(this.props.includeKeywordSearch) {
             return (
                 <div className={styles.keywordSearch}>
@@ -284,7 +270,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                                 return (
                                     <ActionButton 
                                         text={suffix}
-                                        onClick={this.btnAdvanced_click}
+                                        onClick={e => this.setState({ showAdvanced: !showAdvanced })}
                                         className="btnAdvanced"
                                         checked={this.state.showAdvanced}
                                     />
@@ -315,23 +301,6 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
             ...this.state,
             resettableKey: selected.key
         });
-    }
-
-    public formChange(): void {
-
-    }
-
-    protected btnAdvanced_click = (e: React.MouseEvent<any>): void => {
-        let { showAdvanced } = this.state;
-
-        showAdvanced = !showAdvanced;
-        
-        this.setState({
-            ...this.state,
-            showAdvanced,
-            classNameAdvanced: showAdvanced ? AdvancedExpanded : AdvancedMinimized
-        });
-
     }
 
     protected btnSearch_click = (e?: React.MouseEvent<any>): void => {
@@ -448,11 +417,11 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
     }
 
-    private _container(rows: JSX.Element[], key: number): JSX.Element {
+/*     private _container(rows: JSX.Element[], key: number): JSX.Element {
         return (
             <div className="ms-Grid" key={key++}>{rows}</div>
         );
-    }
+    } */
 
     private _resetTextfield(field: ITextField): void {
 
@@ -463,8 +432,8 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
     }
 
-    private _cell(control: JSX.Element, key: number): JSX.Element {
-        return (<div className={styles.cell} key={key++}>{control}</div>);
+    private _cell(control: JSX.Element, key: string): JSX.Element {
+        return (<div className={styles.cell} key={key}>{control}</div>);
     }
 
     private _row(controls: JSX.Element[], key: number): JSX.Element {

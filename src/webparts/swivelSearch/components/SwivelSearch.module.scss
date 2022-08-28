@@ -22,6 +22,11 @@
     padding:30px;
   }
 
+  
+  input:-webkit-autofill {
+    display: none;
+  }
+
   .buttonRow {
     margin-top: 30px;
     display: flex;

@@ -397,11 +397,11 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                   label: strings.AddCriteriaFieldLabel,
                   description: strings.AddCriteriaFieldDesc,
                   multiline: true
-                })
-                /* this._propertyPanePropertyEditor({
+                }),
+                this._propertyPanePropertyEditor({
                   webpart: this,
                   key: 'propertyEditor'
-                }) */
+                })
               ]
             }
           ]

@@ -38,6 +38,7 @@ export default class SwivelSearch extends React.Component<ISwivelSearchProps, IS
           startMinimized={this.props.startMinimized}
           additionalCriteria={this.props.additionalCriteria}
         />
+        <div>{this.state.searchQuery}</div>
       </div>
     );
   }
@@ -46,6 +47,10 @@ export default class SwivelSearch extends React.Component<ISwivelSearchProps, IS
   protected search(keywordSearch: string, searchModel: Array<Model.ISearchProperty>, additionalCriteria: string): void {
   
     let query: string = SearchQueryBuilder.BuildSearchQueryString_Keyword(keywordSearch, searchModel, additionalCriteria);
+
+    this.setState({
+      searchQuery: query,
+    });
 
     this.props.searchHandler(query);
 

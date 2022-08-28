@@ -10,13 +10,15 @@ import { Label } from 'office-ui-fabric-react/lib/Label';
 import styles from './DateRange.module.scss';
 import * as strings from 'SwivelSearchWebPartStrings';
 import { first } from '../helpers/Utilities';
+import { SearchOperator } from '../model/AdvancedSearchModel';
+
 
 
 /**
  * All Possible Selectable Date Range operators
  */
 export enum DateRangeOperator {
-    After = "After",
+    After = "After", 
     Before = "Before",
     Between = "Between",
     On = "Equals"
@@ -87,7 +89,7 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
     const refDateEnd = React.useRef(null);
     const [showEndDate, setShowEndDate] = React.useState(false);
 
-    const changed = () => {
+    function changed(overrideField = "", overrideFieldValue: string | number = "") {
 
         const operator = getOperator();
         const date = getDate();
@@ -98,7 +100,11 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
             dateEnd,
         };
 
-        setShowEndDate(operator == DateRangeOperator.Between);
+        if(overrideField) {
+            value[overrideField] = overrideFieldValue;
+        }
+
+        setShowEndDate(value.operator == DateRangeOperator.Between);
 
         props.onChanged(value);
     }
@@ -106,7 +112,7 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
     function datePlaceholder(isEndDate = false) {
 
         const phProp = isEndDate ? 'placeholder2' : 'placeholder1';
-        const operator = getOperator();
+        const operator = props.value.operator;
         if(operator) {
             return DateRangeOperatorMeta[operator][phProp];
         }
@@ -139,16 +145,16 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
                     componentRef={refOperator}
                     options={options} 
                     className={styles.dateOperator}
-                    onChanged={changed}
+                    onChanged={(option: IDropdownOption) => changed('operator', option.key)}
                     selectedKey={props.value.operator}
                 ></Dropdown>
                 <DatePicker 
                     componentRef={refDate}
                     placeholder={datePlaceholder()} 
                     value={props.value.date}
-                    onSelectDate={changed}
+                    onSelectDate={changed as any}
                     formatDate={onFormatDate}
-                    maxDate={getDateEnd()}
+                    maxDate={props.value.dateEnd}
                     strings={DateRangeStrings}
                 />
                 <DatePicker 
@@ -156,11 +162,11 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
                     placeholder={datePlaceholder(true)}
                     value={props.value.dateEnd}
                     hidden={!showEndDate}
-                    onSelectDate={changed} 
+                    onSelectDate={changed as any} 
                     formatDate={onFormatDate}
-                    minDate={getDate()}
+                    minDate={props.value.date}
                     strings={DateRangeStrings}
-                    isRequired={getDate() && showEndDate}
+                    isRequired={props.value.date && showEndDate}
                 />
             </div>
         </div>
@@ -193,9 +199,6 @@ function buildOptions(props: IDateRangeProps): IDropdownOption[] {
         options.push({                                            // Create a new option for each operator
             text: DateRangeOperatorMeta[op].name,
             key: op,
-            data: {
-                value: op
-            },
             selected: (op === value.operator) ? true : undefined       // Mark the correct one as selected
         } as IDropdownOption);
     }

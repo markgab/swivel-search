@@ -158,7 +158,7 @@ export default class ItemPropertiesPanel extends React.Component<IItemProperties
     }
 
     private _activateCancelButtons(frame: HTMLIFrameElement): void {
-        on(frame.contentDocument.body, 'click', 'input[type="button"][value="Close"],input[type="button"][value="Cancel"]', e => this.onClose_click(e));        
+        //on(frame.contentDocument.body, 'click', 'input[type="button"][value="Close"],input[type="button"][value="Cancel"]', e => this.onClose_click(e));        
     }
     
     protected onClose_click(e): void {

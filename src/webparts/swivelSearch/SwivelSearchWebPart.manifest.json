@@ -91,12 +91,6 @@
             "choices": null,
             "sortIdx": 6,
             "propIndex": 5,
-            "data": {
-              "value": {
-                "operator": "Equals",
-                "date": null
-              }
-            },
             "value": {
               "operator": "Equals",
               "date": null

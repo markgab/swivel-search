@@ -46,18 +46,17 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
   private _customCollectionFieldType;
   private _propertyPanePropertyEditor;
 
-  public onInit(): Promise<void> {
-    return super.onInit().then(_ => {
+  public async onInit(): Promise<void> {
+    await super.onInit();
 
-      this.properties.isDebug = true;
+    this.properties.isDebug = true;
 
-      this.searchSchemaHelper = new SearchSchemaHelper(
-        document.location.origin,
-        this.context.pageContext.web.serverRelativeUrl, 
-        this.context.spHttpClient
-      );
+    this.searchSchemaHelper = new SearchSchemaHelper(
+      document.location.origin,
+      this.context.pageContext.web.serverRelativeUrl, 
+      this.context.spHttpClient
+    );
 
-    });
   }
 
   private _sortableProperties: Array<IPropertyPaneDropdownOption> = [];
@@ -68,7 +67,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
     const searchQuery: string | undefined = this.properties.searchQuery.tryGetValue();
     const needsConfiguration: boolean = (!searchQuerySource && !searchQuery) || !this.properties.columns;
 
-    const element: React.ReactElement<ISwivelSearchResultsProps > = React.createElement(
+    const element: React.ReactElement<ISwivelSearchResultsProps> = React.createElement(
       SwivelSearchResults,
       {
         needsConfiguration: needsConfiguration,

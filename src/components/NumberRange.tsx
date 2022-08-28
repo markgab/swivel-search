@@ -3,7 +3,7 @@ import {
     Dropdown, 
     IDropdownOption 
 } from 'office-ui-fabric-react/lib/Dropdown';
-import { TextField, ITextField, ITextFieldProps } from 'office-ui-fabric-react/lib/TextField';
+import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import styles from './NumberRange.module.scss';
 import * as strings from 'SwivelSearchWebPartStrings';
@@ -103,7 +103,7 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
     const refNumberEnd = React.useRef(null);
     const [showEndNumber, setShowEndNumber] = React.useState(false);
 
-    const changed = () => {
+    function changed(overrideField = "", overrideFieldValue: string | number = "") {
 
         const operator = getOperator();
         const number = getNumber();
@@ -114,14 +114,24 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
             numberEnd,
         } as INumberRangeValue;
 
-        setShowEndNumber(operator == NumberRangeOperator.Between);
+        if(overrideField) {
+            value[overrideField] = overrideFieldValue;
+        }
+
+        setShowEndNumber(value.operator == NumberRangeOperator.Between);
 
         props.onChanged(value);
 
     }
 
+    function onNumber1_blur(event: React.FocusEvent<HTMLInputElement>) {
+        const operator = getOperator();
+        if(operator === NumberRangeOperator.Between) {
+            refNumberEnd.current.focus();
+        }
+    }
     
-    const onGetErrorMessage = (numberEnd: string): string => {
+    function onGetErrorMessage(numberEnd: string): string {
         const operator = getOperator();
         const number = getNumber();
         if(operator === NumberRangeOperator.Between) {
@@ -141,7 +151,7 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
     }
 
     function getNumber(): number {
-        const str = refNumber.current?.state?.value || null;
+        const str = refNumber.current?.value || null;
         if(str) {
             return Number(str);
         }
@@ -152,11 +162,23 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
         if(getOperator() !== NumberRangeOperator.Between) {
             return null;
         }
-        const str = refNumberEnd.current?.state?.value || null;
+        const str = refNumberEnd.current?.value || null;
         if(str) {
             return Number(str);
         }
         return null;
+    }
+    
+    function numberPlaceholder(isEndNumber = false) {
+
+        const phProp = isEndNumber ? 'placeholder2' : 'placeholder1';
+        const operator = props.value.operator;
+        if(operator) {
+            return NumberRangeOperatorMeta[operator][phProp];
+        }
+
+        return '';
+        
     }
 
     return(
@@ -168,31 +190,33 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
                     componentRef={refOperator}
                     options={options} 
                     className={styles.numberOperator}
-                    onChanged={changed}
+                    onChanged={o => changed('operator', o.key)}
                     selectedKey={props.value.operator}
                 />
 
                 <TextField
                     componentRef={refNumber}
                     value={props.value.number || '' as any}
-                    onChange={changed}
-                    //onBlur={this.onNumber1_blur}
-                    placeholder={NumberRangeOperatorMeta[getOperator()]?.placeholder1}
+                    onChange={(e, val) => changed('number', val)}
+                    onBlur={onNumber1_blur}
+                    placeholder={numberPlaceholder()}
                     autoComplete={"off"}
                     type={"number"}
                 />
 
-                <TextField
-                    componentRef={refNumberEnd}
-                    hidden={!showEndNumber}
-                    value={props.value.numberEnd || '' as any}
-                    onChange={changed} 
-                    placeholder={NumberRangeOperatorMeta[getOperator()]?.placeholder2}
-                    autoComplete={"off"}
-                    validateOnFocusIn={true}
-                    type={"number"}
-                    onGetErrorMessage={onGetErrorMessage}
-                />
+                {
+                    showEndNumber &&
+                    <TextField
+                        componentRef={refNumberEnd}
+                        value={props.value.numberEnd || '' as any}
+                        onChange={(e, val) => changed('numberEnd', val)} 
+                        placeholder={numberPlaceholder(true)}
+                        autoComplete={"off"}
+                        validateOnFocusIn={true}
+                        type={"number"}
+                        onGetErrorMessage={onGetErrorMessage}
+                    />
+                }
 
             </div>
         </div>
@@ -203,8 +227,6 @@ NumberRange.defaultProps = {
     value: emptyValue(),
 };
 
-
-
 export function emptyValue(): INumberRangeValue {
     return {
         operator: NumberRangeOperator.Equals,
@@ -212,8 +234,6 @@ export function emptyValue(): INumberRangeValue {
         numberEnd: null
     };
 }
-
-
 
 /**
  * Generator options for the number range operator dropdown menu
