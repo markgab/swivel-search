@@ -83,11 +83,28 @@ export const DateRangeOperatorMeta: IDateRangeOperatorMeta = {
 
 export default function DateRange(props: IDateRangeProps): JSX.Element {
 
+    const { 
+        label,
+        onChanged,
+    } = props;
+
+    const value = props.value || EmptyValue();
+
     const options = buildOptions(props);
     const refOperator = React.useRef(null);
     const refDate = React.useRef(null);
     const refDateEnd = React.useRef(null);
     const [showEndDate, setShowEndDate] = React.useState(false);
+
+    /**
+     * On Props Change
+     */
+     React.useEffect(() => {
+
+        // Reset showEndNumber on receive new props
+        setShowEndDate(props.value?.operator === DateRangeOperator.Between);
+
+    }, [props]);
 
     function changed(overrideField = "", overrideFieldValue: string | number = "") {
 
@@ -106,13 +123,13 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
 
         setShowEndDate(value.operator == DateRangeOperator.Between);
 
-        props.onChanged(value);
+        onChanged(value);
     }
 
     function datePlaceholder(isEndDate = false) {
 
         const phProp = isEndDate ? 'placeholder2' : 'placeholder1';
-        const operator = props.value.operator;
+        const operator = value.operator;
         if(operator) {
             return DateRangeOperatorMeta[operator][phProp];
         }
@@ -139,34 +156,34 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
 
     return (
         <div className={styles.dateRange}>
-            <Label>{props.label}</Label>
+            <Label>{label}</Label>
             <div className={styles.pickerRow}>
                 <Dropdown
                     componentRef={refOperator}
                     options={options} 
                     className={styles.dateOperator}
                     onChanged={(option: IDropdownOption) => changed('operator', option.key)}
-                    selectedKey={props.value.operator}
+                    selectedKey={value.operator}
                 ></Dropdown>
                 <DatePicker 
                     componentRef={refDate}
                     placeholder={datePlaceholder()} 
-                    value={props.value.date}
+                    value={value.date}
                     onSelectDate={changed as any}
                     formatDate={onFormatDate}
-                    maxDate={props.value.dateEnd}
+                    maxDate={value.dateEnd}
                     strings={DateRangeStrings}
                 />
                 <DatePicker 
                     componentRef={refDateEnd}
                     placeholder={datePlaceholder(true)}
-                    value={props.value.dateEnd}
+                    value={value.dateEnd}
                     hidden={!showEndDate}
                     onSelectDate={changed as any} 
                     formatDate={onFormatDate}
-                    minDate={props.value.date}
+                    minDate={value.date}
                     strings={DateRangeStrings}
-                    isRequired={props.value.date && showEndDate}
+                    isRequired={value.date && showEndDate}
                 />
             </div>
         </div>

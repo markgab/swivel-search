@@ -1,4 +1,4 @@
-import { DefaultButton, PrimaryButton, ActionButton } from 'office-ui-fabric-react/lib/Button';
+import { PrimaryButton, ActionButton } from 'office-ui-fabric-react/lib/Button';
 import { TextField, ITextFieldProps, ITextField } from 'office-ui-fabric-react/lib/TextField';
 import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 
@@ -6,7 +6,12 @@ import * as React from 'react';
 import DateRange, { EmptyValue, IDateRangeValue } from '../../../components/DateRange';
 import NumberRange from '../../../components/NumberRange';
 import PeoplePicker from '../../../components/PeoplePicker';
-import * as Model from '../../../model/AdvancedSearchModel';
+import { 
+    ISearchProperty,
+    ISearchPropertyChoice,
+    PropertyValueType, 
+    SearchOperator,
+} from '../../../model/AdvancedSearchModel';
 import styles from './SwivelSearch.module.scss';
 import DropdownResettable, { IDropdownResettableOption } from '../../../components/DropdownResettable';
 import { on } from '../../../helpers/events';
@@ -16,8 +21,8 @@ const AdvancedMinimized: string = `${styles.pnlAdvanced} ${styles.pnlAdvancedMin
 const AdvancedExpanded: string = styles.pnlAdvanced;
 
 export interface ISearchInterfaceProps {
-    config: Array<Model.ISearchProperty>;
-    searchHandler: (keywordSearch: string, searchModel: Array<Model.ISearchProperty>, additionalCriteria: string) => void;
+    config: ISearchProperty[];
+    searchHandler: (keywordSearch: string, searchModel: ISearchProperty[], additionalCriteria: string) => void;
     includeKeywordSearch: boolean;
     parentElement: HTMLElement;
     startMinimized: boolean;
@@ -26,7 +31,7 @@ export interface ISearchInterfaceProps {
 
 export interface ISearchInterfaceState {
     keywordSearch: string;
-    config: Array<Model.ISearchProperty>;
+    config: ISearchProperty[];
     resettableKey: string | number;
     classNameAdvanced: string;
     showAdvanced: boolean;
@@ -73,16 +78,16 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
         const { config, showAdvanced } = this.state;
 
-        config.forEach((field: Model.ISearchProperty, i: number) => {
+        config.forEach((field: ISearchProperty, i: number) => {
 
             switch(field.type) {
-                case Model.PropertyValueType.Int32:
-                case Model.PropertyValueType.Int64:
-                case Model.PropertyValueType.Guid:
-                case Model.PropertyValueType.Double:
-                case Model.PropertyValueType.Numeric:
-                case Model.PropertyValueType.String:
-                    if(field.operator === Model.SearchOperator.NumberRange) {
+                case PropertyValueType.Int32:
+                case PropertyValueType.Int64:
+                case PropertyValueType.Guid:
+                case PropertyValueType.Double:
+                case PropertyValueType.Numeric:
+                case PropertyValueType.String:
+                    if(field.operator === SearchOperator.NumberRange) {
 
                         controls.push(
                             <NumberRange 
@@ -120,10 +125,11 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                                     label={field.name} 
                                     onChange={(ev, e) => this.ctrl_changed(e, field)}
                                     data-index={i}
-                                    type={field.type === Model.PropertyValueType.Numeric ? "numeric" : ""}
-                                    componentRef={(component: ITextField): void => {
+                                    type={field.type === PropertyValueType.Numeric ? "numeric" : ""}
+                                    value={field.value as string}
+                                    /* componentRef={(component: ITextField): void => {
                                         this.fieldRefs[field.property] = component;
-                                    }}
+                                    }} */
                                     autoComplete={"new-password"}
                                     //value={field.value ? field.value.toString() : ''}
                                     key={field.property} 
@@ -133,7 +139,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                         }
                     }
                     break;
-                case Model.PropertyValueType.Person:
+                case PropertyValueType.Person:
                     controls.push(
                         <PeoplePicker
                             onChanged={e => this.ctrl_changed(e, field)}
@@ -148,7 +154,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                         />
                     );
                     break;
-                case Model.PropertyValueType.Boolean:
+                case PropertyValueType.Boolean:
 
                     controls.push(
                         <DropdownResettable 
@@ -163,7 +169,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                         />
                     );    
                     break;
-                case Model.PropertyValueType.DateTime:
+                case PropertyValueType.DateTime:
                     //field.options = field.options || {} as Model.ISearchPropertyOptions;
                     //field.data = field.data || {} as any;
                     //field.value = field.value || EmptyValue(); 
@@ -311,62 +317,45 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
         let keywordSearch = "";
 
-        let config = [ ...this.state.config ] as Array<Model.ISearchProperty>;
+        let config = [ ...this.state.config ] as ISearchProperty[];
 
-        config.forEach((field: Model.ISearchProperty) => {
+        config.forEach((field: ISearchProperty) => {
 
-            if(field.type === Model.PropertyValueType.DateTime) {
-                field.value = null;
-            } else if(field.type === Model.PropertyValueType.Numeric ||
-                      field.type === Model.PropertyValueType.String) {
-                if(field.operator === Model.SearchOperator.NumberRange) {
+            switch(true) {
+                case field.type === PropertyValueType.Boolean:
+                case this._hasChoices(field):
+                    field.choicesSelectedKey = '';
+                    //field.value = null;
+                    break;
+                case field.type === PropertyValueType.Person:
+                    field.value = [];
+                    break;
+                default:
                     field.value = null;
-                } else {
-                    if(this._hasChoices(field)) {
-                        field.choicesSelectedKey = '';
-                        field.value = null;
-                    } else {
-                        field.value = null;
-                        //let ref: TextField = this.fieldRefs[field.property];
-                        let ref: any = this.fieldRefs[field.property];
-                        this._resetTextfield(ref);
-                    }
-                }
-            } else if(field.type === Model.PropertyValueType.Person) {
-                field.value = null;
-                let ref: any = this.fieldRefs[field.property];
-                ref.reset();
-            } else if(this._hasChoices(field) || field.type === Model.PropertyValueType.Boolean) {
-
-                field.choicesSelectedKey = '';
-                field.value = null;
-
-            } else {
-                field.value = '';
             }
+
         });
 
         this.setState({
-            ...this.state,
             config,
             keywordSearch
         } as ISearchInterfaceState);
     }
 
-    protected ctrl_change(val: React.FormEvent<HTMLDivElement>, field: Model.ISearchProperty): void {
-
-        console.log('change', val);
-
-
-    }
-
-    protected ctrl_changed(val: any, field: Model.ISearchProperty): void {
+    protected ctrl_changed(val: any, field: ISearchProperty): void {
 
         console.log('ctrl_changed', arguments);
 
         const { config } = this.state;
         const newProp = config[field.propIndex];
-        newProp.value = val;
+
+        switch(field.type) {
+            case PropertyValueType.Boolean:
+                newProp.choicesSelectedKey = val.key;
+                break;
+            default:
+                newProp.value = val;
+        }
 
         this.setState({
             config,
@@ -417,20 +406,6 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
     }
 
-/*     private _container(rows: JSX.Element[], key: number): JSX.Element {
-        return (
-            <div className="ms-Grid" key={key++}>{rows}</div>
-        );
-    } */
-
-    private _resetTextfield(field: ITextField): void {
-
-        field['setState']({
-            ...field['state'],
-            value: ''
-        });
-
-    }
 
     private _cell(control: JSX.Element, key: string): JSX.Element {
         return (<div className={styles.cell} key={key}>{control}</div>);
@@ -452,19 +427,19 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
         );
     }
 
-    private _hasChoices(field: Model.ISearchProperty): boolean {
+    private _hasChoices(field: ISearchProperty): boolean {
         return field.choices && field.choices.length > 0;
     }
     
-    private _isSearchPropertyChoice(choice: any): choice is Model.ISearchPropertyChoice {
+    private _isSearchPropertyChoice(choice: any): choice is ISearchPropertyChoice {
         return choice && typeof choice !== 'string' && typeof choice !== 'number';
     }
 
-    private _conformPropertyChoices(config: Array<Model.ISearchProperty>): void {
+    private _conformPropertyChoices(config: ISearchProperty[]): void {
         const delim = "|";
 
         config.forEach(field => {
-            if(field.type == Model.PropertyValueType.Boolean) {
+            if(field.type == PropertyValueType.Boolean) {
                 field.data = field.data || EmptyValue();
 
                 field.propertyChoices = [
@@ -491,7 +466,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                         key,
                         text,
                         value
-                    } as Model.ISearchPropertyChoice);
+                    } as ISearchPropertyChoice);
                 });
             }
         });

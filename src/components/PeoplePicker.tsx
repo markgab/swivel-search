@@ -6,7 +6,7 @@ import {
     ISearchQuery
 } from '@pnp/sp/search';
 import globals from '../model/SwivelSearchGlobals';
-import { CompactPeoplePicker } from 'office-ui-fabric-react/lib/Pickers';
+import { CompactPeoplePicker, IBasePicker } from 'office-ui-fabric-react/lib/Pickers';
 import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import styles from './PeoplePicker.module.scss';
@@ -22,7 +22,7 @@ export interface PeoplePickerProps {
     placeholder?: string;
     managedProperty?: string;
     onChanged?: (val: any) => void;
-    selectedItems?: Array<IPersonaProps>;
+    selectedItems?: IPersonaProps[];
     //componentRef?: (component?: PeoplePicker) => void;  
     rowLimit?: number; 
     pauseDuration?: number;
@@ -33,14 +33,13 @@ export default function PeoplePicker(props: PeoplePickerProps): JSX.Element {
     const {
         label,
         placeholder,
-        managedProperty,
         onChanged,
         selectedItems,
         rowLimit,
         pauseDuration,
     } = props;
 
-    const onPersonPicker_change = (items?: IPersonaProps[]): void => {
+    function onPersonPicker_change (items?: IPersonaProps[]): void {
 
         if(typeof onChanged === 'function') {
             onChanged(items.length ? items : []);
@@ -52,7 +51,7 @@ export default function PeoplePicker(props: PeoplePickerProps): JSX.Element {
 
     }
     
-    const onPersonPicker_ResolveSuggestions = async (filter: string, selectedItems?: IPersonaProps[]): Promise<IPersonaProps[]> => {
+    async function onPersonPicker_ResolveSuggestions (filter: string, selectedItems?: IPersonaProps[]): Promise<IPersonaProps[]> {
         if(filter.length <= 2) {
             return [];
         }
@@ -104,18 +103,6 @@ export default function PeoplePicker(props: PeoplePickerProps): JSX.Element {
         // If there are no exact matches, display suggestions
         return matches;
 
-    }
-
-    function setPlaceholder(): void {
-        /* if(this.props.placeholder && this._picker) {
-            let p: any = this._picker;
-            if(p.input && p.input.current && p.input.current._inputElement) {
-                let input: HTMLInputElement = p.input.current._inputElement.current;
-                if(input && !input.value) {
-                    input.placeholder = this.props.placeholder;
-                }   
-            }
-        } */
     }
 
     function searchPeople(searchTerms: string): Promise<Array<IPersonaProps>> {
@@ -189,16 +176,37 @@ export default function PeoplePicker(props: PeoplePickerProps): JSX.Element {
 
     }
 
+    let picker: IBasePicker<IPersonaProps>;    
+
+    function componentRefCall(component?: IBasePicker<IPersonaProps>): void {
+
+        picker = component;
+
+        setPlaceholder();
+
+    }
+
+    function setPlaceholder(): void {
+        if(placeholder && picker) {
+            let p: any = picker;
+            if(p.input && p.input.current && p.input.current._inputElement) {
+                let input: HTMLInputElement = p.input.current._inputElement.current;
+                if(input && !input.value) {
+                    input.placeholder = placeholder;
+                }
+            }
+        }
+    }
+
     return (
         <div className={styles.PeoplePicker}>
-            <Label>{props.label}</Label>
+            <Label>{label}</Label>
             <CompactPeoplePicker
                 onResolveSuggestions={onPersonPicker_ResolveSuggestions}
                 onChange={onPersonPicker_change}
-                //onInputChange={onPersonPicker_inputChange}
                 itemLimit={1}
-                //componentRef={this.componentRefCall}
-                //selectedItems={this.props.selectedItems}
+                componentRef={componentRefCall}
+                selectedItems={selectedItems}
             />
         </div>
     );

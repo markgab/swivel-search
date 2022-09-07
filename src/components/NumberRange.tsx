@@ -97,11 +97,29 @@ export const NumberRangeOperatorMeta: INumberRangeOperatorMeta = {
 };
 
 export default function NumberRange(props: INumberRangeProps): JSX.Element {
+    
+    const { 
+        label,
+        onChanged,
+    } = props;
+
+    const value = props.value || EmptyValue();
+
     const options = populateOptions(props);
     const refOperator = React.useRef(null);
     const refNumber = React.useRef(null);
     const refNumberEnd = React.useRef(null);
     const [showEndNumber, setShowEndNumber] = React.useState(false);
+
+    /**
+     * On Props Change
+     */
+    React.useEffect(() => {
+
+        // Reset showEndNumber on receive new props
+        setShowEndNumber(props.value?.operator === NumberRangeOperator.Between);
+
+    }, [props]);
 
     function changed(overrideField = "", overrideFieldValue: string | number = "") {
 
@@ -120,7 +138,7 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
 
         setShowEndNumber(value.operator == NumberRangeOperator.Between);
 
-        props.onChanged(value);
+        onChanged(value);
 
     }
 
@@ -172,7 +190,7 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
     function numberPlaceholder(isEndNumber = false) {
 
         const phProp = isEndNumber ? 'placeholder2' : 'placeholder1';
-        const operator = props.value.operator;
+        const operator = value.operator;
         if(operator) {
             return NumberRangeOperatorMeta[operator][phProp];
         }
@@ -183,7 +201,7 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
 
     return(
         <div className={styles.numberRange}>
-            <Label>{props.label}</Label>
+            <Label>{label}</Label>
             <div className={styles.pickerRow}>
                 
                 <Dropdown
@@ -191,12 +209,12 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
                     options={options} 
                     className={styles.numberOperator}
                     onChanged={o => changed('operator', o.key)}
-                    selectedKey={props.value.operator}
+                    selectedKey={value.operator}
                 />
 
                 <TextField
                     componentRef={refNumber}
-                    value={props.value.number || '' as any}
+                    value={value.number || '' as any}
                     onChange={(e, val) => changed('number', val)}
                     onBlur={onNumber1_blur}
                     placeholder={numberPlaceholder()}
@@ -208,7 +226,7 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
                     showEndNumber &&
                     <TextField
                         componentRef={refNumberEnd}
-                        value={props.value.numberEnd || '' as any}
+                        value={value.numberEnd || '' as any}
                         onChange={(e, val) => changed('numberEnd', val)} 
                         placeholder={numberPlaceholder(true)}
                         autoComplete={"off"}
@@ -224,10 +242,10 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
 }
 
 NumberRange.defaultProps = {
-    value: emptyValue(),
+    value: EmptyValue(),
 };
 
-export function emptyValue(): INumberRangeValue {
+export function EmptyValue(): INumberRangeValue {
     return {
         operator: NumberRangeOperator.Equals,
         number: null,
@@ -239,7 +257,7 @@ export function emptyValue(): INumberRangeValue {
  * Generator options for the number range operator dropdown menu
  */
 function populateOptions(props: INumberRangeProps): IDropdownOption[] {
-    const value = props.value || emptyValue();
+    const value = props.value || EmptyValue();
     const options = []
     for (const opName in NumberRangeOperator) {                             // Loop through DateRangeOperator values
         const op = NumberRangeOperator[opName];
