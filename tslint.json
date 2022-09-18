@@ -18,6 +18,7 @@
     "no-unnecessary-semicolons": true,
     "no-unused-expression": true,
     "no-with-statement": true,
+    "prefer-const": true,
     "semicolon": true,
     "trailing-comma": false,
     "typedef": false,

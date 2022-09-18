@@ -48,7 +48,7 @@ export default class AdvancedSearchData {
     public searcher: ISearch;
 
     public get customSelectProperties(): Array<string> {
-        let props: Array<string> = [];
+        const props: Array<string> = [];
         
         if(this.columns) {
             this.columns.forEach((prop: Model.IResultProperty) => {
@@ -148,7 +148,7 @@ export default class AdvancedSearchData {
     }
 
     private _determineItemType(item: IAdvancedSearchResult): Model.ResultItemType {
-        let type = Model.ResultItemType;
+        const type = Model.ResultItemType;
         switch(true) {
             case this._isDocument(item):
                 return type.Document;
@@ -188,7 +188,7 @@ export default class AdvancedSearchData {
     }
 
     private _isImage(result: IAdvancedSearchResult): boolean {
-        let imgs: string[] = ['gif','png','jpg','jpeg','tif','tiff','bmp'];     // Recognized image formats
+        const imgs: string[] = ['gif','png','jpg','jpeg','tif','tiff','bmp'];     // Recognized image formats
         return  result.IsDocument == "false" as any &&
                 !!result.FileType &&
                 result.IsContainer == "false" as any &&

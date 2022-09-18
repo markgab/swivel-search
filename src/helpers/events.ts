@@ -5,7 +5,7 @@ export function on(element: HTMLElement, event: string, selectorOrHandler: strin
 
         if (typeof(selectorOrHandler) === 'string') {
                 
-            let matches = getElementMatches();                              // runtime polyfill within iframe context
+            const matches = getElementMatches();                              // runtime polyfill within iframe context
             
             while (!matches.call(target, selectorOrHandler) && target !== element) {
                 target = target.parentElement;
@@ -21,7 +21,7 @@ export function on(element: HTMLElement, event: string, selectorOrHandler: strin
 }
 
 function getElementMatches(): (string) => boolean {
-    let m =  
+    const m =  
     Element.prototype.matches ||
     Element.prototype['matchesSelector'] ||
     Element.prototype['mozMatchesSelector'] ||
@@ -29,8 +29,8 @@ function getElementMatches(): (string) => boolean {
     Element.prototype['oMatchesSelector'] ||
     Element.prototype['webkitMatchesSelector'] ||
     function(s) {
-        var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-            i = matches.length;
+        const matches = (this.document || this.ownerDocument).querySelectorAll(s);
+        let i = matches.length;
         while (--i >= 0 && matches.item(i) !== this) {}
         return i > -1;
     };

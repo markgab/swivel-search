@@ -41,8 +41,8 @@ export default class OfficeURIHelper {
      * @param docURL Absolute url to document https://contoso.sharepoint.com/shared/document1.docx
      */
     public static getAbbreviatedOpenInClientURI(docURL: string): string {
-        let ext = this.getFileExtensionFromURL(docURL);
-        let sch = this.getScheme(ext);
+        const ext = this.getFileExtensionFromURL(docURL);
+        const sch = this.getScheme(ext);
 
         return sch + docURL;
 
@@ -50,8 +50,8 @@ export default class OfficeURIHelper {
 
     public static getEditInClientURI(docURL: string): string {
         // ms-powerpoint:ofe|u|https://www.fourthcoffee.com/AllHandsDeck.ppt
-        let ext = this.getFileExtensionFromURL(docURL);
-        let sch = this.getScheme(ext);
+        const ext = this.getFileExtensionFromURL(docURL);
+        const sch = this.getScheme(ext);
         return `${sch}${Command.Edit}|${Descriptor.U}|${docURL}`;
     }
 
@@ -60,8 +60,8 @@ export default class OfficeURIHelper {
      * @param docURL Url to document https://contoso.sharepoint.com/shared/document1.docx
      */
     public static getFileExtensionFromURL(docURL: string): string {
-        let trim = docURL.replace(/\?.*$/, '');
-        let m = trim.match(/[a-zA-Z0-1]{2,5}$/);
+        const trim = docURL.replace(/\?.*$/, '');
+        const m = trim.match(/[a-zA-Z0-1]{2,5}$/);
 
         if(m.length > 0) {
             return m[0].toLowerCase();
@@ -130,7 +130,7 @@ export default class OfficeURIHelper {
      * @param docURL Url to document https://contoso.sharepoint.com/shared/document1.docx
      */
     public static isOfficeDocument(docURL: string): boolean {
-        let ext = [            
+        const ext = [            
             'doc',
             'docm',
             'docx',

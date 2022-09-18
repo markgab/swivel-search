@@ -51,17 +51,17 @@ export default function PeoplePicker(props: PeoplePickerProps): JSX.Element {
 
     }
     
-    async function onPersonPicker_ResolveSuggestions (filter: string, selectedItems?: IPersonaProps[]): Promise<IPersonaProps[]> {
+    async function onPersonPicker_ResolveSuggestions (filter: string, selected?: IPersonaProps[]): Promise<IPersonaProps[]> {
         if(filter.length <= 2) {
             return [];
         }
 
         // Collection of search engine matches
-        let currPersons = [];
+        let currPersons: IPersonaProps[];
 
         // Collection of historical items collection
         // Some valid search results may no longer be in the active user's list
-        let histPersons = [];
+        let histPersons: IPersonaProps[];
 
         // Promises array
         const p = [];
@@ -86,17 +86,17 @@ export default function PeoplePicker(props: PeoplePickerProps): JSX.Element {
         histPersons = cleanMultivalueResults(histPersons, filter);
         
         // Combine both results and remove dupes
-        let matches = removeDuplicates(currPersons.concat(histPersons));
+        const matches = removeDuplicates(currPersons.concat(histPersons));
 
         // Search for an exact match where the search key matches a persons name to the letter
-        let exact = matches.filter(m => {
+        const exact = matches.filter(m => {
             return (m.text || "").toLowerCase() === filter.toLowerCase();
         });
 
         // If there is an exact match, auto-select it
         if(exact.length > 0) {
             let match = exact[0];
-            selectedItems.push(match);
+            selected.push(match);
             return [];
         }
 
@@ -122,7 +122,7 @@ export default function PeoplePicker(props: PeoplePickerProps): JSX.Element {
             EnablePhonetic,
         };
 
-        let query = `${searchTerms}*`; 
+        const query = `${searchTerms}*`; 
         
         const q = SearchQueryBuilder(query, queryOptions);
 
@@ -188,9 +188,9 @@ export default function PeoplePicker(props: PeoplePickerProps): JSX.Element {
 
     function setPlaceholder(): void {
         if(placeholder && picker) {
-            let p: any = picker;
+            const p: any = picker;
             if(p.input && p.input.current && p.input.current._inputElement) {
-                let input: HTMLInputElement = p.input.current._inputElement.current;
+                const input: HTMLInputElement = p.input.current._inputElement.current;
                 if(input && !input.value) {
                     input.placeholder = placeholder;
                 }
@@ -242,13 +242,13 @@ function wait(ms: number): Promise<void> {
 }
 
 function removeDuplicates(persons: Array<IPersonaProps>): Array<IPersonaProps> {
-    let unique = {};
+    const unique = {};
     persons.forEach(p => {
       if(!unique[p.text]) {
         unique[p.text] = p;
       }
     });
-    let arr: Array<IPersonaProps> = [];
+    const arr: Array<IPersonaProps> = [];
     for (let p in unique) {
         arr.push(unique[p]);
     }
@@ -257,19 +257,19 @@ function removeDuplicates(persons: Array<IPersonaProps>): Array<IPersonaProps> {
 }
 
 function cleanMultivalueResults(persons: Array<IPersonaProps>, searchTerm: string): Array<IPersonaProps> {
-    let multis = persons.filter(p => p.text.indexOf(';') !== -1);
-    let lowerTerm = searchTerm.toLowerCase();
+    const multis = persons.filter(p => p.text.indexOf(';') !== -1);
+    const lowerTerm = searchTerm.toLowerCase();
 
     multis.forEach(p => {
-        let lowerString = p.text.toLowerCase();
+        const lowerString = p.text.toLowerCase();
         if(lowerString.indexOf(lowerTerm) === -1) {
            p.text = '';
            return;
         }
-        let lowerNames = lowerString.split(';');
-        let properNames = p.text.split(';');
+        const lowerNames = lowerString.split(';');
+        const properNames = p.text.split(';');
         for(let i = 0; i < lowerNames.length; i++) {
-            let n = lowerNames[i];
+            const n = lowerNames[i];
             if(n.indexOf(lowerTerm) !== -1) {
                 p.text = properNames[i];
                 break;

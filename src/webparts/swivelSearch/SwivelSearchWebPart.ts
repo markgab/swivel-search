@@ -363,7 +363,7 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
                       type: this._customCollectionFieldType.custom,
                       onCustomRender: (field, val: string, onUpdate, item: ISearchProperty, itemId) => {
                         let disabled: boolean = false;
-                        let { type, operator } = item; 
+                        const { type, operator } = item; 
                         if(type === PropertyValueType.DateTime || 
                            type === PropertyValueType.Boolean  ||
                            type === PropertyValueType.Person   || 

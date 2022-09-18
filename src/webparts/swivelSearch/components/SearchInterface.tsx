@@ -59,7 +59,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     private readonly buttonRowHeight: number = 62;
     private fieldRefs: any = {};
 
-    componentDidUpdate(prevProps, prevState) {
+    public componentDidUpdate(prevProps, prevState) {
         // update logic here
     }
 
@@ -242,7 +242,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     }
 
     protected onInput_keypress = (e: KeyboardEvent) => {
-        let key = e.keyCode;
+        const key = e.keyCode;
 
         switch(key) {
             case 13:    // Enter
@@ -299,7 +299,6 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     }
 
     protected keywordSearch_changed = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, keywordSearch: string): void => {
-        console.log('keywordSearch: ', keywordSearch);
          this.setState({
             ...this.state,
             keywordSearch
@@ -320,9 +319,9 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
     protected btnReset_click = (e: React.MouseEvent<any>): void => {
 
-        let keywordSearch = "";
+        const keywordSearch = "";
 
-        let config = [ ...this.state.config ] as ISearchProperty[];
+        const config = [ ...this.state.config ] as ISearchProperty[];
 
         config.forEach((field: ISearchProperty) => {
 
@@ -418,7 +417,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
     private _row(controls: JSX.Element[], key: number): JSX.Element {
 
-        let cells: JSX.Element[] = [];
+        const cells: JSX.Element[] = [];
 
         controls.forEach((control: JSX.Element, i: number) => {
             cells.push(
@@ -459,7 +458,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
                 field.choices.split("\n").forEach((text, idx) => {
                     let value = text;
-                    let key = `${field.property}-${idx}`;
+                    const key = `${field.property}-${idx}`;
 
                     if(text.indexOf(delim) !== -1) {
                         let arr = text.split(delim);

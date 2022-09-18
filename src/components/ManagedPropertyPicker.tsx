@@ -99,7 +99,7 @@ export default class ManagedPropertyPicker extends React.Component<IManagedPrope
     }
 
     protected onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        let key = e.target.value;
+        const key = e.target.value;
 
         if(typeof this.props.onChanged == 'function') {
             this.props.onChanged.call(null, e);
@@ -136,9 +136,7 @@ export default class ManagedPropertyPicker extends React.Component<IManagedPrope
     private fetchMatchingManagedProperties(key: string): Promise<Array<any>> {
         console.log('search: ', key);
         return this.schema.fetchManagedPropertyMatches(key).then(managedProps => {
-            let options = managedProps.map(mp => {
-                return mp.RefinementName;
-            });
+            const options = managedProps.map(mp => mp.RefinementName);
             return options;
         });
     }

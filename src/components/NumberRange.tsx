@@ -126,19 +126,19 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
         const operator = getOperator();
         const number = getNumber();
         const numberEnd = getNumberEnd();
-        const value = {
+        const newValue = {
             operator,
             number,
             numberEnd,
         } as INumberRangeValue;
 
         if(overrideField) {
-            value[overrideField] = overrideFieldValue;
+            newValue[overrideField] = overrideFieldValue;
         }
 
-        setShowEndNumber(value.operator == NumberRangeOperator.Between);
+        setShowEndNumber(newValue.operator == NumberRangeOperator.Between);
 
-        onChanged(value);
+        onChanged(newValue);
 
     }
 
@@ -164,8 +164,8 @@ export default function NumberRange(props: INumberRangeProps): JSX.Element {
     }
 
     function getOperator(): NumberRangeOperator {
-        const options: IDropdownOption[] = refOperator.current?.selectedOptions || [];
-        return first(options)?.key as NumberRangeOperator || null;
+        const opts: IDropdownOption[] = refOperator.current?.selectedOptions || [];
+        return first(opts)?.key as NumberRangeOperator || null;
     }
 
     function getNumber(): number {
@@ -258,7 +258,7 @@ export function EmptyValue(): INumberRangeValue {
  */
 function populateOptions(props: INumberRangeProps): IDropdownOption[] {
     const value = props.value || EmptyValue();
-    const options = []
+    const options = [];
     for (const opName in NumberRangeOperator) {                             // Loop through DateRangeOperator values
         const op = NumberRangeOperator[opName];
         options.push({                                                      // Create a new option for each operator

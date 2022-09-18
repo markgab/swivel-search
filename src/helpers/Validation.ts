@@ -4,8 +4,8 @@ export default class Validation {
 
     public static validateSearchConfig(strConfig: string): string {
 
-        var o: any;
-        var sample: Model.IAdvancedSearchConfig = require('../model/SampleSearchConfig');
+        let o: any;
+        const sample: Model.IAdvancedSearchConfig = require('../model/SampleSearchConfig');
 
         try {
             o = JSON.parse(strConfig);
@@ -23,8 +23,8 @@ export default class Validation {
 
     public static validateResultsConfig(strConfig: string): string {
         
-        var o: any;
-        var sample: Model.IResultsConfig = require('../model/SampleResultsConfig');
+        let o: any;
+        const sample: Model.IResultsConfig = require('../model/SampleResultsConfig');
 
         try {
             o = JSON.parse(strConfig);
@@ -59,7 +59,7 @@ export default class Validation {
         if (o instanceof Array) {
             // If the sample was not an arry then we return false;
             if (!(s instanceof Array)) return false;
-            let oneSample = s[0];
+            const oneSample = s[0];
             let e: any;
             for (e of o) {
                 if (!this.is(e, oneSample, strict, recursive)) return false;

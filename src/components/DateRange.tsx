@@ -111,19 +111,19 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
         const operator = getOperator();
         const date = getDate();
         const dateEnd = getDateEnd();
-        const value: IDateRangeValue = {
+        const newValue: IDateRangeValue = {
             operator,
             date,
             dateEnd,
         };
 
         if(overrideField) {
-            value[overrideField] = overrideFieldValue;
+            newValue[overrideField] = overrideFieldValue;
         }
 
-        setShowEndDate(value.operator == DateRangeOperator.Between);
+        setShowEndDate(newValue.operator == DateRangeOperator.Between);
 
-        onChanged(value);
+        onChanged(newValue);
     }
 
     function datePlaceholder(isEndDate = false) {
@@ -139,8 +139,8 @@ export default function DateRange(props: IDateRangeProps): JSX.Element {
     }
 
     function getOperator(): DateRangeOperator {
-        const options: IDropdownOption[] = refOperator.current?.selectedOptions || []; 
-        return first(options)?.key as DateRangeOperator || null;
+        const opts: IDropdownOption[] = refOperator.current?.selectedOptions || []; 
+        return first(opts)?.key as DateRangeOperator || null;
     }
 
     function getDate(): Date {

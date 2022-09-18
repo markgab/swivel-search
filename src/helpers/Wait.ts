@@ -12,7 +12,7 @@ export class WaitPromise<T> extends Promise<T> {
 }
 
 export default function wait<T>(ms: number, args?: any): WaitPromise<T> {
-    let waiting = new WaitPromise<T>(resolve => {
+    const waiting = new WaitPromise<T>(resolve => {
         waiting._timeoutId = setTimeout(resolve.bind(null, args), ms);
     });
 

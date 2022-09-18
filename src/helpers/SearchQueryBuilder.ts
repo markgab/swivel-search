@@ -12,25 +12,25 @@ import { IDropdownResettableOption } from '../components/DropdownResettable';
 export default class SearchQueryBuilder {
 
     public static BuildSearchQueryString_Keyword(keywordSearch: string, searchModel: ISearchProperty[], additionalCriteria: string): string {
-        var searchString = '';
-        var strAndOperator = ' AND ';
-        var properties = searchModel;
-        var criteria: Array<string> = [];
+        let searchString = '';
+        const strAndOperator = ' AND ';
+        const properties = searchModel;
+        const criteria: Array<string> = [];
 
         if(keywordSearch) {
             criteria.push(keywordSearch);
         }
 
-        for (var i = 0; i < properties.length; i++) {
-            var field: ISearchProperty = properties[i];
-            var prop: string = field.property;
-            var value: string | number | IDateRangeValue | INumberRangeValue | IPersonaProps[] | IDropdownResettableOption = field.value;
+        for (let i = 0; i < properties.length; i++) {
+            const field: ISearchProperty = properties[i];
+            const prop: string = field.property;
+            let value: string | number | IDateRangeValue | INumberRangeValue | IPersonaProps[] | IDropdownResettableOption = field.value;
 
-            var oper: SearchOperator; // = field.value['operator'] || field.operator;
-            var dateVal: IDateRangeValue = <IDateRangeValue> field.value;
-            var numbVal: INumberRangeValue = <any> field.value;
-            var perVal: Array<IPersonaProps> = <any> field.value;
-            var choiceVal: IDropdownResettableOption = <any> field.value;
+            let oper: SearchOperator; // = field.value['operator'] || field.operator;
+            const dateVal: IDateRangeValue = <IDateRangeValue> field.value;
+            const numbVal: INumberRangeValue = <any> field.value;
+            const perVal: Array<IPersonaProps> = <any> field.value;
+            const choiceVal: IDropdownResettableOption = <any> field.value;
 
             switch(field.type) {
                 case PropertyValueType.Person:
@@ -176,7 +176,7 @@ export default class SearchQueryBuilder {
      * @param days number of days to add
      */
     private static _addDays(date, days) {
-        var result = new Date(date);
+        const result = new Date(date);
         result.setDate(result.getDate() + days);
         return result;
     }

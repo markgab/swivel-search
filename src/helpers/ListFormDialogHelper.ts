@@ -7,7 +7,7 @@ export default class ListFormDialogHelper {
     private _resolve: Function;
 
     public ensureDialogFriendlyPage(frame: HTMLIFrameElement): void {
-        let loc = frame.getAttribute('src');
+        const loc = frame.getAttribute('src');
         if(loc && this.isPageClassic(frame) && loc.toLowerCase().indexOf('&isdlg=1') === -1) {
             frame.setAttribute('src', loc + '&isDlg=1');
         }
@@ -19,7 +19,6 @@ export default class ListFormDialogHelper {
     }
 
     protected onClose_click(e): void {
-        console.log('close');
         this.fnctCloseDialog();
     }
 

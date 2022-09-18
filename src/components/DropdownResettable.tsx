@@ -38,14 +38,14 @@ export default function DropdownResettable(props: IDropdownResettableProps): JSX
         if(onChanged) {                                          // If onChanged is provied
             onChanged(selectedOption);                           // call handler
         }
-    }
+    };
     
     /**
      * Prepends an empty choice to the options array for resetting the control
      */
-    function includeResetDropdownChoice(options: IDropdownResettableOption[]): IDropdownResettableOption[] {
+    function includeResetDropdownChoice(opts: IDropdownResettableOption[]): IDropdownResettableOption[] {
 
-        let choices = [...options] as IDropdownResettableOption[];
+        const choices = [...opts] as IDropdownResettableOption[];
 
         const resetChoice: IDropdownResettableOption = {                    // Reset options definition
             key: `field-reset`,
