@@ -1,16 +1,20 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
-import {
-  BaseClientSideWebPart,
-} from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import {
   IPropertyPaneConfiguration,
   PropertyPaneTextField,
   PropertyPaneToggle,
   PropertyPaneChoiceGroup
 } from '@microsoft/sp-property-pane';
-import { ISearchProperty, PropertyValueType, SearchApi, IAdvancedSearchConfig, SearchOperator } from '../../model/AdvancedSearchModel';
+import { 
+  ISearchProperty, 
+  PropertyValueType, 
+  SearchApi, 
+  IAdvancedSearchConfig, 
+  SearchOperator 
+} from '../../model/AdvancedSearchModel';
 import * as strings from 'SwivelSearchWebPartStrings';
 import SwivelSearch from './components/SwivelSearch';
 import { ISwivelSearchProps } from './components/ISwivelSearchProps';
@@ -18,13 +22,13 @@ import { IDynamicDataPropertyDefinition } from '@microsoft/sp-dynamic-data';
 import ManagedPropertyPicker from '../../components/ManagedPropertyPicker';
 import AdvancedSearchData from '../../model/AdvancedSearchData';
 import { globalsSetup } from '../../model/SwivelSearchGlobals';
-
 import { TextField, ITextFieldProps } from 'office-ui-fabric-react/lib/TextField';
 import { 
   Dropdown,  
   IDropdownOption, 
   IDropdownProps
 } from 'office-ui-fabric-react/lib/Dropdown';
+import { deepClone } from '../../helpers/Utilities';
 
 export interface ISwivelSearchWebPartProps {
   searchApi: SearchApi;
@@ -100,12 +104,12 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
    * Web part native render method
    */
   public render(): void {
-
+    
     this._indexProperties();
     const element: React.ReactElement<ISwivelSearchProps> = React.createElement(
       SwivelSearch,
       <ISwivelSearchProps> {
-        config: this._deepCopyConfig(this.properties.searchConfig),
+        config: deepClone(this.properties.searchConfig),
         isDebug: this.properties.isDebug,
         context: this.context,
         startMinimized: this.properties.startMinimized,
@@ -163,16 +167,6 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
     }
   }
 
-  private _deepCopyConfig(config: Array<ISearchProperty>): ISearchProperty[] {
-    let copy: ISearchProperty[] = [];
-
-    config.forEach(p =>{
-      copy.push({ ...p });
-    });
-
-    return copy;
-  }
-
   protected onPropertyPaneConfigurationStart(): void {
 
   }
@@ -180,15 +174,12 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
   protected onPropertyPaneFieldChanged(propertyPath: string, oldValue: any, newValue: any): void {
     super.onPropertyPaneFieldChanged(propertyPath, oldValue, newValue);
 
-    //console.log('Property Pane Change. Path: ', propertyPath);
-    //console.log(newValue);
-
     this._indexProperties();
   }
-
+/* 
   protected onDataType_change = (option: IDropdownOption, index?: number): void => {
     //console.log('change', option.text);
-  }
+  } */
 
   protected get dataVersion(): Version {
     return Version.parse('1.0');

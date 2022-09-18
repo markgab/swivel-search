@@ -46,7 +46,7 @@ export default class SwivelSearch extends React.Component<ISwivelSearchProps, IS
 
   protected search(keywordSearch: string, searchModel: Array<Model.ISearchProperty>, additionalCriteria: string): void {
   
-    let query: string = SearchQueryBuilder.BuildSearchQueryString_Keyword(keywordSearch, searchModel, additionalCriteria);
+    const query: string = SearchQueryBuilder.BuildSearchQueryString_Keyword(keywordSearch, searchModel, additionalCriteria);
 
     this.setState({
       searchQuery: query,

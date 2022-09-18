@@ -58,6 +58,11 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     private readonly fieldHeight: number = 61;
     private readonly buttonRowHeight: number = 62;
     private fieldRefs: any = {};
+
+    componentDidUpdate(prevProps, prevState) {
+        // update logic here
+    }
+
 /* 
     public componentWillReceiveProps(nextProps: ISearchInterfaceProps): void {
         const config =  [ ...nextProps.config ];
@@ -443,8 +448,8 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                 field.data = field.data || EmptyValue();
 
                 field.propertyChoices = [
-                    { key: `${field.property}-1`, text: 'Yes', value: 'true' }, 
-                    { key: `${field.property}-2`, text: 'No', value: 'false' }
+                    { key: `true`, text: 'Yes', value: 'true' }, 
+                    { key: `false`, text: 'No', value: 'false' }
                 ];
 
             }
