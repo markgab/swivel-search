@@ -1,12 +1,10 @@
 import * as React from 'react';
 import styles from './SwivelSearch.module.scss';
 import { ISwivelSearchProps, ISwivelSearchState } from './ISwivelSearchProps';
-import { escape } from '@microsoft/sp-lodash-subset';
-
-import SearchInterface, { ISearchInterfaceProps } from './SearchInterface';
+import SearchInterface from './SearchInterface';
 import * as Model from '../../../model/AdvancedSearchModel';
 import SearchQueryBuilder from '../../../helpers/SearchQueryBuilder';
-import { WebPartContext } from '@microsoft/sp-webpart-base';
+import SwivelSearchGlobals from '../../../model/SwivelSearchGlobals';
 
 export default class SwivelSearch extends React.Component<ISwivelSearchProps, ISwivelSearchState> {
   
@@ -14,29 +12,15 @@ export default class SwivelSearch extends React.Component<ISwivelSearchProps, IS
     super(props);
     this.state = {
       searchQuery: '',
-      config: this.props.config
     };
-  }
-
-  public state: ISwivelSearchState;
-
-  public componentWillReceiveProps(nextProps: ISwivelSearchProps): void {
-    this.setState({
-      ...this.state,
-      config: nextProps.config
-    });
   }
 
   public render(): React.ReactElement<ISwivelSearchProps> {
     return (
       <div className={ styles.swivelSearch }>
         <SearchInterface 
-          config={this.props.config}
-          searchHandler={(keywordSearch, searchModel, additionalCriteria) => this.search(keywordSearch, searchModel, additionalCriteria)} 
-          includeKeywordSearch={this.props.includeKeywordSearch}
+          searchHandler={(keywordSearch, controlValues) => this.search(keywordSearch, controlValues)} 
           parentElement={this.props.parentElement}
-          startMinimized={this.props.startMinimized}
-          additionalCriteria={this.props.additionalCriteria}
         />
         <div>{this.state.searchQuery}</div>
       </div>
@@ -44,9 +28,10 @@ export default class SwivelSearch extends React.Component<ISwivelSearchProps, IS
   }
 
 
-  protected search(keywordSearch: string, searchModel: Array<Model.ISearchProperty>, additionalCriteria: string): void {
+  protected search(keywordSearch: string, controlValues: { [key: string]: any }): void {
   
-    const query: string = SearchQueryBuilder.BuildSearchQueryString_Keyword(keywordSearch, searchModel, additionalCriteria);
+    const { addCriteria, searchConfig } = SwivelSearchGlobals.propsSearchInterface;
+    const query: string = SearchQueryBuilder.BuildSearchQueryString_Keyword(keywordSearch, searchConfig, controlValues, addCriteria);
 
     this.setState({
       searchQuery: query,

@@ -56,7 +56,7 @@ export default class ManagedPropertyPicker extends React.Component<IManagedPrope
                     selectOnBlur={false}
                     renderItem={(item, isHighlighted) =>
                         <div style={{ background: isHighlighted ? 'lightgray' : 'white' }}>
-                        {item}
+                            {item}
                         </div>
                     }
                     wrapperStyle={{

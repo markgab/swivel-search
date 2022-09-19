@@ -11,7 +11,7 @@ import { IDropdownResettableOption } from '../components/DropdownResettable';
 
 export default class SearchQueryBuilder {
 
-    public static BuildSearchQueryString_Keyword(keywordSearch: string, searchModel: ISearchProperty[], additionalCriteria: string): string {
+    public static BuildSearchQueryString_Keyword(keywordSearch: string, searchModel: ISearchProperty[], controlValues: { [key: string]: any }, additionalCriteria: string): string {
         let searchString = '';
         const strAndOperator = ' AND ';
         const properties = searchModel;
@@ -24,13 +24,14 @@ export default class SearchQueryBuilder {
         for (let i = 0; i < properties.length; i++) {
             const field: ISearchProperty = properties[i];
             const prop: string = field.property;
-            let value: string | number | IDateRangeValue | INumberRangeValue | IPersonaProps[] | IDropdownResettableOption = field.value;
+            //let value: string | number | IDateRangeValue | INumberRangeValue | IPersonaProps[] | IDropdownResettableOption = field.value;
+            let value = controlValues[field.property];
 
             let oper: SearchOperator; // = field.value['operator'] || field.operator;
-            const dateVal: IDateRangeValue = <IDateRangeValue> field.value;
-            const numbVal: INumberRangeValue = <any> field.value;
-            const perVal: Array<IPersonaProps> = <any> field.value;
-            const choiceVal: IDropdownResettableOption = <any> field.value;
+            const dateVal: IDateRangeValue = <IDateRangeValue> value;
+            const numbVal: INumberRangeValue = <any> value;
+            const perVal: Array<IPersonaProps> = <any> value;
+            const choiceVal: IDropdownResettableOption = <any> value;
 
             switch(field.type) {
                 case PropertyValueType.Person:

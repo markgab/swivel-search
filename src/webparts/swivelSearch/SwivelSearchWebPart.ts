@@ -45,20 +45,19 @@ const searchQueryDynamicPropertyLabel = 'Search Query';
 
 export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSearchWebPartProps> {
 
-  protected onInit(): Promise<void> {
-    return super.onInit().then(_ => {
+  protected async onInit(): Promise<void> {
+    await super.onInit();
 
-      this.data = new AdvancedSearchData(this.context, []);
-      this.properties.isDebug = true;
-      globalsSetup(this.data);
+    this.data = new AdvancedSearchData(this.context, []);
+    this.properties.isDebug = true;
 
-      // register this web part as dynamic data source
-      this.context.dynamicDataSourceManager.initializeSource(this);
+    // register this web part as dynamic data source
+    this.context.dynamicDataSourceManager.initializeSource(this);
 
-      this.properties.searchConfig = this.properties.searchConfig || [];
-      console.log(JSON.stringify(this.properties.searchConfig));
-      this._indexProperties();
-    });
+    this.properties.searchConfig = this.properties.searchConfig || [];
+
+    //this._indexProperties();
+    
   }
 
   public searchConfig: IAdvancedSearchConfig;
@@ -104,8 +103,11 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
    * Web part native render method
    */
   public render(): void {
+    const wpProps = deepClone(this.properties);
+
+    globalsSetup(this.data, this.context, wpProps, null);
     
-    this._indexProperties();
+    //this._indexProperties();
     const element: React.ReactElement<ISwivelSearchProps> = React.createElement(
       SwivelSearch,
       <ISwivelSearchProps> {
@@ -176,10 +178,6 @@ export default class SwivelSearchWebPart extends BaseClientSideWebPart<ISwivelSe
 
     this._indexProperties();
   }
-/* 
-  protected onDataType_change = (option: IDropdownOption, index?: number): void => {
-    //console.log('change', option.text);
-  } */
 
   protected get dataVersion(): Version {
     return Version.parse('1.0');

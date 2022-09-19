@@ -2,17 +2,16 @@ import * as Model from '../../../model/AdvancedSearchModel';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 
 export interface ISwivelSearchProps {
-  config: Array<Model.ISearchProperty>;
-  isDebug: boolean;
-  context: WebPartContext;
+  //config: Array<Model.ISearchProperty>;
+  //isDebug: boolean;
+  //context: WebPartContext;
   searchHandler: Function;
-  includeKeywordSearch: boolean;
+  //includeKeywordSearch: boolean;
   parentElement: HTMLElement;
-  startMinimized: boolean;
-  additionalCriteria: string;
+  //startMinimized: boolean;
+  //additionalCriteria: string;
 }
 
 export interface ISwivelSearchState {
   searchQuery: string;
-  config: Array<Model.ISearchProperty>;
 }
