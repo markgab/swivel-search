@@ -72,64 +72,62 @@ export default class SearchQueryBuilder {
             
             switch (oper) {
                 case SearchOperator.Equals:
-                    if(field.type === PropertyValueType.Numeric) {
-                        criteria.push(prop + '=' + (numbVal.number || value));
-                    } else if(field.type === PropertyValueType.Person) {
-                        let name = perVal[0].text;
-                        criteria.push(prop + ':"*' + name + '*"');
-                    } else if(field.type === PropertyValueType.DateTime) {
-                        criteria.push(prop + '=' + dateVal.date.toISOString());
-                    } else {
-                        if(typeof value !== 'string') {
-                            value = choiceVal.value || choiceVal.text;
-                        }
-                        criteria.push(prop + ':"' + value + '"');
+
+                    switch(field.type) {
+                        case PropertyValueType.Numeric:
+                            criteria.push(`${prop}=${numbVal.number || value}`);
+                            break;
+                        case PropertyValueType.Person:
+                            let name = perVal[0].text;
+                            criteria.push(`${prop}:"*${name}*"`);
+                            break;
+                        case PropertyValueType.DateTime:
+                            criteria.push(`${prop}=${dateVal.date.toISOString()}`);
+                            break;
+                        default:
+                            if(typeof value !== 'string') {
+                                value = choiceVal.value || choiceVal.text;
+                            }
+                            criteria.push(`${prop}:"${value}"`);
                     }
-                    //searchString += prop + ':"' + value + '"';
                     //author: "John Smith"
+
                     break;
                 case SearchOperator.Contains:
                     if(typeof value !== 'string') {
                         value = choiceVal.value || choiceVal.text;
                     }
-                    criteria.push(prop + ':"*' + value + '*"');
-                    //searchString += prop + ':"*' + value + '*"';
+                    criteria.push(`${prop}:"*${value}*"`);
                     //author: "*Smith*"
                     break;
                 case SearchOperator.Between:
                     if(field.type === PropertyValueType.DateTime) {
                         //LastModifiedTime:2017-06-30T04:00:00.000Z..2018-06-30T04:00:00.000Z
-                        //add a tday to endDate to include selected date in results 
-                        //let startDate = (value as string).split(';')[0];
-                        //let endDate = this._addDays(new Date((value as string).split(';')[1]), 1).toISOString();
-                        criteria.push(prop + ':' + dateVal.date.toISOString() + '..' + dateVal.dateEnd.toISOString());
-                        //searchString += prop + ':' + startDate + '..' + endDate;
+                        criteria.push(`${prop}:${dateVal.date.toISOString()}..${dateVal.dateEnd.toISOString()}`);
                     } else {
-                        criteria.push(prop + '>=' + numbVal.number);
-                        criteria.push(prop + '<=' + numbVal.numberEnd);
+                        criteria.push(`${prop}>=${numbVal.number}`);
+                        criteria.push(`${prop}<=${numbVal.numberEnd}`);
                     }
                     break;
                 case SearchOperator.LessThanEqual:
-                    criteria.push(prop + '<=' + numbVal.number);
+                    criteria.push(`${prop}<=${numbVal.number}`);
                     break;
                 case SearchOperator.Before:
                     //LastModifiedTime<=2018-06-30T04:00:00.000Z
                     //add day to include selected date in results
-                    criteria.push(prop + '<=' + this._addDays(dateVal.date, 1).toISOString());
-                    //searchString += prop + '<=' + this._addDays(new Date(value as string), 1).toISOString();
+                    criteria.push(`${prop}<=${this._addDays(dateVal.date, 1).toISOString()}`);
                     break;
                 case SearchOperator.GreaterThanEqual:
                 case SearchOperator.After:
                     //LastModifiedTime>=2018-06-30T04:00:00.000Z
-                    //searchString += prop + '>=' + value;
                     let val = numbVal.number || dateVal.date.toISOString();
-                    criteria.push(prop + '>=' + val);
+                    criteria.push(`${prop}>=${val}`);
                     break;
                 case SearchOperator.GreatherThan:
-                    criteria.push(prop + '>' + numbVal.number);
+                    criteria.push(`${prop}>${numbVal.number}`);
                     break;
                 case SearchOperator.LessThan:
-                    criteria.push(prop + '<' + numbVal.number);
+                    criteria.push(`${prop}<${numbVal.number}`);
                     break;
                 default:
                     console.log('Unexpected Operator: ', oper);
