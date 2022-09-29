@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styles from './SwivelSearchResults.module.scss';
-import ResultsInterface, { IResultsInterfaceProps } from './ResultsInterface';
+import ResultsInterface from './ResultsInterface';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as Model from '../../../model/AdvancedSearchModel';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
@@ -45,7 +45,7 @@ export default class SwivelSearchResults extends React.Component<ISwivelSearchRe
       return;
     }
 
-    let { Placeholder } = await import (
+    const { Placeholder } = await import (
       /* webpackChunkName: 'pnp-spfx-controls-react-placeholder' */
       '@pnp/spfx-controls-react/lib/Placeholder'
     );
@@ -57,8 +57,8 @@ export default class SwivelSearchResults extends React.Component<ISwivelSearchRe
   }
 
   public render(): React.ReactElement<ISwivelSearchResultsProps> {
-    let { needsConfiguration, onConfigure } = this.props;
-    let Placeholder = this.placeholder;
+    const { needsConfiguration, onConfigure } = this.props;
+    const Placeholder = this.placeholder;
 
     return (
       <div className={styles.swivelSearchResults}>

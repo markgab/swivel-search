@@ -7,7 +7,6 @@ import {
 } from 'office-ui-fabric-react/lib/Panel';
 
 import styles from './ItemPropertiesPanel.module.scss';
-import { on } from '../../../helpers/events';
 
 export interface IItemPropertiesPanelProps extends IPanelProps {
     SPWebUrlLocal: string;
@@ -19,8 +18,8 @@ export interface IItemPropertiesPanelProps extends IPanelProps {
 }
 
 export interface IItemPropertiesPanelState {
-    isOpen: boolean;
-    viewPanelUrl: string;
+    //isOpen: boolean;
+    //viewPanelUrl: string;
     loadingPanelHideClass: string;
 }
 
@@ -31,36 +30,34 @@ export enum PageTypes {
     NewForm = 8
 }
 
-export default class ItemPropertiesPanel extends React.Component<IItemPropertiesPanelProps> {
+export default class ItemPropertiesPanel extends React.Component<IItemPropertiesPanelProps, IItemPropertiesPanelState> {
     constructor(props: IItemPropertiesPanelProps) {
         super(props);
         this._listenForClosePanelEvent();
         this._closePanelRedirectUrl = `${this.props.SPWebUrlLocal}/siteassets/advanced-search-webpart-close-panel.aspx`;
         this.state = {
-            isOpen: this.props.isOpen,
-            viewPanelUrl: '',
             loadingPanelHideClass: styles.frmPropsLoading
         };
     }
 
-    public state: IItemPropertiesPanelState;
     private _closePanelRedirectUrl: string;
 
     public render(): React.ReactElement<IItemPropertiesPanelProps> {
+        const { isOpen } = this.props;
         return (
             <div className={ styles.ItemPropertiesPanel }>
                 <Panel {...this.props }
-                    isOpen={this.state.isOpen}
+                    isOpen={isOpen}
                     type={PanelType.medium}
                     className={styles.panel}
                     isLightDismiss={true}
-                    onDismiss={() => this.viewPanel_dismiss()}>
-                    <div className={styles.frmPropsAnchor} style={{}}>
+                    onDismiss={this.viewPanel_dismiss}>
+                    <div className={styles.frmPropsAnchor}>
                         <div className={this.state.loadingPanelHideClass}>
                             <Spinner size={SpinnerSize.large} />
                         </div>
                         <iframe
-                            src={this.state.viewPanelUrl} 
+                            src={this.viewPanelUrl} 
                             className={`${styles.frmViewPanel} mg-results-form-dialog`}
                             frameBorder={0}
                             onLoad={e => this.panelFrame_load(e)} 
@@ -71,22 +68,14 @@ export default class ItemPropertiesPanel extends React.Component<IItemProperties
         );
     }
 
-    public componentWillReceiveProps(nextProps: IItemPropertiesPanelProps): void {
-        const newState: IItemPropertiesPanelState = {
-            ...this.state,
-            viewPanelUrl: this._listFormUrl(nextProps),
-            isOpen: nextProps.isOpen
-        };
-
-        if(newState.isOpen !== this.state.isOpen === true) {
-            newState.loadingPanelHideClass = styles.frmPropsLoading;
-        }
-
-        this.setState(newState);
+    public componentWillReceiveProps(nextProps: IItemPropertiesPanelProps, prevProps: IItemPropertiesPanelProps): void {
+        this.setState({
+            loadingPanelHideClass: (nextProps.isOpen !== prevProps.isOpen === true) ? styles.frmPropsLoading : '',
+        });
     }
 
     protected panelFrame_load(e: React.SyntheticEvent<HTMLIFrameElement>): void {
-        let frm: HTMLIFrameElement = e.currentTarget;
+        const frm: HTMLIFrameElement = e.currentTarget;
         if(this._ensureDialogFriendlyPage(frm)) {
             this._showLoadingPanel(false);
             this._activateCancelButtons(frm);
@@ -95,31 +84,45 @@ export default class ItemPropertiesPanel extends React.Component<IItemProperties
         }
     }
 
-
-    protected viewPanel_dismiss(): void {
+    protected viewPanel_dismiss = (): void => {
         this.props.onDismiss();
     }
 
     private _override_classicStyles(frame: HTMLIFrameElement): void {
-        let doc = frame.contentDocument;
-        let style = doc.createElement('style');
-        style.innerText = `.BreadcrumbBar-list,.BreadcrumbBar,.od-ListForm-breadcrumb{display:none !important;}.od-SearchBox,.od-Search,.od-TopBar-search {display:none !important;}`;
+        const doc = frame.contentDocument;
+        const style = doc.createElement('style');
+        style.innerText = `
+            .BreadcrumbBar-list,
+            .BreadcrumbBar,
+            .od-ListForm-breadcrumb {
+                display:none !important;
+            }
+            .od-SearchBox,
+            .od-Search,
+            .od-TopBar-search {
+                display:none !important;
+            }`;
         frame.contentDocument.body.appendChild(style);
     }
 
     private _override_commitPopup(frame: HTMLIFrameElement): void {
-        frame.contentWindow.frameElement['commitPopup'] = () => this.viewPanel_dismiss();
+        frame.contentWindow.frameElement['commitPopup'] = this.viewPanel_dismiss;
     }
 
+/* 
     private _listFormUrl(props: IItemPropertiesPanelProps): string {
-        let { SPWebUrl, PageType, ListID, ListItemID, ContentTypeId, isOpen } = props;
+        const { SPWebUrl, PageType, ListID, ListItemID, ContentTypeId, isOpen } = props;
+        const dest = `${SPWebUrl}/_layouts/15/listform.aspx?PageType=${PageType}&ListID=${ListID}&ID=${ListItemID}&ContentTypeId=${ContentTypeId}&source=${encodeURIComponent(this._closePanelRedirectUrl)}`;
 
-        if(isOpen) {
-            return `${SPWebUrl}/_layouts/15/listform.aspx?PageType=${PageType}&ListID=${ListID}&ID=${ListItemID}&ContentTypeId=${ContentTypeId}&source=${encodeURIComponent(this._closePanelRedirectUrl)}`;
-        } else {
-            return '';
-        }
+        return isOpen ? dest : '';
 
+    } */
+
+    get viewPanelUrl(): string {
+        const { SPWebUrl, PageType, ListID, ListItemID, ContentTypeId, isOpen } = this.props;
+        const dest = `${SPWebUrl}/_layouts/15/listform.aspx?PageType=${PageType}&ListID=${ListID}&ID=${ListItemID}&ContentTypeId=${ContentTypeId}&source=${encodeURIComponent(this._closePanelRedirectUrl)}`;
+
+        return isOpen ? dest : '';
     }
 
     private _showLoadingPanel(val: boolean): Promise<void> {
@@ -144,7 +147,7 @@ export default class ItemPropertiesPanel extends React.Component<IItemProperties
     }
 
     private _ensureDialogFriendlyPage(frame: HTMLIFrameElement): boolean {
-        let loc = frame.getAttribute('src') || '';
+        const loc = frame.getAttribute('src') || '';
         if(this._isPageClassic(frame)) {
             if(loc.toLowerCase().indexOf('&isdlg=1') === -1) {
                 frame.setAttribute('src', loc + '&isDlg=1');
@@ -164,7 +167,6 @@ export default class ItemPropertiesPanel extends React.Component<IItemProperties
     protected onClose_click(e): void {
         this.props.onDismiss();
     }
-
 
     private _isPageClassic(frame: HTMLIFrameElement): boolean {
         const frameDoc = frame.contentDocument;

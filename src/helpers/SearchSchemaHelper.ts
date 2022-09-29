@@ -48,7 +48,7 @@ export default class SearchSchemaHelper {
 
         const url = `${this.webAbsoluteUrl}/_api/search/postquery`;
         const encodedRefiner = btoa(`*${propertyName}*`);
-        let body = `{
+        const body = `{
             "request": {
                 "ClientType": "HighlightedContentWebPart",
                 "SourceId": "8413CD39-2156-4E00-B54D-11EFD9ABDB89",
@@ -107,7 +107,7 @@ export default class SearchSchemaHelper {
                    !results.PrimaryQueryResult.RefinementResults.Refiners.length) {
                     return [];
                 } else {
-                    let entries = results.PrimaryQueryResult.RefinementResults.Refiners[0].Entries;
+                    const entries = results.PrimaryQueryResult.RefinementResults.Refiners[0].Entries;
                     //console.log('props: ', entries);
                     return entries;
                 }

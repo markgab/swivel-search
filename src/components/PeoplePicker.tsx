@@ -95,8 +95,7 @@ export default function PeoplePicker(props: PeoplePickerProps): JSX.Element {
 
         // If there is an exact match, auto-select it
         if(exact.length > 0) {
-            let match = exact[0];
-            selected.push(match);
+            selected.push(exact[0]);
             return [];
         }
 
@@ -249,7 +248,7 @@ function removeDuplicates(persons: Array<IPersonaProps>): Array<IPersonaProps> {
       }
     });
     const arr: Array<IPersonaProps> = [];
-    for (let p in unique) {
+    for (const p in unique) {
         arr.push(unique[p]);
     }
 

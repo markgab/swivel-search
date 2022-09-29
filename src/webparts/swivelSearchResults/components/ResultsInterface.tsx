@@ -6,10 +6,12 @@ import {
     SearchResults,
     ISort,
 } from '@pnp/sp/search';
-import * as Model from '../../../model/AdvancedSearchModel';
-import AdvancedSearchData, {
-    IAdvancedSearchResult
-} from '../../../model/AdvancedSearchData';
+import {
+    IResultProperty, 
+    ResultItemType, 
+    ResultPropertyValueType,
+} from '../../../model/AdvancedSearchModel';
+import AdvancedSearchData, { IAdvancedSearchResult } from '../../../model/AdvancedSearchData';
 
 import { getFileTypeIconProps, initializeFileTypeIcons, FileIconType } from '@uifabric/file-type-icons';
 import { uniq } from '@microsoft/sp-lodash-subset';
@@ -26,10 +28,7 @@ import {
     IDetailsRowProps,
     ISelectionOptions
 } from 'office-ui-fabric-react/lib/DetailsList';
-import { 
-    CommandBar,
-    ICommandBarItemProps 
-} from 'office-ui-fabric-react/lib/CommandBar';
+import { CommandBar, ICommandBarItemProps } from 'office-ui-fabric-react/lib/CommandBar';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
@@ -41,7 +40,7 @@ import stickybits from 'stickybits';
 
 export interface IResultsInterfaceProps {
     isDebug: boolean;
-    columns: Array<Model.IResultProperty>;
+    columns: IResultProperty[];
     includeIdentityColumn: boolean;
     searchQuery: string;
     context: WebPartContext;
@@ -50,21 +49,17 @@ export interface IResultsInterfaceProps {
 }
 
 export interface IResultInterfaceState {
-    items: ICommandBarItemProps[];
-    overflowItems: ICommandBarItemProps[];
-    faritems: ICommandBarItemProps[];
-    searchQuery: string;
+    commandBarItems: ICommandBarItemProps[];
+    commandBarOverflowItems: ICommandBarItemProps[];
+    commandBarFaritems: ICommandBarItemProps[];
     results: ISearchResult[];
-    columns: Model.IResultProperty[];
-    spWebUrl: string;
-    listID: string;
-    listItemID: string;
-    contentTypeId: string;
+    columns: IResultProperty[];
     itemPropPanelOpen: boolean;
     documentReaderOpen: boolean;
     documentReaderUrl: string;
     showLoading: boolean;
     sort?: ISort;
+    selectedResult?: IAdvancedSearchResult;
 }
 
 const ColumnDefaults: any = {
@@ -83,7 +78,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             key: 'FileType',
             name: 'File Type',
             sortable: false,
-            type: Model.ResultPropertyValueType.String,
+            type: ResultPropertyValueType.String,
             headerClassName: 'DetailsListExample-header--FileIcon',
             className: 'DetailsListExample-cell--FileIcon',
             iconClassName: 'DetailsListExample-Header-FileTypeIcon',
@@ -93,8 +88,8 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             minWidth: 20,
             maxWidth: 20,
             onRender: (item: IAdvancedSearchResult) => {
-                let web = this.props.context.pageContext.web.absoluteUrl;
-                let type = Model.ResultItemType;
+                const web = this.props.context.pageContext.web.absoluteUrl;
+                const type = ResultItemType;
     
                 switch(item.ResultItemType) {
                     case type.List:
@@ -124,7 +119,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 key: 'TitleOrFilename',
                 name: 'Name',
                 sortable: true,
-                type: Model.ResultPropertyValueType.String,
+                type: ResultPropertyValueType.String,
                 fieldName: 'TitleOrFilename',
                 minWidth: 100,
                 onColumnClick: (e, column) => this.column_click(e, column),
@@ -134,7 +129,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             });
         }
 
-        let cols = uniq<Model.IResultProperty>([
+        const cols = uniq<IResultProperty>([
             ...this._defaultColumns,
             ...props.columns
         ]);
@@ -142,32 +137,28 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         this._applyCustomColumnRendering(cols);
 
         this.state = {
-            items:[],
-            overflowItems:[],
-            faritems:[],
-            searchQuery: props.searchQuery,
+            commandBarItems:[],
+            commandBarOverflowItems:[],
+            commandBarFaritems:[],
             results: [],
             columns: cols,
-            spWebUrl: '',
-            listID: '',
-            listItemID: '',
-            contentTypeId: '',
             itemPropPanelOpen: false,
             documentReaderOpen: false,
             documentReaderUrl: '',
             showLoading: false,
-            sort: props.sort
+            sort: props.sort,
+            selectedResult: null,
         };
 
         this._selection = new Selection({
             onSelectionChanged: () => {
-                let selected: IAdvancedSearchResult = this._getSelectionDetails();
-                let items = this.commandbarButtons(selected);
-                let overflowItems = this.commandbarOverflowButtons(selected);
+                const selectedResult: IAdvancedSearchResult = this._getSelectionDetails();
+                const commandBarItems = this.commandbarButtons(selectedResult);
+                const commandBarOverflowItems = this.commandbarOverflowButtons(selectedResult);
                 this.setState({
-                    ...this.state,
-                    items,
-                    overflowItems,
+                    selectedResult,
+                    commandBarItems,
+                    commandBarOverflowItems,
                     itemPropPanelOpen: false,
                     documentReaderOpen: false,
                 });
@@ -184,11 +175,10 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     }
 
     public searchData: AdvancedSearchData;
-    public state: IResultInterfaceState;
     private _selection: Selection;
     private _scrollParent: HTMLElement;
     private _isFetchingItems: Boolean = false;
-    private _defaultColumns: Model.IResultProperty[];
+    private _defaultColumns: IResultProperty[];
 
     public componentWillReceiveProps(nextProps: IResultsInterfaceProps): void {
         this.search(nextProps);
@@ -197,12 +187,12 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     public componentDidUpdate(prevProps, prevState) : void {
         
       // commandBar
-      let cBar = this.props.context.domElement.querySelector(`.${styles.commandBar}`);
+      const cBar = this.props.context.domElement.querySelector(`.${styles.commandBar}`);
       if(!cBar['sticky']) {
           cBar['sticky'] = true;
           stickybits(cBar, { 
               scrollEl: this._scrollParent,
-              stickyBitStickyOffset: 0
+              stickyBitStickyOffset: 0,
           }
         );
       }
@@ -212,9 +202,9 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         return(
             <div className={styles.results}>
                 <CommandBar 
-                    items={this.state.items}
-                    overflowItems={this.state.overflowItems} 
-                    farItems={this.state.faritems}
+                    items={this.state.commandBarItems}
+                    overflowItems={this.state.commandBarOverflowItems} 
+                    farItems={this.state.commandBarFaritems}
                     className={styles.commandBar}
                 />
                 <DetailsList
@@ -232,63 +222,71 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     onRenderMissingItem={this._onRenderMissingItem}
                 />
 
-                <div className={ this.state.results.length || !this.state.searchQuery ? styles.hidden : '' }>
-                    Your search returned zero matches.
-                </div>
-
-                <div className={this.state.showLoading ? `${styles.pnlLoading} ${styles.fadein}` : styles.pnlLoading } style={{ display: this.state.showLoading ? 'flex' : 'none' }}>
-                    <div className={styles.loading}>
-                        <Label>Loading ...</Label>
-                        <Spinner size={SpinnerSize.large} />
+                {
+                    this.state.results.length || !this.props.searchQuery &&
+                    <div>
+                        Your search returned zero matches.
                     </div>
-                </div>
+                }
+
+                {
+                    this.state.showLoading &&
+                    <div className={`${styles.pnlLoading} ${styles.fadein}`}>
+                        <div className={styles.loading}>
+                            <Label>Loading ...</Label>
+                            <Spinner size={SpinnerSize.large} />
+                        </div>
+                    </div>
+                }
 
                 <ItemPropertiesPanel
                     PageType={PageTypes.ViewForm}
-                    SPWebUrl={this.state.spWebUrl}
-                    ListID={this.state.listID}
-                    ListItemID={this.state.listItemID}
-                    ContentTypeId={this.state.contentTypeId}
-                    SPWebUrlLocal={this.props.context.pageContext.web.absoluteUrl}                    
+                    SPWebUrl={this.state.selectedResult?.SPWebUrl || ''}
+                    ListID={this.state.selectedResult?.ListID || ''}
+                    ListItemID={this.state.selectedResult?.ListItemID || ''}
+                    ContentTypeId={this.state.selectedResult?.ContentTypeId || ''}
+                    SPWebUrlLocal={this.props.context.pageContext.web.absoluteUrl}
                     isOpen={this.state.itemPropPanelOpen}
                     onDismiss={() => this.itemPropertiesPanel_dismiss()}
                     type={PanelType.medium}
-                    isLightDismiss={true}>
-                </ItemPropertiesPanel>
+                    isLightDismiss={true}
+                ></ItemPropertiesPanel>
 
                 <Panel
                     type={PanelType.smallFluid}
                     isOpen={this.state.documentReaderOpen}
                     className={styles.readerPanel}
-                    onDismiss={() => this.documentReaderPanel_dismiss()}>
+                    onDismiss={() => this.documentReaderPanel_dismiss()}
+                >
                     <div>
                         <iframe
                             className={styles.frmDocumentReader} 
                             src={this.state.documentReaderUrl}
                             onLoad={this.frame_load}
-                            frameBorder={0}></iframe>
+                            frameBorder={0}
+                        ></iframe>
                     </div>
                 </Panel>
             </div>
         );
     }
 
-    protected search(props: IResultsInterfaceProps): Promise<any> {
+    protected async search(props: IResultsInterfaceProps): Promise<void> {
 
-        this.setState({
-            ...this.state,
-            showLoading: true
-        });
+        try {
 
-        this._selection.setItems([], true);
-
-        return this.searchData.search(props.searchQuery).then((res: SearchResults) => {
+            this.setState({
+                showLoading: true
+            });
+    
+            this._selection.setItems([], true);
+    
+            const res = await this.searchData.search(props.searchQuery);
 
             let totalPages = 0;
             let currentPage = 0;
             let totalRows = 0;
             let results: IAdvancedSearchResult[] = [];
-            // let columns: Array<Model.IResultProperty>;
             
             if( res && 
                 res.RawSearchResults && 
@@ -303,41 +301,30 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     });
                     results.push(null);
 
-                    // let colTypes: Model.IResultPropertyDef[] = res.RawSearchResults.PrimaryQueryResult.RelevantResults.Table.Rows[0].Cells as any;
-
-                    // columns = this._buildColumnConfig(colTypes);
-
                     currentPage = 1;
 
             }
 
             console.log('result count: ', results.length);
 
-            return this.setState({
-                ...this.state,
-                searchQuery: props.searchQuery,
+            this.setState({
                 results: results,
                 showLoading: false,
-                faritems: [this.resultCountLabel(totalRows)]
-                // columns: results.length ? columns : [ ...this.state.columns ]
-            } as IResultInterfaceState);
+                commandBarFaritems: [this.resultCountLabel(totalRows)]
+            });
 
-        }).catch((err) => {
+        } catch(err) {
             this.setState({
-                ...this.state,
                 showLoading: false
             });
-        });
-
+            throw err;
+        }
     }
 
     protected documentReaderPanel_dismiss(): void {
-        let newState: IResultInterfaceState = {
-            ...this.state,
-            documentReaderOpen: false
-        };
-
-        this.setState(newState);
+        this.setState({
+            documentReaderOpen: false,
+        });
     }
 
     protected detailsList_RenderMissingItems(index?: number, rowProps?: IDetailsRowProps): React.ReactNode {
@@ -346,23 +333,17 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     }
 
     protected itemPropertiesPanel_dismiss(): void {
-        let newState: IResultInterfaceState = {
-            ...this.state,
+        this.setState({
             itemPropPanelOpen: false,
-            spWebUrl: '',
-            listID: '',
-            listItemID: '',
-            contentTypeId: ''
-        };
-
-        this.setState(newState);
+            selectedResult: null,
+        });
     }
 
     protected row_dbclick = (item?: any, index?: number, ev?: Event): void => {
 
-        let type = Model.ResultItemType;
+        const type = ResultItemType;
         let key: string = "";
-        let btn: any = { key };
+        const btn: any = { key };
 
         if(item.ResultItemType === type.Page ||
            item.ResultItemType === type.OneDrive || 
@@ -390,74 +371,69 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     }
 
     protected frame_load = (e: React.SyntheticEvent<HTMLIFrameElement, Event>): void => {
-        let frame: HTMLIFrameElement = e.target as any;
-        let doc: Document = frame.contentDocument;
-        let selected: IAdvancedSearchResult = this._getSelectionDetails();
+        const frame: HTMLIFrameElement = e.target as any;
+        const doc: Document = frame.contentDocument;
+        const selected: IAdvancedSearchResult = this._getSelectionDetails();
 
         if(doc) {
 
-            let s = doc.createElement('style') as HTMLStyleElement;
+            const s = doc.createElement('style') as HTMLStyleElement;
 
             if(selected.FileType === "pdf") {
-                s.innerText = 'button.ms-Button--commandBar[title="Close"]{ display:none; }';
+                s.innerText = `
+                    button.ms-Button--commandBar[title="Close"] {
+                        display:none; 
+                    }`;
             } else {
-                s.innerText = '.OneUp-commandBar { display: none; } .OneUp-content{ top: 0 !important; }';
+                s.innerText = `
+                    .OneUp-commandBar { 
+                        display: none;
+                    } 
+                    .OneUp-content{ 
+                        top: 0 !important; 
+                    }`;
             }
 
             doc.head.appendChild(s);
         }
-
     }
 
-    protected btnCommandbar_click(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, btn: ICommandBarItemProps): void {
-        let action: string = btn.key;
-        let selected: IAdvancedSearchResult = this._getSelectionDetails();
-        let newState = {
-            ...this.state
-        } as IResultInterfaceState;
+    protected btnCommandbar_click = (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, btn: ICommandBarItemProps): void => {
+        const action: string = btn.key;
+        const { selectedResult } = this.state;
+        const newState = {} as IResultInterfaceState;
 
         switch(action) {
             case 'view':
-                console.log(action, selected);
+                console.log(action, selectedResult);
                 newState.documentReaderOpen = true;
-                if(selected.ResultItemType === Model.ResultItemType.Image || 
-                   selected.FileType === 'pdf') {
-                    newState.documentReaderUrl = this._buildListPreviewLink(selected);
-                } else {
-                    newState.documentReaderUrl = selected.ServerRedirectedEmbedURL;
-                }
+                newState.documentReaderUrl = this._buildListPreviewLink(selectedResult);
                 break;
             case 'edit':
-                console.log(action, selected);
-                window.open(selected.ServerRedirectedURL);
+                window.open(selectedResult.ServerRedirectedURL);
                 break;
             case 'go':
-                window.open(selected.OriginalPath);
+                window.open(selectedResult.OriginalPath);
                 break;
             case 'opencontainer':
-                window.open(selected.ParentLink);
+                window.open(selectedResult.ParentLink);
                 break;
             case 'viewproperties':
                 newState.itemPropPanelOpen = true;
-                newState.spWebUrl = selected.SPWebUrl;
-                newState.listID = selected.ListID;
-                newState.listItemID = selected.ListItemID;
-                newState.contentTypeId = selected.ContentTypeId;
                 break;
             case 'clientopen':
-                let url = OfficeURIHelper.getAbbreviatedOpenInClientURI(selected.OriginalPath);
+                const url = OfficeURIHelper.getAbbreviatedOpenInClientURI(selectedResult.OriginalPath);
                 window.location.href = url;
                 break;
             case 'download':
-                let dl = selected.OriginalPath + '?Web=0';
+                const dl = selectedResult.OriginalPath + '?Web=0';
                 window.location.href = dl;
                 break;
             case 'log':
-                console.log(JSON.stringify(selected));
+                console.log(JSON.stringify(selectedResult));
                 break;
             default:
                 break;
-
         }
 
         this.setState(newState);
@@ -468,8 +444,19 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         //this._dialogHelper.activateCancelButtons();
     }
 
+    /**
+     * Returns the url to preview the selected item based on 
+     * it's type
+     * @param result 
+     * @returns 
+     */
     private _buildListPreviewLink(result: IAdvancedSearchResult): string {
-        return `${result.ParentLink}?id=${encodeURIComponent(this._absToRelativeUrl(result.DocumentLink))}&parent=${encodeURIComponent(this._buildListPreviewLinkParentUrl(result))}`;
+        
+        if(result.ResultItemType === ResultItemType.Image || result.FileType === 'pdf') {
+            return `${result.ParentLink}?id=${encodeURIComponent(this._absToRelativeUrl(result.DocumentLink))}&parent=${encodeURIComponent(this._buildListPreviewLinkParentUrl(result))}`;
+        }
+        
+        return result.ServerRedirectedEmbedURL;
     }
 
     private _buildListPreviewLinkParentUrl(result: IAdvancedSearchResult): string {
@@ -480,45 +467,30 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         return absUrl.replace(/^http[s]?:\/\/[^\/]+/, '');
     }
 
+    private _applyCustomColumnRendering(columns: IResultProperty[]): void {
 
-    private _applyCustomColumnRendering(columns: Array<Model.IResultProperty>): void {
-
-        columns.forEach((col) => {
-            this._applyResultPropertyDefaults(col);
-        });
+        columns.forEach((col) => this._applyResultPropertyDefaults(col));
 
     }
 
-    private _applyResultPropertyDefaults(colConfig: Model.IResultProperty): void {
+    private _applyResultPropertyDefaults(colConfig: IResultProperty): void {
 
         switch(colConfig.type) {
-            case Model.ResultPropertyValueType.DateTime:
-                colConfig.onRender = (item: IAdvancedSearchResult) => {
-                    return this._formatDate(item[colConfig.fieldName] as string);
-                };
+            case ResultPropertyValueType.DateTime:
+                colConfig.onRender = (item: IAdvancedSearchResult) => this._formatDate(item[colConfig.fieldName] as string);
                 break;
-            case Model.ResultPropertyValueType.Boolean:
-                colConfig.onRender = (item: IAdvancedSearchResult) => {
-                    return this._formatBool(item[colConfig.fieldName] as string);
-                };
+            case ResultPropertyValueType.Boolean:
+                colConfig.onRender = (item: IAdvancedSearchResult) => this._formatBool(item[colConfig.fieldName] as string);
                 break;
         }
     }
 
-    private _formatDate (isoDate: string): string {
-        if(!isoDate) {
-            return '';
-        }
-        return (new Date(isoDate)).toLocaleDateString();
+    private _formatDate(isoDate: string): string {
+        return isoDate ? (new Date(isoDate)).toLocaleDateString() : ''; 
     }
 
-    private _formatBool (bool: string): string {
-        if(bool === 'true'){
-            return 'Yes';
-        }
-        else {
-            return 'No';
-        }
+    private _formatBool(bool: string): string {
+        return bool ? 'Yes' : 'No';
     }
 
     private _getSelectionDetails(): IAdvancedSearchResult {
@@ -529,14 +501,14 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
           case 1:
             return this._selection.getSelection()[0] as IAdvancedSearchResult;
           default:
-          return null;
+            return null;
         }
     }
 
     private commandbarButtons(result: IAdvancedSearchResult): ICommandBarItemProps[] {
-        let items: ICommandBarItemProps[] = [];
-        let type = Model.ResultItemType;
-        let splitItems: Array<IContextualMenuItem> = [];
+        const items: ICommandBarItemProps[] = [];
+        const type = ResultItemType;
+        const splitItems: Array<IContextualMenuItem> = [];
 
         if(!result) { return items; }
 
@@ -553,17 +525,16 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 iconProps: {
                     iconName: 'Generate'
                 },
-                onClick: (e, btn) => this.btnCommandbar_click(e, btn)
+                onClick: this.btnCommandbar_click,
             });
-        } else if(result.IsDocument == "true" as any || 
-                  result.ResultItemType === type.Image) {
-                splitItems.push({
+        } else if(result.IsDocument == "true" as any || result.ResultItemType === type.Image) {
+            splitItems.push({
                 key: 'view',
                 name: 'View',
                 iconProps: {
                     iconName: 'View'
                 },
-                onClick: (e, btn) => this.btnCommandbar_click(e, btn)                             
+                onClick: this.btnCommandbar_click,                             
             });
             if(result.ServerRedirectedURL) {
                 splitItems.push({
@@ -572,7 +543,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     iconProps: {
                         iconName: 'PageEdit'
                     },
-                    onClick: (e, btn) => this.btnCommandbar_click(e, btn)
+                    onClick: this.btnCommandbar_click,
                 });
             }
             
@@ -583,14 +554,14 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     iconProps: {
                         iconName: 'PageEdit'
                     },
-                    onClick: (e, btn) => this.btnCommandbar_click(e, btn)
+                    onClick: this.btnCommandbar_click,
                 });
             }
 
         }
 
         if(splitItems.length > 1) {
-            let split = splitItems.shift();
+            const split = splitItems.shift();
             split.split = true;
             split.subMenuProps = {
                 items: splitItems
@@ -612,9 +583,8 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     iconProps: {
                         iconName: 'CustomList'
                     },
-                    onClick: (e, btn) => this.btnCommandbar_click(e, btn)
-                }
-            );
+                    onClick: this.btnCommandbar_click,
+                });
         }
 
         if(result.ParentLink) {
@@ -624,7 +594,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 iconProps: {
                     iconName: 'FolderOpen'
                 },
-                onClick: (e, btn) => this.btnCommandbar_click(e, btn)
+                onClick: this.btnCommandbar_click,
             });
         }
         
@@ -642,8 +612,8 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
     }
 
     private commandbarOverflowButtons(result: IAdvancedSearchResult): ICommandBarItemProps[] {
-        let items: ICommandBarItemProps[] = [];
-        let type = Model.ResultItemType;
+        const items: ICommandBarItemProps[] = [];
+        const type = ResultItemType;
         
         if(!result) { return items; }
 
@@ -656,7 +626,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 iconProps: {
                     iconName: 'Download'
                 },
-                onClick: (e, btn) => this.btnCommandbar_click(e, btn)
+                onClick: this.btnCommandbar_click,
             });
         }
 
@@ -668,7 +638,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 iconProps: {
                     iconName: 'M365InvoicingLogo'
                 },
-                onClick: (e, btn) => this.btnCommandbar_click(e, btn)
+                onClick: this.btnCommandbar_click,
             });
         }
 
@@ -704,15 +674,15 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
         return document.documentElement;
       }
     
-      private _onRenderMissingItem = (index: number): null => {
+    private _onRenderMissingItem = (index: number): null => {
         
         if(this.searchData.totalRows <= this.state.results.length) {
             return null;
         }
     
         if (!this._isFetchingItems) {
-          this._isFetchingItems = true;
 
+            this._isFetchingItems = true;
             let resultsCopy = [...this.state.results];
             
             this.searchData.getPage(this.searchData.page + 1).then((res: SearchResults) => {
@@ -720,7 +690,7 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                     return;
                 }
 
-                let results: IAdvancedSearchResult[] = res.PrimarySearchResults as any;
+                const results: IAdvancedSearchResult[] = res.PrimarySearchResults as any;
                 
                 results.forEach(result => {
                     this._rowIdentity(result);
@@ -730,7 +700,6 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
                 resultsCopy = resultsCopy.concat(res.PrimarySearchResults);
                 resultsCopy.push(null);
                 this.setState({
-                    ...this.state,
                   results: resultsCopy
                 } as IResultInterfaceState, () => {
                     this._isFetchingItems = false;
@@ -738,6 +707,6 @@ export default class ResultsInterface extends React.Component<IResultsInterfaceP
             });
         }
         return null;
-      }
+    }
 
 }

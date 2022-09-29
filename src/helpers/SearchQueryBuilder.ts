@@ -78,7 +78,7 @@ export default class SearchQueryBuilder {
                             criteria.push(`${prop}=${numbVal.number || value}`);
                             break;
                         case PropertyValueType.Person:
-                            let name = perVal[0].text;
+                            const name = perVal[0].text;
                             criteria.push(`${prop}:"*${name}*"`);
                             break;
                         case PropertyValueType.DateTime:
@@ -120,7 +120,7 @@ export default class SearchQueryBuilder {
                 case SearchOperator.GreaterThanEqual:
                 case SearchOperator.After:
                     //LastModifiedTime>=2018-06-30T04:00:00.000Z
-                    let val = numbVal.number || dateVal.date.toISOString();
+                    const val = numbVal.number || dateVal.date.toISOString();
                     criteria.push(`${prop}>=${val}`);
                     break;
                 case SearchOperator.GreatherThan:

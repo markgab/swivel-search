@@ -30,7 +30,7 @@ export interface ISearchInterfaceState {
     keywordSearch: string;
     classNameAdvanced: string;
     showAdvanced: boolean;
-    controlValues: { [key: string]: any }
+    controlValues: { [key: string]: any };
 }
 
 export default class SearchInterface extends React.Component<ISearchInterfaceProps, ISearchInterfaceState> {
@@ -402,7 +402,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                     const key = `${field.property}-${idx}`;
 
                     if(text.indexOf(delim) !== -1) {
-                        let arr = text.split(delim);
+                        const arr = text.split(delim);
                         text = arr[0];
                         value = arr[1];
                     }

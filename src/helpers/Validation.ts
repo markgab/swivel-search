@@ -51,7 +51,7 @@ export default class Validation {
      */
     public static is<T>(o: any, sample: T, strict = true, recursive = true): o is T {
         if (o == null) return false;
-        let s = sample as any;
+        const s = sample as any;
         // If we have primitives we check that they are of the same type and that type is not object 
         if (typeof s === typeof o && typeof o != "object") return true;
 
@@ -66,7 +66,7 @@ export default class Validation {
             }
         } else {
             // We check if all the properties of sample are present on o
-            for (let key of Object.getOwnPropertyNames(sample)) {
+            for (const key of Object.getOwnPropertyNames(sample)) {
                 if (typeof o[key] !== typeof s[key]) {
                     console.log('Object missing property: ' + key, o);
                     return false;
@@ -77,7 +77,7 @@ export default class Validation {
             }
             // We check that o does not have any extra prperties to sample
             if (strict) {
-                for (let key of Object.getOwnPropertyNames(o)) {
+                for (const key of Object.getOwnPropertyNames(o)) {
                     if (s[key] == null) return false;
                 }
             }

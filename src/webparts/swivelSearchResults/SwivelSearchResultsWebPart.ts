@@ -40,7 +40,6 @@ export interface ISwivelSearchResultsWebPartProps {
 
 export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<ISwivelSearchResultsWebPartProps> {
 
-  public resultsConfig: Model.IResultsConfig;
   public searchSchemaHelper: SearchSchemaHelper;
   private _propertyFieldCollectionData;
   private _customCollectionFieldType;
@@ -62,7 +61,6 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
   private _sortableProperties: Array<IPropertyPaneDropdownOption> = [];
 
   public render(): void {
-    //this.resultsConfig = this._parseConfig(this.properties.resultsConfig);
     const searchQuerySource: IDynamicDataSource | undefined = this.properties.searchQuery.tryGetSource();
     const searchQuery: string | undefined = this.properties.searchQuery.tryGetValue();
     const needsConfiguration: boolean = (!searchQuerySource && !searchQuery) || !this.properties.columns;
@@ -119,7 +117,7 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
       ...defaultSortProperties
     ];
     if(this.properties.columns) {
-      let custProps = this.properties.columns.filter(prop => {
+      const custProps = this.properties.columns.filter(prop => {
         return prop.sortable === true;
       }).map(prop => prop.name);
       props = [
@@ -212,7 +210,6 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                 this._propertyFieldCollectionData('columns', {
                     key: 'resultsConfig',
                     enableSorting: true,
-                    //label: 'Choose Result Columns',
                     panelHeader: 'Result Columns',
                     manageBtnLabel: 'Choose Result Columns',
                     value: this.properties.columns,
@@ -276,9 +273,6 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                     ]
                   }
                 ),
-                /* PropertyPaneTextField('rowLimit', {
-                  label: strings.RowLimitFieldLabel
-                }), */
                 PropertyPaneDropdown('sortProperty', {
                   options: this._sortableProperties,
                   label: 'Sort Property',
@@ -293,10 +287,6 @@ export default class SwivelSearchResultsWebPart extends BaseClientSideWebPart<IS
                   }],
                   label: 'Sort Direction'
                 })
-                /* this._propertyPanePropertyEditor({
-                  webpart: this,
-                  key: 'propertyEditor'
-                }) */
               ]
             }
           ]
