@@ -170,7 +170,7 @@ export default class ItemPropertiesPanel extends React.Component<IItemProperties
 
     private _isPageClassic(frame: HTMLIFrameElement): boolean {
         const frameDoc = frame.contentDocument;
-        return frameDoc.getElementById('s4-workspace') !== null;
+        return frameDoc?.getElementById('s4-workspace') !== null;
     }
 
 }

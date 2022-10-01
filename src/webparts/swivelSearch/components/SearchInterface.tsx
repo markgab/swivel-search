@@ -1,7 +1,7 @@
 import { PrimaryButton, ActionButton } from 'office-ui-fabric-react/lib/Button';
 import { TextField, ITextFieldProps } from 'office-ui-fabric-react/lib/TextField';
 import * as React from 'react';
-import DateRange, { EmptyValue, IDateRangeValue } from '../../../components/DateRange';
+import DateRange, { EmptyValue } from '../../../components/DateRange';
 import NumberRange from '../../../components/NumberRange';
 import PeoplePicker from '../../../components/PeoplePicker';
 import { 
@@ -12,7 +12,6 @@ import {
 } from '../../../model/AdvancedSearchModel';
 import styles from './SwivelSearch.module.scss';
 import DropdownResettable, { IDropdownResettableOption } from '../../../components/DropdownResettable';
-import { IPersonaProps } from 'office-ui-fabric-react';
 import SwivelSearchGlobals from '../../../model/SwivelSearchGlobals';
 
 const AdvancedMinimized: string = `${styles.pnlAdvanced} ${styles.pnlAdvancedMinimized}`;
@@ -189,7 +188,6 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                     break;
             }
 
-
         });
 
         const rows = controls.map((c, i) => this._cell(c, `cell${i}`));
@@ -235,10 +233,9 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
     }
 
     protected onInput_keypress = (e: KeyboardEvent) => {
-        const key = e.keyCode;
 
-        switch(key) {
-            case 13:    // Enter
+        switch(e.key) {
+            case "Enter":
                 this.btnSearch_click();
                 break;
         }
@@ -294,7 +291,6 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
     protected keywordSearch_changed = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, keywordSearch: string): void => {
          this.setState({
-            ...this.state,
             keywordSearch
          } as ISearchInterfaceState);
     }
@@ -338,11 +334,8 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
 
     protected ctrl_changed(val: any, field: ISearchProperty): void {
 
-        console.log('ctrl_changed', arguments);
-
         const { controlValues } = this.state;
         controlValues[field.property] = val;
-
 
         this.setState({
             controlValues,
@@ -350,11 +343,11 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
         
     }
 
-
     private _cell(control: JSX.Element, key: string): JSX.Element {
         return (<div className={styles.cell} key={key}>{control}</div>);
     }
 
+/* 
     private _row(controls: JSX.Element[], key: number): JSX.Element {
 
         const cells: JSX.Element[] = [];
@@ -369,7 +362,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                 {cells}
             </div>
         );
-    }
+    } */
 
     private _hasChoices(field: ISearchProperty): boolean {
         return field.choices && field.choices.length > 0;

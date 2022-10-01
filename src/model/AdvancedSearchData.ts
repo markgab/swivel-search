@@ -32,6 +32,8 @@ export interface IAdvancedSearchResult extends ISearchResult {
     DocumentLink: string;
 }
 
+const EmptyGuid = "00000000-0000-0000-0000-000000000000";
+
 export default class AdvancedSearchData {
     constructor(public context: BaseComponentContext, public columns: Array<Model.IResultProperty>) {
         pnpSetup({
@@ -197,19 +199,25 @@ export default class AdvancedSearchData {
     }
 
     private _isWeb(result: IAdvancedSearchResult): boolean {
-        return  result.IsDocument == "false" as any && 
+        const isWeb =   result.IsDocument == "false" as any &&
+                        result.IsContainer == "true" as any &&
+                        result.IsListItem == "false" as any &&
+                        result.ListID == EmptyGuid;
+                        //result.FileType == 'aspx';
+/*         const isWeb = result.IsDocument == "false" as any && 
                 result.IsContainer == "true" as any &&
-                result.IsListItem === null &&
+                result.IsListItem === null &&                               // "false"
             ((
-               !result.ListID &&
-                result.FileExtension === null
+               !result.ListID &&                                            // [Empty Guid]
+                result.FileExtension === null                               // Undefined
             )
             || 
             (
                 result.ListID &&
                 result.FileExtension == 'aspx' &&
-                result.FileType == 'aspx'
-            ));
+                result.FileType == 'aspx'                                   // 'aspx'
+            )); */
+        return isWeb;
     }
 
     private _isList(result: IAdvancedSearchResult): boolean {
@@ -223,10 +231,12 @@ export default class AdvancedSearchData {
     }
 
     private _isListOrLibrary(result: IAdvancedSearchResult): boolean {
-        return  result.IsDocument == "false" as any &&
-                result.FileType === "html" &&
+        const is = result.IsDocument == "false" as any &&
                 result.IsContainer == "false" as any &&
-                result.IsListItem === null;                
+                result.IsListItem === "false" &&
+                !!result.ListID &&
+                !result.ListItemID;
+        return is;                
     }
 
     private _isListItem(result: IAdvancedSearchResult): boolean {
@@ -251,10 +261,10 @@ export default class AdvancedSearchData {
     }
 
     private _isFolder(result: IAdvancedSearchResult): boolean {
-        return  result.IsDocument == "false" as any &&
+        return result.IsDocument == "false" as any &&
                 result.IsContainer == "true" as any &&
-                result.IsListItem === null &&
-                result.FileExtension === null &&
+                result.IsListItem === "false" &&
+               !result.FileExtension &&
               !!result.ListID &&
                !result.ServerRedirectedURL &&
               !!result.ParentLink;
@@ -263,7 +273,7 @@ export default class AdvancedSearchData {
     private _isOneNote(result: IAdvancedSearchResult): boolean {
         return  result.IsDocument == "false" as any &&
                 result.IsContainer == "true" as any &&
-                result.IsListItem === null &&
+                result.IsListItem === "false" &&                               // "false"
               !!result.ListID &&
               !!result.ServerRedirectedURL;
     }
