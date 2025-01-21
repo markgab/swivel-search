@@ -11,7 +11,7 @@ import {
     SearchOperator,
 } from '../../../model/AdvancedSearchModel';
 import styles from './SwivelSearch.module.scss';
-import DropdownResettable, { IDropdownResettableOption } from '../../../components/DropdownResettable';
+import DropdownResettable, { getResetChoice, IDropdownResettableOption } from '../../../components/DropdownResettable';
 import SwivelSearchGlobals from '../../../model/SwivelSearchGlobals';
 
 const AdvancedMinimized: string = `${styles.pnlAdvanced} ${styles.pnlAdvancedMinimized}`;
@@ -156,10 +156,10 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
                         <DropdownResettable 
                             placeHolder={field.operator}
                             label={field.name} 
-                            onChanged={e => this.ctrl_changed(e, field)}
                             options={field.propertyChoices as IDropdownResettableOption[]}
                             //selectedKey={field.choicesSelectedKey as any}
-                            selectedKey={controlValues[field.property]}
+                            selectedKey={controlValues[field.property]?.key || undefined}
+                            onChanged={e => this.ctrl_changed(e, field)}
                             data-index={i} 
                             key={field.property} 
                         />
@@ -312,7 +312,7 @@ export default class SearchInterface extends React.Component<ISearchInterfacePro
             switch(true) {
                 case field.type === PropertyValueType.Boolean:
                 case this._hasChoices(field):
-                    controlValues[field.property] = '';
+                    controlValues[field.property] = getResetChoice();
                     //field.choicesSelectedKey = '';
                     //field.value = null;
                     break;

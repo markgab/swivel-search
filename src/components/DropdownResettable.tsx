@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { 
-    Dropdown, 
-    IDropdown, 
-    DropdownMenuItemType, 
+    Dropdown,
     IDropdownOption, 
     IDropdownProps
 } from 'office-ui-fabric-react/lib/Dropdown';
@@ -48,12 +46,13 @@ export default function DropdownResettable(props: IDropdownResettableProps): JSX
         const choices = [...opts] as IDropdownResettableOption[];
 
         const resetChoice: IDropdownResettableOption = {                    // Reset options definition
-            key: `field-reset`,
+            //key: `field-reset`,
+            key: '',
             text: '',
             value: null
         };
 
-        choices.unshift(resetChoice);                                       // Add reset option to beginning of array
+        choices.unshift(getResetChoice());                                  // Add reset option to beginning of array
 
         return choices;                                                     // return options array
     }
@@ -65,4 +64,14 @@ export default function DropdownResettable(props: IDropdownResettableProps): JSX
             selectedKey={selectedKey}
         />
     );
+}
+
+
+
+export const getResetChoice = (): IDropdownResettableOption => {            // Reset options definition
+    return {
+        key: `field-reset`,
+        text: '',
+        value: null
+    };
 }
